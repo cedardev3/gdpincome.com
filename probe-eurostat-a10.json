@@ -1,0 +1,478 @@
+{
+  "version": "2.0",
+  "class": "dataset",
+  "label": "Gross value added and income by main industry (NACE Rev.2 ) - annual data",
+  "source": "ESTAT",
+  "updated": "2026-09-18T23:00:00+0200",
+  "value": {
+    "0": 3085866,
+    "1": 3182023,
+    "2": 3127047,
+    "3": 3324835,
+    "4": 3613110,
+    "5": 3888686,
+    "6": 3979644,
+    "7": 4104359,
+    "8": 2081977.9,
+    "9": 2150689.8,
+    "10": 2056545.2,
+    "11": 2212764.4,
+    "12": 2368609.4,
+    "13": 2545652,
+    "14": 2624893.4,
+    "15": 2664898.2,
+    "16": 25496,
+    "17": 29470,
+    "18": 25144,
+    "19": 27761,
+    "20": 39396,
+    "21": 38948,
+    "22": 38624,
+    "23": 38267,
+    "24": 36063,
+    "25": 34252.4,
+    "26": 33856.9,
+    "27": 36702.2,
+    "28": 45653.3,
+    "29": 40566.5,
+    "30": 37066.6,
+    "31": 41318.7,
+    "32": 750810,
+    "33": 760217,
+    "34": 716887,
+    "35": 764929,
+    "36": 828496,
+    "37": 943847,
+    "38": 930927,
+    "39": 936290,
+    "40": 277731.2,
+    "41": 288093.1,
+    "42": 261238,
+    "43": 277505.6,
+    "44": 287583.6,
+    "45": 373347.9,
+    "46": 366266.7,
+    "47": 358527.6,
+    "48": 680255,
+    "49": 683172,
+    "50": 640044,
+    "51": 684545,
+    "52": 731784,
+    "53": 792263,
+    "54": 793156,
+    "55": 797190,
+    "56": 232856,
+    "57": 241054.8,
+    "58": 214340.1,
+    "59": 228132.6,
+    "60": 246857.9,
+    "61": 287169.2,
+    "62": 298287.7,
+    "63": 299277.5,
+    "64": 137085,
+    "65": 143453,
+    "66": 154908,
+    "67": 162322,
+    "68": 174930,
+    "69": 187237,
+    "70": 201408,
+    "71": 208178,
+    "72": 116209.9,
+    "73": 123120.2,
+    "74": 116007,
+    "75": 125991.1,
+    "76": 130929.3,
+    "77": 142708.5,
+    "78": 145655.7,
+    "79": 148501.4,
+    "80": 508303,
+    "81": 526691,
+    "82": 500723,
+    "83": 546327,
+    "84": 638549,
+    "85": 642940,
+    "86": 646904,
+    "87": 659791,
+    "88": 346792.9,
+    "89": 364927.1,
+    "90": 324101.3,
+    "91": 369322.6,
+    "92": 422808.4,
+    "93": 428189.7,
+    "94": 443910.4,
+    "95": 444600.7,
+    "96": 148410,
+    "97": 155600,
+    "98": 155643,
+    "99": 167966,
+    "100": 168320,
+    "101": 187001,
+    "102": 187796,
+    "103": 196381,
+    "104": 112243.7,
+    "105": 117186.4,
+    "106": 115434.5,
+    "107": 124843.4,
+    "108": 131672.5,
+    "109": 138234.7,
+    "110": 144044.4,
+    "111": 147141.8,
+    "112": 120471,
+    "113": 125977,
+    "114": 128492,
+    "115": 138978,
+    "116": 135598,
+    "117": 149300,
+    "118": 152074,
+    "119": 158828,
+    "120": 81059.8,
+    "121": 78350.8,
+    "122": 79816.9,
+    "123": 85211.7,
+    "124": 87940.1,
+    "125": 73116,
+    "126": 81394.6,
+    "127": 96252.7,
+    "128": 338508,
+    "129": 348936,
+    "130": 357400,
+    "131": 368015,
+    "132": 380213,
+    "133": 411850,
+    "134": 435516,
+    "135": 444179,
+    "136": 292014.8,
+    "137": 300545.4,
+    "138": 303856.6,
+    "139": 310139.4,
+    "140": 325412.4,
+    "141": 372697.4,
+    "142": 380347.3,
+    "143": 376739.1,
+    "144": 369715,
+    "145": 368108,
+    "146": 359501,
+    "147": 397397,
+    "148": 431154,
+    "149": 464052,
+    "150": 473492,
+    "151": 489027,
+    "152": 297564.8,
+    "153": 311391.2,
+    "154": 293333,
+    "155": 319626.3,
+    "156": 343758.5,
+    "157": 359839.9,
+    "158": 378857.8,
+    "159": 388118.5,
+    "160": 578245,
+    "161": 610337,
+    "162": 630007,
+    "163": 651344,
+    "164": 697005,
+    "165": 736114,
+    "166": 778636,
+    "167": 832903,
+    "168": 459589.5,
+    "169": 467691.3,
+    "170": 471588.3,
+    "171": 501978.3,
+    "172": 521099.8,
+    "173": 540239.1,
+    "174": 564989.5,
+    "175": 579781.2,
+    "176": 108823,
+    "177": 113234,
+    "178": 98342,
+    "179": 99796,
+    "180": 119449,
+    "181": 127397,
+    "182": 134267,
+    "183": 140515,
+    "184": 62708.3,
+    "185": 65131.9,
+    "186": 57312.7,
+    "187": 61443.8,
+    "188": 71751.5,
+    "189": 76712.3,
+    "190": 82360.4,
+    "191": 83916.5
+  },
+  "status": {
+    "5": "p",
+    "6": "p",
+    "7": "p",
+    "14": "p",
+    "15": "p",
+    "21": "p",
+    "22": "p",
+    "23": "p",
+    "30": "p",
+    "31": "p",
+    "37": "p",
+    "38": "p",
+    "39": "p",
+    "46": "p",
+    "47": "p",
+    "53": "p",
+    "54": "p",
+    "55": "p",
+    "62": "p",
+    "63": "p",
+    "69": "p",
+    "70": "p",
+    "71": "p",
+    "78": "p",
+    "79": "p",
+    "85": "p",
+    "86": "p",
+    "87": "p",
+    "94": "p",
+    "95": "p",
+    "101": "p",
+    "102": "p",
+    "103": "p",
+    "110": "p",
+    "111": "p",
+    "117": "p",
+    "118": "p",
+    "119": "p",
+    "126": "p",
+    "127": "p",
+    "133": "p",
+    "134": "p",
+    "135": "p",
+    "142": "p",
+    "143": "p",
+    "149": "p",
+    "150": "p",
+    "151": "p",
+    "158": "p",
+    "159": "p",
+    "165": "p",
+    "166": "p",
+    "167": "p",
+    "174": "p",
+    "175": "p",
+    "181": "p",
+    "182": "p",
+    "183": "p",
+    "190": "p",
+    "191": "p"
+  },
+  "id": [
+    "freq",
+    "unit",
+    "nace_r2",
+    "na_item",
+    "geo",
+    "time"
+  ],
+  "size": [
+    1,
+    1,
+    12,
+    1,
+    2,
+    8
+  ],
+  "dimension": {
+    "freq": {
+      "label": "Time frequency",
+      "category": {
+        "index": {
+          "A": 0
+        },
+        "label": {
+          "A": "Annual"
+        }
+      }
+    },
+    "unit": {
+      "label": "Unit of measure",
+      "category": {
+        "index": {
+          "CP_MEUR": 0
+        },
+        "label": {
+          "CP_MEUR": "Current prices, million euro"
+        }
+      }
+    },
+    "nace_r2": {
+      "label": "Statistical classification of economic activities in the European Community (NACE Rev. 2)",
+      "category": {
+        "index": {
+          "TOTAL": 0,
+          "A": 1,
+          "B-E": 2,
+          "C": 3,
+          "F": 4,
+          "G-I": 5,
+          "J": 6,
+          "K": 7,
+          "L": 8,
+          "M_N": 9,
+          "O-Q": 10,
+          "R-U": 11
+        },
+        "label": {
+          "TOTAL": "Total - all NACE activities",
+          "A": "Agriculture, forestry and fishing",
+          "B-E": "Industry (except construction)",
+          "C": "Manufacturing",
+          "F": "Construction",
+          "G-I": "Wholesale and retail trade, transport, accommodation and food service activities",
+          "J": "Information and communication",
+          "K": "Financial and insurance activities",
+          "L": "Real estate activities",
+          "M_N": "Professional, scientific and technical activities; administrative and support service activities",
+          "O-Q": "Public administration, defence, education, human health and social work activities",
+          "R-U": "Arts, entertainment and recreation; other service activities; activities of household and extra-territorial organizations and bodies"
+        }
+      }
+    },
+    "na_item": {
+      "label": "National accounts indicator (ESA 2010)",
+      "category": {
+        "index": {
+          "B1G": 0
+        },
+        "label": {
+          "B1G": "Value added, gross"
+        }
+      }
+    },
+    "geo": {
+      "label": "Geopolitical entity (reporting)",
+      "category": {
+        "index": {
+          "DE": 0,
+          "FR": 1
+        },
+        "label": {
+          "DE": "Germany",
+          "FR": "France"
+        }
+      }
+    },
+    "time": {
+      "label": "Time",
+      "category": {
+        "index": {
+          "2018": 0,
+          "2019": 1,
+          "2020": 2,
+          "2021": 3,
+          "2022": 4,
+          "2023": 5,
+          "2024": 6,
+          "2025": 7
+        },
+        "label": {
+          "2018": "2018",
+          "2019": "2019",
+          "2020": "2020",
+          "2021": "2021",
+          "2022": "2022",
+          "2023": "2023",
+          "2024": "2024",
+          "2025": "2025"
+        }
+      }
+    }
+  },
+  "extension": {
+    "lang": "EN",
+    "id": "NAMA_10_A10",
+    "agencyId": "ESTAT",
+    "version": "1.0",
+    "datastructure": {
+      "id": "NAMA_10_A10",
+      "agencyId": "ESTAT",
+      "version": "138.1"
+    },
+    "annotation": [
+      {
+        "type": "CREATED",
+        "date": "2014-09-04T14:58:03+0200"
+      },
+      {
+        "type": "DISSEMINATION_DOI_XML",
+        "title": "<adms:identifier xmlns:adms=\"http://www.w3.org/ns/adms#\" xmlns:skos=\"http://www.w3.org/2004/02/skos/core.html\" xmlns:dct=\"http://purl.org/dc/terms/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"><adms:Identifier rdf:about=\"https://doi.org/10.2908/NAMA_10_A10\"><skos:notation rdf:datatype=\"http://purl.org/spar/datacite/doi\">10.2908/NAMA_10_A10</skos:notation><dct:creator rdf:resource=\"http://publications.europa.eu/resource/authority/corporate-body/ESTAT\"/><dct:issued rdf:datatype=\"http://www.w3.org/2001/XMLSchema#date\">2023-01-19</dct:issued></adms:Identifier></adms:identifier>"
+      },
+      {
+        "type": "DISSEMINATION_OBJECT_TYPE",
+        "title": "DATASET"
+      },
+      {
+        "type": "DISSEMINATION_TIMESTAMP_DATA",
+        "date": "2026-09-18T23:00:00+0200"
+      },
+      {
+        "type": "DISSEMINATION_TIMESTAMP_GLOBAL",
+        "date": "2026-09-18T23:00:00+0200"
+      },
+      {
+        "type": "DISSEMINATION_TIMESTAMP_PLANNED",
+        "date": "2026-09-18T23:00:00+0200"
+      },
+      {
+        "type": "ESMS_HTML",
+        "title": "Explanatory texts (metadata)",
+        "href": "https://ec.europa.eu/eurostat/cache/metadata/en/nama_10_gdp_esms.htm"
+      },
+      {
+        "type": "ESMS_SDMX",
+        "title": "Explanatory texts (metadata)",
+        "href": "https://ec.europa.eu/eurostat/api/dissemination/files?file=metadata/nama_10_gdp_esms.sdmx.zip"
+      },
+      {
+        "type": "FOOTNOTE",
+        "title": "Footnote (metadata)",
+        "href": "https://ec.europa.eu/eurostat/cache/metadata/Annexes/nama_10_gdp_esms_an_Gross_domestic_product_(GDP)_a.xlsx"
+      },
+      {
+        "type": "OBS_COUNT",
+        "title": "874906"
+      },
+      {
+        "type": "OBS_PERIOD_OVERALL_LATEST",
+        "title": "2025"
+      },
+      {
+        "type": "OBS_PERIOD_OVERALL_OLDEST",
+        "title": "1975"
+      },
+      {
+        "type": "SOURCE_INSTITUTIONS",
+        "text": "Eurostat"
+      },
+      {
+        "type": "UPDATE_DATA",
+        "date": "2026-09-18T23:00:00+0200"
+      },
+      {
+        "type": "UPDATE_FOOTNOTES",
+        "date": "2026-07-22T14:45:06Z"
+      },
+      {
+        "type": "UPDATE_STRUCTURE",
+        "date": "2026-09-08T11:00:00+0200"
+      }
+    ],
+    "status": {
+      "label": {
+        "p": "provisional"
+      }
+    },
+    "positions-with-no-data": {
+      "freq": [],
+      "unit": [],
+      "nace_r2": [],
+      "na_item": [],
+      "geo": [],
+      "time": []
+    }
+  }
+}

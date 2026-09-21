@@ -128,13 +128,21 @@ export default function DrilldownPie({
         </text>
       </svg>
       {hovered ? (
-        <div className="pointer-events-none absolute left-1/2 top-2 z-10 -translate-x-1/2 rounded-lg bg-[#1f3d4d] px-3 py-1.5 text-center text-white shadow-lg">
+        <div className="pointer-events-none absolute left-1/2 top-2 z-10 max-w-[min(100%,20rem)] -translate-x-1/2 rounded-lg bg-[#1f3d4d] px-3 py-1.5 text-center text-white shadow-lg">
           <p className="text-sm font-semibold">{hovered.name}</p>
           <p className="text-xs text-[#e8dcc8]">
             {formatMillions(hovered.amountMillions)} · {formatPercent(hovered.percent)}
             {hovered.isOffset ? " · offset" : ""}
+            {hovered.periodLabel || hovered.year
+              ? ` · ${hovered.periodLabel ?? hovered.year}`
+              : ""}
           </p>
-          <p className="mt-0.5 text-[10px] text-[#c4b59a]">
+          {hovered.sources?.length ? (
+            <p className="mt-0.5 text-[10px] leading-snug text-[#c4b59a]">
+              Source: {hovered.sources.map((s) => s.label).join(" · ")}
+            </p>
+          ) : null}
+          <p className="mt-0.5 text-[10px] text-[#a89880]">
             {hasChildren(hovered) ? "Click to open" : "No further detail"}
           </p>
         </div>

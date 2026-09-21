@@ -16,6 +16,8 @@ export type ChartNode = {
   color: string;
   description: string;
   sources: SourceLink[];
+  year?: number;
+  periodLabel?: string;
   children?: ChartNode[];
 };
 
@@ -32,7 +34,7 @@ export type PieChartModel = {
   slices: PieSlice[];
   /** Negative amounts drawn on top of the positive pie (do not expand geometry). */
   overlays: PieSlice[];
-  /** Sidebar / legend order matches the source tree. */
+  /** Sidebar / legend ordered largest → smallest by amount. */
   legend: PieSlice[];
 };
 
@@ -176,7 +178,8 @@ export function buildPieChart(parent: ChartNode): PieChartModel {
   }
   const legend = chartChildren(parent)
     .map((child) => byId.get(child.id))
-    .filter((slice): slice is PieSlice => slice != null);
+    .filter((slice): slice is PieSlice => slice != null)
+    .sort((a, b) => b.amountMillions - a.amountMillions);
 
   return { slices, overlays, legend };
 }
@@ -223,8 +226,27 @@ export function formatPercent(percent: number): string {
   return `${(percent * 100).toFixed(1)}%`;
 }
 
+export function formatUsdPerCapita(usd: number): string {
+  return `$${Math.round(usd).toLocaleString("en-US")}`;
+}
+
+export function formatPopulation(n: number): string {
+  if (n >= 1_000_000_000) {
+    return `${trimZeros((n / 1_000_000_000).toFixed(2))} billion`;
+  }
+  if (n >= 1_000_000) {
+    return `${trimZeros((n / 1_000_000).toFixed(1))} million`;
+  }
+  return n.toLocaleString("en-US");
+}
+
 function trimZeros(value: string): string {
   return value.replace(/\.?0+$/, "");
+}
+
+/** Stable SVG numbers so SSR and client don't diverge on float noise. */
+function svgNum(n: number): string {
+  return (Math.round(n * 1e4) / 1e4).toString();
 }
 
 function polar(cx: number, cy: number, radius: number, angle: number) {
@@ -244,9 +266,9 @@ export function pieSlicePath(
   const sweep = endAngle - startAngle;
   if (sweep >= Math.PI * 2 - 1e-6) {
     return [
-      `M ${cx} ${cy - radius}`,
-      `A ${radius} ${radius} 0 1 1 ${cx} ${cy + radius}`,
-      `A ${radius} ${radius} 0 1 1 ${cx} ${cy - radius}`,
+      `M ${svgNum(cx)} ${svgNum(cy - radius)}`,
+      `A ${svgNum(radius)} ${svgNum(radius)} 0 1 1 ${svgNum(cx)} ${svgNum(cy + radius)}`,
+      `A ${svgNum(radius)} ${svgNum(radius)} 0 1 1 ${svgNum(cx)} ${svgNum(cy - radius)}`,
       "Z",
     ].join(" ");
   }
@@ -255,9 +277,9 @@ export function pieSlicePath(
   const end = polar(cx, cy, radius, endAngle);
   const largeArc = sweep > Math.PI ? 1 : 0;
   return [
-    `M ${cx} ${cy}`,
-    `L ${start.x} ${start.y}`,
-    `A ${radius} ${radius} 0 ${largeArc} 1 ${end.x} ${end.y}`,
+    `M ${svgNum(cx)} ${svgNum(cy)}`,
+    `L ${svgNum(start.x)} ${svgNum(start.y)}`,
+    `A ${svgNum(radius)} ${svgNum(radius)} 0 ${largeArc} 1 ${svgNum(end.x)} ${svgNum(end.y)}`,
     "Z",
   ].join(" ");
 }

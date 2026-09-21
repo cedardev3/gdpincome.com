@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "fetch:gdp": "node scripts/fetch-oecd-gva.mjs"
+    "fetch:gdp": "node scripts/fetch-gdp.mjs"
   },
   "dependencies": {
     "next": "16.3.5",

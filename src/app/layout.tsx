@@ -10,7 +10,7 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   title: "GDP Income",
   description:
-    "Explore gross value added by industry for major economies — drill from sectors into ISIC subsectors using OECD national accounts.",
+    "Explore GDP across selected economies in USD, then drill into industry composition for the United States, Canada, and Australia.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
