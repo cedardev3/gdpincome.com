@@ -3,6 +3,8 @@
  * Official EU statistics for DE, FR, IT (and other EU geos).
  */
 
+import { cachedFetchJson } from "./http-cache.mjs";
+
 const A10_URL =
   "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/nama_10_a10";
 const A64_URL =
@@ -46,6 +48,14 @@ const GEO_META = {
   DE: { id: "deu", code: "DEU", name: "Germany", color: "#1f3d4d" },
   FR: { id: "fra", code: "FRA", name: "France", color: "#2a6f97" },
   IT: { id: "ita", code: "ITA", name: "Italy", color: "#2f7d6d" },
+  ES: { id: "esp", code: "ESP", name: "Spain", color: "#c45c26" },
+  NL: { id: "nld", code: "NLD", name: "Netherlands", color: "#3d8a7a" },
+  PL: { id: "pol", code: "POL", name: "Poland", color: "#8a3c3c" },
+  BE: { id: "bel", code: "BEL", name: "Belgium", color: "#5c6b9a" },
+  IE: { id: "irl", code: "IRL", name: "Ireland", color: "#2f7d3c" },
+  SE: { id: "swe", code: "SWE", name: "Sweden", color: "#3c6ea8" },
+  NO: { id: "nor", code: "NOR", name: "Norway", color: "#1f3d4d" },
+  AT: { id: "aut", code: "AUT", name: "Austria", color: "#8a5a3c" },
 };
 
 function shade(hex, factor) {
@@ -86,11 +96,9 @@ function decodeEurostat(j, filters) {
 }
 
 async function fetchJson(url) {
-  const res = await fetch(url, {
+  return cachedFetchJson(url, {
     headers: { "User-Agent": "gdpincome.com/0.1", Accept: "application/json" },
   });
-  if (!res.ok) throw new Error(`Eurostat HTTP ${res.status} for ${url}`);
-  return res.json();
 }
 
 /**

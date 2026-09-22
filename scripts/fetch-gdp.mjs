@@ -5,12 +5,12 @@
  * - USA: BEA GDP by Industry via FRED
  * - Canada: Statistics Canada 36-10-0434
  * - Australia: ABS ANA_IND_GVA / GDP(P)
- * - Germany / France / Italy: Eurostat nama_10_a10 + nama_10_a64
- * - China / India: World Bank WDI sector VA (national accounts)
- * - Japan / United Kingdom: OECD Table 6 (no fresher open national drill-down)
+ * - EU/EEA: Eurostat nama_10_a10 + nama_10_a64
+ * - Emerging / others: World Bank WDI sector VA
+ * - JPN/GBR/MEX/TUR/CHE: OECD Table 6
  *
  * Fallback: OECD Table 6 via DBnomics when a primary fetch fails.
- * Demographics: World Bank WDI population & age structure.
+ * Demographics: World Bank WDI. Bond yields: OECD IRLT (optional if missing).
  *
  * Run: node scripts/fetch-gdp.mjs
  */
@@ -24,12 +24,34 @@ import { fetchEurostatCountries } from "./lib/fetch-eurostat.mjs";
 import { fetchWorldBankIndustry } from "./lib/fetch-worldbank-industry.mjs";
 import { fetchPopulationBundle } from "./lib/fetch-population.mjs";
 import { fetchBondYieldsBundle } from "./lib/fetch-bond-yields.mjs";
+import { cachedFetchJson } from "./lib/http-cache.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OECD_PREFERRED_YEAR = 2024;
-/** Next-largest economies after USA (excl. CA/AU already on chart). Italy replaces Russia (OECD RUS only through 2020). */
-const NEW_CODES = ["CHN", "DEU", "JPN", "GBR", "IND", "FRA", "ITA"];
-const ALL_ISO3 = ["USA", "CHN", "DEU", "JPN", "GBR", "IND", "FRA", "ITA", "CAN", "AUS"];
+/** First expansion after USA + CA/AU. */
+const BATCH1_CODES = ["CHN", "DEU", "JPN", "GBR", "IND", "FRA", "ITA"];
+/** Next 10 by World Bank GDP after the prior set. */
+const BATCH2_CODES = ["RUS", "BRA", "ESP", "KOR", "MEX", "TUR", "IDN", "NLD", "SAU", "CHE"];
+/**
+ * Completeness batch: top-30 closure + regional anchors (Africa, Gulf, SE Asia, Nordics, CEE).
+ * Eurostat for EU/EEA; World Bank sector VA otherwise.
+ */
+const BATCH3_CODES = [
+  "POL", "BEL", "IRL", "ARG", "SWE", "NOR", "THA", "ARE", "SGP",
+  "NGA", "ZAF", "AUT", "ISR", "EGY", "VNM", "BGD",
+];
+const WB_INDUSTRY_CODES = [
+  "CHN", "IND", "RUS", "BRA", "KOR", "IDN", "SAU",
+  "ARG", "THA", "ARE", "SGP", "NGA", "ZAF", "ISR", "EGY", "VNM", "BGD",
+];
+const EUROSTAT_GEOS = ["DE", "FR", "IT", "ES", "NL", "PL", "BE", "IE", "SE", "NO", "AT"];
+const OECD_PRIMARY_CODES = ["JPN", "GBR", "MEX", "TUR", "CHE"];
+const ALL_ISO3 = [
+  "USA", "CHN", "DEU", "JPN", "GBR", "IND", "FRA", "ITA", "CAN", "AUS",
+  ...BATCH2_CODES,
+  ...BATCH3_CODES,
+];
+const FX_PROVISIONAL_CODES = [...BATCH1_CODES, ...BATCH2_CODES, ...BATCH3_CODES];
 const STATCAN_PRODUCT_ID = 36100434;
 const STATCAN_COORD = (naicsMemberId) =>
   `1.1.1.${naicsMemberId}.0.0.0.0.0.0`;
@@ -73,7 +95,7 @@ function shortenName(name, code) {
 }
 
 async function fetchJson(url, init) {
-  const res = await fetch(url, {
+  return cachedFetchJson(url, {
     headers: {
       "User-Agent": "gdpincome.com/0.1",
       Accept: "application/json",
@@ -81,22 +103,22 @@ async function fetchJson(url, init) {
     },
     ...init,
   });
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`HTTP ${res.status} for ${url}: ${body.slice(0, 200)}`);
-  }
-  return res.json();
 }
 
 async function fetchFx(yearsByCountry) {
-  const codes = Object.keys(yearsByCountry).join(";");
+  const codes = Object.keys(yearsByCountry);
   const years = [...new Set(Object.values(yearsByCountry))];
   const minY = Math.min(...years, 2020);
   const maxY = Math.max(...years);
-  const url = `https://api.worldbank.org/v2/country/${codes}/indicator/PA.NUS.FCRF?format=json&date=${minY}:${maxY}&per_page=200`;
-  const data = await fetchJson(url);
-  const rows = data[1];
-  if (!rows?.length) throw new Error(`No FX rates for ${minY}-${maxY}`);
+  const rows = [];
+  // World Bank caps multi-country responses; fetch in chunks.
+  for (let i = 0; i < codes.length; i += 12) {
+    const chunk = codes.slice(i, i + 12).join(";");
+    const url = `https://api.worldbank.org/v2/country/${chunk}/indicator/PA.NUS.FCRF?format=json&date=${minY}:${maxY}&per_page=500`;
+    const data = await fetchJson(url);
+    if (data[1]?.length) rows.push(...data[1]);
+  }
+  if (!rows.length) throw new Error(`No FX rates for ${minY}-${maxY}`);
   const latestByCountry = {};
   for (const row of rows) {
     if (row.value == null) continue;
@@ -364,28 +386,23 @@ function buildOecdTree(refArea, seriesDocs, labels, fx, year) {
   const total = byActivity.get("_T");
   if (!total) throw new Error(`${refArea}: missing _T for ${year}`);
   const countryNames = {
-    USA: "United States",
-    AUS: "Australia",
-    CAN: "Canada",
-    JPN: "Japan",
-    GBR: "United Kingdom",
-    DEU: "Germany",
-    FRA: "France",
-    ITA: "Italy",
-    CHN: "China",
-    IND: "India",
+    USA: "United States", AUS: "Australia", CAN: "Canada", JPN: "Japan",
+    GBR: "United Kingdom", DEU: "Germany", FRA: "France", ITA: "Italy",
+    CHN: "China", IND: "India", RUS: "Russia", BRA: "Brazil", ESP: "Spain",
+    KOR: "South Korea", MEX: "Mexico", TUR: "Türkiye", IDN: "Indonesia",
+    NLD: "Netherlands", SAU: "Saudi Arabia", CHE: "Switzerland",
+    POL: "Poland", BEL: "Belgium", IRL: "Ireland", ARG: "Argentina",
+    SWE: "Sweden", NOR: "Norway", THA: "Thailand", ARE: "United Arab Emirates",
+    SGP: "Singapore", NGA: "Nigeria", ZAF: "South Africa", AUT: "Austria",
+    ISR: "Israel", EGY: "Egypt", VNM: "Vietnam", BGD: "Bangladesh",
   };
   const currency = {
-    USA: "USD",
-    AUS: "AUD",
-    CAN: "CAD",
-    JPN: "JPY",
-    GBR: "GBP",
-    DEU: "EUR",
-    FRA: "EUR",
-    ITA: "EUR",
-    CHN: "CNY",
-    IND: "INR",
+    USA: "USD", AUS: "AUD", CAN: "CAD", JPN: "JPY", GBR: "GBP", DEU: "EUR",
+    FRA: "EUR", ITA: "EUR", CHN: "CNY", IND: "INR", RUS: "RUB", BRA: "BRL",
+    ESP: "EUR", KOR: "KRW", MEX: "MXN", TUR: "TRY", IDN: "IDR", NLD: "EUR",
+    SAU: "SAR", CHE: "CHF", POL: "PLN", BEL: "EUR", IRL: "EUR", ARG: "ARS",
+    SWE: "SEK", NOR: "NOK", THA: "THB", ARE: "AED", SGP: "SGD", NGA: "NGN",
+    ZAF: "ZAR", AUT: "EUR", ISR: "ILS", EGY: "EGP", VNM: "VND", BGD: "BDT",
   }[refArea];
   if (!currency) throw new Error(`No currency map for OECD ${refArea}`);
   const source = {
@@ -460,6 +477,16 @@ function buildOecdTree(refArea, seriesDocs, labels, fx, year) {
     ITA: "#2f7d6d",
     CHN: "#c45c26",
     IND: "#d4a017",
+    RUS: "#6b5c9a",
+    BRA: "#2f7d6d",
+    ESP: "#c45c26",
+    KOR: "#3c6ea8",
+    MEX: "#5a8f3c",
+    TUR: "#c45c26",
+    IDN: "#8a5a3c",
+    NLD: "#3d8a7a",
+    SAU: "#8a7358",
+    CHE: "#5c6b9a",
   };
   return {
     id: refArea.toLowerCase(),
@@ -537,6 +564,14 @@ export const COUNTRY_ORDER = ${JSON.stringify(
 
 function attachDemographics(tree, pop, yieldRow) {
   const gdpPerCapitaUsd = Math.round((tree.amountMillions * 1e6) / pop.population);
+  const yieldFields = yieldRow
+    ? {
+        bondYield10y: yieldRow.bondYield10y,
+        bondYield10yPeriod: yieldRow.bondYield10yPeriod,
+        bondYield10yUnit: yieldRow.bondYield10yUnit,
+        bondYield10yLabel: yieldRow.bondYield10yLabel,
+      }
+    : {};
   return {
     ...tree,
     population: pop.population,
@@ -548,14 +583,11 @@ function attachDemographics(tree, pop, yieldRow) {
     pct65PlusYear: pop.pct65PlusYear,
     pctUnder18Proxy: pop.pctUnder18Proxy,
     under18ProxyLabel: pop.under18ProxyLabel,
-    bondYield10y: yieldRow.bondYield10y,
-    bondYield10yPeriod: yieldRow.bondYield10yPeriod,
-    bondYield10yUnit: yieldRow.bondYield10yUnit,
-    bondYield10yLabel: yieldRow.bondYield10yLabel,
+    ...yieldFields,
     sources: [
       ...(tree.sources ?? []),
       ...(pop.sources ?? []),
-      ...(yieldRow.sources ?? []),
+      ...((yieldRow && yieldRow.sources) || []),
     ],
   };
 }
@@ -595,7 +627,7 @@ async function main() {
   yearsByCountry.AUS = new Date().getUTCFullYear();
   if (usa) yearsByCountry.USA = usa.year;
   else yearsByCountry.USA = OECD_PREFERRED_YEAR;
-  for (const c of NEW_CODES) yearsByCountry[c] = OECD_PREFERRED_YEAR;
+  for (const c of FX_PROVISIONAL_CODES) yearsByCountry[c] = OECD_PREFERRED_YEAR;
 
   console.log("Fetching FX…", yearsByCountry);
   let { rates: fx, fxYears } = await fetchFx(yearsByCountry);
@@ -634,11 +666,11 @@ async function main() {
   periodByCountry.AUS = aus.periodLabel ?? String(aus.year);
   sourceByCountry.AUS = aus.sourceKey ?? "abs";
 
-  console.log("Fetching Eurostat (Germany, France, Italy)…");
+  console.log("Fetching Eurostat (EU/EEA geos)…");
   const eurPerUsd = fx.DEU;
   if (eurPerUsd == null) throw new Error("Missing EUR/USD FX (DEU)");
   try {
-    const euTrees = await fetchEurostatCountries(["DE", "FR", "IT"], eurPerUsd);
+    const euTrees = await fetchEurostatCountries(EUROSTAT_GEOS, eurPerUsd);
     for (const t of euTrees) {
       trees.push(t);
       yearsByCountry[t.code] = t.year;
@@ -648,7 +680,7 @@ async function main() {
     }
   } catch (err) {
     console.error("  Eurostat failed:", err.message);
-    for (const code of ["DEU", "FRA", "ITA"]) {
+    for (const code of ["DEU", "FRA", "ITA", "ESP", "NLD", "POL", "BEL", "IRL", "SWE", "NOR", "AUT"]) {
       const t = await fetchOecdFallback(code, fx[code]);
       trees.push(t);
       yearsByCountry[code] = t.year;
@@ -658,28 +690,41 @@ async function main() {
     }
   }
 
-  console.log("Fetching World Bank industry (China, India)…");
-  for (const code of ["CHN", "IND"]) {
-    try {
-      const t = await fetchWorldBankIndustry(code);
-      trees.push(t);
-      yearsByCountry[code] = t.year;
-      periodByCountry[code] = t.periodLabel;
-      sourceByCountry[code] = "worldbank";
-      console.log(`  ${t.name}: $${(t.amountMillions / 1000).toFixed(1)}B · ${t.periodLabel}`);
-    } catch (err) {
-      console.error(`  ${code} WB failed:`, err.message);
-      const t = await fetchOecdFallback(code, fx[code]);
-      trees.push(t);
-      yearsByCountry[code] = t.year;
-      periodByCountry[code] = String(t.year);
-      sourceByCountry[code] = "oecd";
-      usedFallback.push(code);
+  console.log("Fetching World Bank industry…");
+  for (const code of WB_INDUSTRY_CODES) {
+    let ok = false;
+    for (let attempt = 1; attempt <= 3 && !ok; attempt++) {
+      try {
+        const t = await fetchWorldBankIndustry(code);
+        trees.push(t);
+        yearsByCountry[code] = t.year;
+        periodByCountry[code] = t.periodLabel;
+        sourceByCountry[code] = "worldbank";
+        console.log(`  ${t.name}: $${(t.amountMillions / 1000).toFixed(1)}B · ${t.periodLabel}`);
+        ok = true;
+      } catch (err) {
+        console.error(`  ${code} WB attempt ${attempt} failed:`, err.message);
+        if (attempt < 3) await new Promise((r) => setTimeout(r, 800 * attempt));
+      }
+    }
+    if (!ok) {
+      try {
+        const t = await fetchOecdFallback(code, fx[code] ?? 1);
+        trees.push(t);
+        yearsByCountry[code] = t.year;
+        periodByCountry[code] = String(t.year);
+        sourceByCountry[code] = "oecd";
+        usedFallback.push(code);
+      } catch (oecdErr) {
+        throw new Error(
+          `${code}: World Bank and OECD both failed (${oecdErr.message})`,
+        );
+      }
     }
   }
 
-  console.log("Fetching OECD (Japan, United Kingdom)…");
-  for (const code of ["JPN", "GBR"]) {
+  console.log("Fetching OECD Table 6 (JP, GB, MX, TR, CH)…");
+  for (const code of OECD_PRIMARY_CODES) {
     const t = await fetchOecdPrimary(code, fx[code]);
     trees.push(t);
     yearsByCountry[code] = t.year;
@@ -700,10 +745,12 @@ async function main() {
     const pop = popByCode[t.code];
     const yld = yieldByCode[t.code];
     if (!pop) throw new Error(`Missing population for ${t.code}`);
-    if (!yld) throw new Error(`Missing bond yield for ${t.code}`);
     const out = attachDemographics(t, pop, yld);
+    const yStr = yld
+      ? ` · 10y ${yld.bondYield10y}% (${yld.bondYield10yPeriod})`
+      : " · 10y n/a";
     console.log(
-      `  ${t.code} pop=${(pop.population / 1e6).toFixed(1)}M · GDP/cap $${out.gdpPerCapitaUsd.toLocaleString()} · 0–14 ${pop.pctUnder18Proxy}% · 65+ ${pop.pct65Plus}% · 10y ${yld.bondYield10y}% (${yld.bondYield10yPeriod})`,
+      `  ${t.code} pop=${(pop.population / 1e6).toFixed(1)}M · GDP/cap $${out.gdpPerCapitaUsd.toLocaleString()} · 0–14 ${pop.pctUnder18Proxy}% · 65+ ${pop.pct65Plus}%${yStr}`,
     );
     return out;
   });
@@ -750,9 +797,13 @@ async function main() {
       under18:
         "Under-18 uses World Bank SP.POP.0014.TO.ZS (ages 0–14) — closest freely published cohort to under 18.",
       ranking:
-        "Next 7 after USA exclude Canada/Australia (already on chart). Italy included instead of Russia (OECD SNA TABLE6 for RUS ends in 2020).",
+        "Batch 3 adds Poland, Belgium, Ireland, Argentina, Sweden, Norway, Thailand, UAE, Singapore, Nigeria, South Africa, Austria, Israel, Egypt, Vietnam, Bangladesh.",
+      batch2Sources:
+        "Eurostat for ES/NL; OECD Table 6 for MEX/TUR/CHE; World Bank sector VA for RUS/BRA/KOR/IDN/SAU.",
+      batch3Sources:
+        "Eurostat for PL/BE/IE/SE/NO/AT; World Bank sector VA for ARG/THA/ARE/SGP/NGA/ZAF/ISR/EGY/VNM/BGD.",
       bondYield10y:
-        "OECD KEI measure IRLT — long-term interest rates on government bonds with residual maturity of about 10 years (% per annum).",
+        "OECD KEI measure IRLT — long-term interest rates on government bonds with residual maturity of about 10 years (% per annum). Omitted when missing or older than 2022.",
     },
     sources: {
       bea: {
@@ -775,13 +826,13 @@ async function main() {
       },
       eurostat: {
         dataset: "Eurostat nama_10_a10 / nama_10_a64",
-        countries: ["DEU", "FRA", "ITA"],
+        countries: ["DEU", "FRA", "ITA", "ESP", "NLD", "POL", "BEL", "IRL", "SWE", "NOR", "AUT"],
         url: "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table",
         measure: "Gross value added (B1G), current prices, annual",
       },
       worldbank: {
         dataset: "World Bank WDI sector value added",
-        countries: ["CHN", "IND"],
+        countries: WB_INDUSTRY_CODES,
         url: "https://data.worldbank.org/indicator/NV.IND.TOTL.CD",
         measure: "GDP + agriculture / industry / manufacturing / services VA (USD)",
       },
@@ -789,7 +840,7 @@ async function main() {
         dataset: "OECD/DSD_NAMAIN10@DF_TABLE6",
         countries: oecdCountries,
         url: "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6",
-        measure: "Primary for JPN/GBR; fallback elsewhere — GVA current prices, annual",
+        measure: "Primary for JPN/GBR/MEX/TUR/CHE; fallback elsewhere — GVA current prices, annual",
       },
       population: {
         dataset: "World Bank WDI SP.POP.TOTL / 0014 / 65UP",
@@ -801,7 +852,7 @@ async function main() {
         dataset: "OECD/DSD_KEI@DF_KEI measure IRLT",
         countries: ALL_ISO3,
         url: "https://db.nomics.world/OECD/DSD_KEI@DF_KEI",
-        measure: "Long-term interest rates (~10-year government bonds), % per annum, monthly",
+        measure: "Long-term interest rates (~10-year government bonds), % per annum, monthly; omitted if missing/stale",
       },
     },
   };

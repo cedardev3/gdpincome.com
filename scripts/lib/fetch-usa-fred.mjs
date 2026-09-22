@@ -4,6 +4,8 @@
  * No API key required (public FRED CSV).
  */
 
+import { cachedFetchText } from "./http-cache.mjs";
+
 const FRED_CSV = (id) =>
   `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${id}`;
 
@@ -143,11 +145,9 @@ function shortenName(name) {
 }
 
 async function fetchFredSeries(seriesId) {
-  const res = await fetch(FRED_CSV(seriesId), {
+  const text = await cachedFetchText(FRED_CSV(seriesId), {
     headers: { "User-Agent": "gdpincome.com/0.1" },
   });
-  if (!res.ok) throw new Error(`FRED ${seriesId}: HTTP ${res.status}`);
-  const text = await res.text();
   if (!text.startsWith("observation_date")) {
     throw new Error(`FRED ${seriesId}: unexpected response`);
   }

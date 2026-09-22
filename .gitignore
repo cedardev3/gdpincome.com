@@ -42,3 +42,4 @@ next-env.d.ts
 
 # local source downloads used by data refresh scripts
 /tmp-*
+/scripts/.cache

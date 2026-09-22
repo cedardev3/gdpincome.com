@@ -1,18 +1,26 @@
 "use client";
 
 import { useId } from "react";
+import { FlagIcon } from "@/lib/flags";
 import {
   buildPieChart,
+  charsFitOnArc,
   formatMillions,
   formatPercent,
   hasChildren,
+  midAngle,
   pieSlicePath,
+  polar,
+  svgNum,
+  truncateLabel,
   type ChartNode,
   type PieSlice,
 } from "@/lib/pie";
 
 type DrilldownPieProps = {
   node: ChartNode;
+  /** World view: label with country code / flag. Deeper: truncated sector names. */
+  labelMode: "country" | "sector";
   hoveredId: string | null;
   onHover: (id: string | null) => void;
   onSelect: (id: string) => void;
@@ -22,9 +30,15 @@ const SIZE = 520;
 const CX = SIZE / 2;
 const CY = SIZE / 2;
 const RADIUS = 214;
+const LABEL_RADIUS = 148;
+/** Minimum sweep (radians) to place any on-slice label. */
+const MIN_SWEEP_LABEL = 0.2;
+const MIN_SWEEP_FLAG = 0.32;
+const MIN_CHARS_SECTOR = 4;
 
 export default function DrilldownPie({
   node,
+  labelMode,
   hoveredId,
   onHover,
   onSelect,
@@ -107,6 +121,15 @@ export default function DrilldownPie({
           />
         ))}
 
+        {/* Labels above wedges so they stay readable */}
+        {chart.slices.map((slice) => (
+          <SliceLabel
+            key={`label-${slice.id}`}
+            slice={slice}
+            labelMode={labelMode}
+          />
+        ))}
+
         <circle cx={CX} cy={CY} r={86} fill="#fbf8f2" />
         <text
           x={CX}
@@ -143,7 +166,7 @@ export default function DrilldownPie({
             </p>
           ) : null}
           <p className="mt-0.5 text-[10px] text-[#a89880]">
-            {hasChildren(hovered) ? "Click to open" : "No further detail"}
+            {hasChildren(hovered) ? "Tap to open" : "No further detail"}
           </p>
         </div>
       ) : null}
@@ -154,6 +177,93 @@ export default function DrilldownPie({
         </p>
       ) : null}
     </div>
+  );
+}
+
+function SliceLabel({
+  slice,
+  labelMode,
+}: {
+  slice: PieSlice;
+  labelMode: "country" | "sector";
+}) {
+  const sweep = slice.endAngle - slice.startAngle;
+  if (sweep < MIN_SWEEP_LABEL || slice.isOffset) return null;
+
+  const angle = midAngle(slice.startAngle, slice.endAngle);
+  const { x, y } = polar(CX, CY, LABEL_RADIUS, angle);
+
+  if (labelMode === "country") {
+    const code = slice.code;
+    if (!code) return null;
+    const showFlag = sweep >= MIN_SWEEP_FLAG;
+    if (showFlag) {
+      return (
+        <g pointerEvents="none" aria-hidden>
+          <foreignObject
+            x={svgNum(x - 18)}
+            y={svgNum(y - 16)}
+            width={36}
+            height={32}
+          >
+            <div className="flex flex-col items-center gap-0.5 leading-none">
+              <FlagIcon iso3={code} className="h-3 w-[1.125rem] rounded-[1px] shadow-sm" />
+              <span
+                className="text-[10px] font-semibold tabular-nums tracking-wide text-white"
+                style={{ textShadow: "0 0 3px rgba(0,0,0,.85), 0 1px 2px rgba(0,0,0,.7)" }}
+              >
+                {code}
+              </span>
+            </div>
+          </foreignObject>
+        </g>
+      );
+    }
+    return (
+      <text
+        x={svgNum(x)}
+        y={svgNum(y)}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        pointerEvents="none"
+        fill="#ffffff"
+        style={{
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: "0.04em",
+          paintOrder: "stroke",
+          stroke: "rgba(0,0,0,0.55)",
+          strokeWidth: 3,
+        }}
+      >
+        {code}
+      </text>
+    );
+  }
+
+  const maxChars = charsFitOnArc(LABEL_RADIUS, sweep, 6.2);
+  if (maxChars < MIN_CHARS_SECTOR) return null;
+  const label = truncateLabel(slice.name, Math.min(maxChars, 18));
+  if (!label) return null;
+
+  return (
+    <text
+      x={svgNum(x)}
+      y={svgNum(y)}
+      textAnchor="middle"
+      dominantBaseline="middle"
+      pointerEvents="none"
+      fill="#ffffff"
+      style={{
+        fontSize: sweep > 0.45 ? 11 : 9.5,
+        fontWeight: 650,
+        paintOrder: "stroke",
+        stroke: "rgba(0,0,0,0.55)",
+        strokeWidth: 3,
+      }}
+    >
+      {label}
+    </text>
   );
 }
 

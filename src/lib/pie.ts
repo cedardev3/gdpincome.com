@@ -245,15 +245,37 @@ function trimZeros(value: string): string {
 }
 
 /** Stable SVG numbers so SSR and client don't diverge on float noise. */
-function svgNum(n: number): string {
+export function svgNum(n: number): string {
   return (Math.round(n * 1e4) / 1e4).toString();
 }
 
-function polar(cx: number, cy: number, radius: number, angle: number) {
+export function polar(cx: number, cy: number, radius: number, angle: number) {
   return {
     x: cx + radius * Math.cos(angle),
     y: cy + radius * Math.sin(angle),
   };
+}
+
+export function midAngle(startAngle: number, endAngle: number): number {
+  return (startAngle + endAngle) / 2;
+}
+
+/** Approximate characters that fit along an arc at the given radius. */
+export function charsFitOnArc(
+  radius: number,
+  sweepRadians: number,
+  pxPerChar = 6.8,
+): number {
+  const arc = Math.abs(sweepRadians) * radius;
+  return Math.max(0, Math.floor(arc / pxPerChar));
+}
+
+export function truncateLabel(name: string, maxChars: number): string {
+  const trimmed = name.trim();
+  if (maxChars < 2) return "";
+  if (trimmed.length <= maxChars) return trimmed;
+  if (maxChars < 4) return trimmed.slice(0, maxChars);
+  return `${trimmed.slice(0, maxChars - 1)}…`;
 }
 
 export function pieSlicePath(

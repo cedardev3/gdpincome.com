@@ -1,8 +1,10 @@
 /**
- * China & India broad industry value added via World Bank WDI
+ * Broad industry value added via World Bank WDI
  * (compiled from national statistical offices).
- * Two-level: Agriculture / Industry (+ Manufacturing child) / Services.
+ * Two-level: Agriculture / Industry (+ Manufacturing child when available) / Services.
  */
+
+import { cachedFetchJson } from "./http-cache.mjs";
 
 const INDICATORS = {
   gdp: "NY.GDP.MKTP.CD",
@@ -15,6 +17,21 @@ const INDICATORS = {
 const META = {
   CHN: { id: "chn", name: "China", color: "#c45c26" },
   IND: { id: "ind", name: "India", color: "#d4a017" },
+  RUS: { id: "rus", name: "Russia", color: "#6b5c9a" },
+  BRA: { id: "bra", name: "Brazil", color: "#2f7d6d" },
+  KOR: { id: "kor", name: "South Korea", color: "#3c6ea8" },
+  IDN: { id: "idn", name: "Indonesia", color: "#8a5a3c" },
+  SAU: { id: "sau", name: "Saudi Arabia", color: "#8a7358" },
+  ARG: { id: "arg", name: "Argentina", color: "#6a8ab0" },
+  THA: { id: "tha", name: "Thailand", color: "#2a6f97" },
+  ARE: { id: "are", name: "United Arab Emirates", color: "#2f7d6d" },
+  SGP: { id: "sgp", name: "Singapore", color: "#c45c26" },
+  NGA: { id: "nga", name: "Nigeria", color: "#5a8f3c" },
+  ZAF: { id: "zaf", name: "South Africa", color: "#8a6b3c" },
+  ISR: { id: "isr", name: "Israel", color: "#3c6ea8" },
+  EGY: { id: "egy", name: "Egypt", color: "#c47a3c" },
+  VNM: { id: "vnm", name: "Vietnam", color: "#2f7d3c" },
+  BGD: { id: "bgd", name: "Bangladesh", color: "#5c6b9a" },
 };
 
 function shade(hex, factor) {
@@ -30,15 +47,26 @@ function round1(n) {
 
 async function fetchIndicator(iso3, indicator) {
   const url = `https://api.worldbank.org/v2/country/${iso3}/indicator/${indicator}?format=json&date=2018:2025&per_page=50`;
-  const j = await (await fetch(url, { headers: { "User-Agent": "gdpincome.com/0.1" } })).json();
-  const rows = (j[1] || []).filter((r) => r.value != null);
-  if (!rows.length) return null;
-  rows.sort((a, b) => Number(b.date) - Number(a.date));
-  return { year: Number(rows[0].date), value: Number(rows[0].value) };
+  let lastErr;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    try {
+      const j = await cachedFetchJson(url, {
+        headers: { "User-Agent": "gdpincome.com/0.1" },
+      });
+      const rows = (j[1] || []).filter((r) => r.value != null);
+      if (!rows.length) return null;
+      rows.sort((a, b) => Number(b.date) - Number(a.date));
+      return { year: Number(rows[0].date), value: Number(rows[0].value) };
+    } catch (err) {
+      lastErr = err;
+      await new Promise((r) => setTimeout(r, 600 * (attempt + 1)));
+    }
+  }
+  throw lastErr;
 }
 
 /**
- * @param {string} iso3 CHN | IND
+ * @param {string} iso3
  */
 export async function fetchWorldBankIndustry(iso3) {
   const meta = META[iso3];
@@ -55,14 +83,17 @@ export async function fetchWorldBankIndustry(iso3) {
     throw new Error(`World Bank incomplete industry VA for ${iso3}`);
   }
 
-  // Prefer a common year across series
-  const years = [gdp, agr, ind, mfg, srv].filter(Boolean).map((x) => x.year);
+  // Prefer a common year across series (mfg optional)
+  const years = [gdp, agr, ind, srv, mfg].filter(Boolean).map((x) => x.year);
   const year = Math.min(...years);
-  async function atYear(indicator) {
+  async function atYear(indicator, optional = false) {
     const url = `https://api.worldbank.org/v2/country/${iso3}/indicator/${indicator}?format=json&date=${year}&per_page=5`;
-    const j = await (await fetch(url, { headers: { "User-Agent": "gdpincome.com/0.1" } })).json();
+    const j = await cachedFetchJson(url, { headers: { "User-Agent": "gdpincome.com/0.1" } });
     const row = (j[1] || []).find((r) => r.value != null);
-    if (!row) throw new Error(`${iso3} ${indicator} missing ${year}`);
+    if (!row) {
+      if (optional) return null;
+      throw new Error(`${iso3} ${indicator} missing ${year}`);
+    }
     return Number(row.value);
   }
 
@@ -70,7 +101,7 @@ export async function fetchWorldBankIndustry(iso3) {
     atYear(INDICATORS.gdp),
     atYear(INDICATORS.agr),
     atYear(INDICATORS.ind),
-    atYear(INDICATORS.mfg),
+    atYear(INDICATORS.mfg, true),
     atYear(INDICATORS.srv),
   ]);
 
@@ -80,10 +111,9 @@ export async function fetchWorldBankIndustry(iso3) {
   };
 
   const toM = (usd) => usd / 1e6;
-  const otherInd = indY - mfgY;
-
-  const industryChildren = [
-    {
+  const industryChildren = [];
+  if (mfgY != null && mfgY > 0) {
+    industryChildren.push({
       id: `${meta.id}-mfg`,
       name: "Manufacturing",
       code: "MFG",
@@ -93,20 +123,21 @@ export async function fetchWorldBankIndustry(iso3) {
       sources: [source],
       year,
       periodLabel: String(year),
-    },
-  ];
-  if (otherInd > 0) {
-    industryChildren.push({
-      id: `${meta.id}-ind-other`,
-      name: "Other industry (excl. manufacturing)",
-      code: "IND_OTH",
-      amountMillions: round1(toM(otherInd)),
-      color: shade("#2a6f97", 0.65),
-      description: `Industry minus manufacturing, ${year}.`,
-      sources: [source],
-      year,
-      periodLabel: String(year),
     });
+    const otherInd = indY - mfgY;
+    if (otherInd > 0) {
+      industryChildren.push({
+        id: `${meta.id}-ind-other`,
+        name: "Other industry (excl. manufacturing)",
+        code: "IND_OTH",
+        amountMillions: round1(toM(otherInd)),
+        color: shade("#2a6f97", 0.65),
+        description: `Industry minus manufacturing, ${year}.`,
+        sources: [source],
+        year,
+        periodLabel: String(year),
+      });
+    }
   }
 
   const sections = [
@@ -131,7 +162,7 @@ export async function fetchWorldBankIndustry(iso3) {
       sources: [source],
       year,
       periodLabel: String(year),
-      children: industryChildren,
+      ...(industryChildren.length > 0 ? { children: industryChildren } : {}),
     },
     {
       id: `${meta.id}-srv`,

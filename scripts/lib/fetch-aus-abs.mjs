@@ -3,6 +3,8 @@
  * Chain volume measures, quarterly SA levels → ×4 for annualized USD millions.
  */
 
+import { cachedFetchText } from "./http-cache.mjs";
+
 const ABS_URL =
   "https://data.api.abs.gov.au/rest/data/ABS,ANA_IND_GVA,1.0.0/all?startPeriod=2023&format=csvfilewithlabels";
 
@@ -101,11 +103,9 @@ export async function fetchAusFromAbs(fxAudPerUsd) {
     url: "https://data.worldbank.org/indicator/PA.NUS.FCRF",
   };
 
-  const res = await fetch(ABS_URL, {
+  const text = await cachedFetchText(ABS_URL, {
     headers: { "User-Agent": "gdpincome.com/0.1", Accept: "text/csv" },
   });
-  if (!res.ok) throw new Error(`ABS ANA_IND_GVA: HTTP ${res.status}`);
-  const text = await res.text();
   const lines = text.trim().split(/\r?\n/);
   if (lines.length < 2) throw new Error("ABS ANA_IND_GVA: empty CSV");
 
