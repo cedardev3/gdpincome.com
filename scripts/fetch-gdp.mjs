@@ -551,17 +551,34 @@ export type CountryGdpTree = ChartNode & {
   sourceKey?: "bea" | "statcan" | "abs" | "eurostat" | "worldbank" | "oecd";
   population?: number;
   populationYear?: number;
+  populationPrior5y?: number | null;
+  populationPrior5yYear?: number | null;
   gdpPerCapitaUsd?: number;
+  gdpPerCapitaWbUsd?: number | null;
+  gdpPerCapitaWbYear?: number | null;
+  gdpPerCapitaWbPrior5yUsd?: number | null;
+  gdpPerCapitaWbPrior5yYear?: number | null;
+  cpiIndex?: number | null;
+  cpiYear?: number | null;
+  cpiPrior5y?: number | null;
+  cpiPrior5yYear?: number | null;
+  inflationCumulative5yPct?: number | null;
   pctUnder15?: number | null;
   pctUnder15Year?: number | null;
+  pctUnder15Prior5y?: number | null;
+  pctUnder15Prior5yYear?: number | null;
   pct65Plus?: number | null;
   pct65PlusYear?: number | null;
+  pct65PlusPrior5y?: number | null;
+  pct65PlusPrior5yYear?: number | null;
   pctUnder18Proxy?: number | null;
   under18ProxyLabel?: string;
   bondYield10y?: number;
   bondYield10yPeriod?: string;
   bondYield10yUnit?: string;
   bondYield10yLabel?: string;
+  bondYield10yPrior5y?: number | null;
+  bondYield10yPrior5yPeriod?: string | null;
 };
 
 export const GDP_DATA_META = ${JSON.stringify(meta, null, 2)} as const;
@@ -587,17 +604,34 @@ function attachDemographics(tree, pop, yieldRow) {
         bondYield10yPeriod: yieldRow.bondYield10yPeriod,
         bondYield10yUnit: yieldRow.bondYield10yUnit,
         bondYield10yLabel: yieldRow.bondYield10yLabel,
+        bondYield10yPrior5y: yieldRow.bondYield10yPrior5y ?? null,
+        bondYield10yPrior5yPeriod: yieldRow.bondYield10yPrior5yPeriod ?? null,
       }
     : {};
   return {
     ...tree,
     population: pop.population,
     populationYear: pop.populationYear,
+    populationPrior5y: pop.populationPrior5y ?? null,
+    populationPrior5yYear: pop.populationPrior5yYear ?? null,
     gdpPerCapitaUsd,
+    gdpPerCapitaWbUsd: pop.gdpPerCapitaWbUsd ?? null,
+    gdpPerCapitaWbYear: pop.gdpPerCapitaWbYear ?? null,
+    gdpPerCapitaWbPrior5yUsd: pop.gdpPerCapitaWbPrior5yUsd ?? null,
+    gdpPerCapitaWbPrior5yYear: pop.gdpPerCapitaWbPrior5yYear ?? null,
+    cpiIndex: pop.cpiIndex ?? null,
+    cpiYear: pop.cpiYear ?? null,
+    cpiPrior5y: pop.cpiPrior5y ?? null,
+    cpiPrior5yYear: pop.cpiPrior5yYear ?? null,
+    inflationCumulative5yPct: pop.inflationCumulative5yPct ?? null,
     pctUnder15: pop.pctUnder15,
     pctUnder15Year: pop.pctUnder15Year,
+    pctUnder15Prior5y: pop.pctUnder15Prior5y ?? null,
+    pctUnder15Prior5yYear: pop.pctUnder15Prior5yYear ?? null,
     pct65Plus: pop.pct65Plus,
     pct65PlusYear: pop.pct65PlusYear,
+    pct65PlusPrior5y: pop.pct65PlusPrior5y ?? null,
+    pct65PlusPrior5yYear: pop.pct65PlusPrior5yYear ?? null,
     pctUnder18Proxy: pop.pctUnder18Proxy,
     under18ProxyLabel: pop.under18ProxyLabel,
     ...yieldFields,

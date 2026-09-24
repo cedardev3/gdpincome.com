@@ -7,6 +7,10 @@ import {
   charsFitOnArc,
   formatMillions,
   formatPercent,
+  fiveYearDeltaClassOnDark,
+  gdpTotalFiveYearDelta,
+  inflationFiveYearDrag,
+  realGdpFiveYearDelta,
   hasChildren,
   midAngle,
   pieSlicePath,
@@ -24,6 +28,9 @@ type DrilldownPieProps = {
   hoveredId: string | null;
   onHover: (id: string | null) => void;
   onSelect: (id: string) => void;
+  /** Show a back control when drilled in. */
+  canGoBack?: boolean;
+  onBack?: () => void;
 };
 
 const SIZE = 520;
@@ -42,6 +49,8 @@ export default function DrilldownPie({
   hoveredId,
   onHover,
   onSelect,
+  canGoBack = false,
+  onBack,
 }: DrilldownPieProps) {
   const glowId = useId();
   const hatchId = useId();
@@ -61,6 +70,19 @@ export default function DrilldownPie({
 
   return (
     <div className="relative mx-auto w-full max-w-[520px]">
+      {canGoBack && onBack ? (
+        <button
+          type="button"
+          onClick={onBack}
+          className="absolute left-0 top-0 z-10 inline-flex items-center gap-1.5 rounded-md border border-[#d4c8b4] bg-[#f7f3ec]/95 px-3 py-1.5 text-sm font-semibold text-[#1f3d4d] shadow-sm backdrop-blur-sm transition hover:border-[#1f3d4d] hover:bg-[#ebe4d8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2a6f97]"
+          aria-label="Go back"
+        >
+          <span aria-hidden className="text-base leading-none">
+            ←
+          </span>
+          Back
+        </button>
+      ) : null}
       <svg
         viewBox={`0 0 ${SIZE} ${SIZE}`}
         role="img"
@@ -160,6 +182,31 @@ export default function DrilldownPie({
               ? ` · ${hovered.periodLabel ?? hovered.year}`
               : ""}
           </p>
+          {(() => {
+            const gdp5yr = gdpTotalFiveYearDelta(hovered);
+            const inflation = inflationFiveYearDrag(hovered);
+            const real = realGdpFiveYearDelta(hovered);
+            if (!gdp5yr && !inflation && !real) return null;
+            return (
+              <div className="mt-0.5 space-y-0.5 text-xs font-medium tabular-nums">
+                {gdp5yr ? (
+                  <p className={fiveYearDeltaClassOnDark(gdp5yr.tone)}>
+                    {gdp5yr.text}
+                  </p>
+                ) : null}
+                {inflation ? (
+                  <p className={fiveYearDeltaClassOnDark(inflation.tone)}>
+                    inflation {inflation.text}
+                  </p>
+                ) : null}
+                {real ? (
+                  <p className={fiveYearDeltaClassOnDark(real.tone)}>
+                    real {real.text}
+                  </p>
+                ) : null}
+              </div>
+            );
+          })()}
           {hovered.sources?.length ? (
             <p className="mt-0.5 text-[10px] leading-snug text-[#c4b59a]">
               Source: {hovered.sources.map((s) => s.label).join(" · ")}

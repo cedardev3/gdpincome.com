@@ -19,6 +19,12 @@ export type ChartNode = {
   year?: number;
   periodLabel?: string;
   children?: ChartNode[];
+  /** Optional demographics (present on country roots). */
+  population?: number;
+  populationPrior5y?: number | null;
+  gdpPerCapitaWbUsd?: number | null;
+  gdpPerCapitaWbPrior5yUsd?: number | null;
+  inflationCumulative5yPct?: number | null;
 };
 
 export type PieSlice = ChartNode & {
@@ -238,6 +244,101 @@ export function formatPopulation(n: number): string {
     return `${trimZeros((n / 1_000_000).toFixed(1))} million`;
   }
   return n.toLocaleString("en-US");
+}
+
+export type FiveYearDelta = {
+  text: string;
+  tone: "up" | "down" | "flat";
+  /** Raw percentage points (positive = increase). */
+  pct: number;
+};
+
+function formatFiveYearPct(pct: number): FiveYearDelta {
+  const tone: FiveYearDelta["tone"] =
+    pct > 0.005 ? "up" : pct < -0.005 ? "down" : "flat";
+  const sign = pct > 0.005 ? "+" : pct < -0.005 ? "−" : "";
+  const abs = Math.abs(pct);
+  const decimals = abs >= 10 ? 1 : 2;
+  return {
+    text: `${sign}${abs.toFixed(decimals)}% (5yr)`,
+    tone,
+    pct,
+  };
+}
+
+/** Relative % change formatted like `+3.27% (5yr)`. */
+export function fiveYearDelta(
+  current: number | null | undefined,
+  prior: number | null | undefined,
+): FiveYearDelta | null {
+  if (current == null || prior == null) return null;
+  if (!Number.isFinite(current) || !Number.isFinite(prior)) return null;
+  if (Math.abs(prior) < 1e-9) return null;
+  const pct = ((current - prior) / Math.abs(prior)) * 100;
+  return formatFiveYearPct(pct);
+}
+
+type WithGdpFiveYearFields = {
+  gdpPerCapitaWbUsd?: number | null;
+  gdpPerCapitaWbPrior5yUsd?: number | null;
+  population?: number | null;
+  populationPrior5y?: number | null;
+  inflationCumulative5yPct?: number | null;
+};
+
+/** Nominal total GDP 5y change from World Bank GDP/capita × population. */
+export function gdpTotalFiveYearDelta(
+  node: WithGdpFiveYearFields,
+): FiveYearDelta | null {
+  const now =
+    node.gdpPerCapitaWbUsd != null && node.population != null
+      ? node.gdpPerCapitaWbUsd * node.population
+      : null;
+  const prior =
+    node.gdpPerCapitaWbPrior5yUsd != null && node.populationPrior5y != null
+      ? node.gdpPerCapitaWbPrior5yUsd * node.populationPrior5y
+      : null;
+  return fiveYearDelta(now, prior);
+}
+
+/**
+ * Cumulative CPI shown as a drag on growth (always the negative of price rise
+ * when inflation is positive). Example: 18% CPI rise → `−18.0% (5yr)`.
+ */
+export function inflationFiveYearDrag(
+  node: WithGdpFiveYearFields,
+): FiveYearDelta | null {
+  const cum = node.inflationCumulative5yPct;
+  if (cum == null || !Number.isFinite(cum)) return null;
+  return formatFiveYearPct(-cum);
+}
+
+/**
+ * Inflation-adjusted GDP change: nominal growth − cumulative inflation.
+ * Inflation is treated as a negative contribution to the net.
+ */
+export function realGdpFiveYearDelta(
+  node: WithGdpFiveYearFields,
+): FiveYearDelta | null {
+  const nominal = gdpTotalFiveYearDelta(node);
+  const inflation = node.inflationCumulative5yPct;
+  if (nominal == null || inflation == null || !Number.isFinite(inflation)) {
+    return null;
+  }
+  return formatFiveYearPct(nominal.pct - inflation);
+}
+
+export function fiveYearDeltaClass(tone: FiveYearDelta["tone"]): string {
+  if (tone === "up") return "text-[#2f7d3c]";
+  if (tone === "down") return "text-[#c45c26]";
+  return "text-[#8a7358]";
+}
+
+/** Tooltip-friendly class on dark pie hover chip. */
+export function fiveYearDeltaClassOnDark(tone: FiveYearDelta["tone"]): string {
+  if (tone === "up") return "text-[#8fd99a]";
+  if (tone === "down") return "text-[#f0a070]";
+  return "text-[#e8dcc8]";
 }
 
 function trimZeros(value: string): string {

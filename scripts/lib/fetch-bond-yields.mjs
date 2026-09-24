@@ -2,8 +2,9 @@
  * 10-year government bond yields via OECD Key Economic Indicators (IRLT)
  * through DBnomics — long-term interest rates ≈ residual maturity ~10 years.
  *
- * Missing or stale series (older than MIN_PERIOD_YEAR) are omitted — callers
- * must not invent placeholder yields.
+ * Missing or stale series (latest older than MIN_LATEST_YEAR) are omitted —
+ * callers must not invent placeholder yields. When a latest yield exists, also
+ * attach an observation ~5 years earlier when available.
  */
 
 import { cachedFetchJson } from "./http-cache.mjs";
@@ -13,8 +14,8 @@ const SOURCE = {
   label: "OECD long-term interest rates (IRLT / ~10y govt bonds)",
   url: "https://db.nomics.world/OECD/DSD_KEI@DF_KEI",
 };
-/** Drop observations before this calendar year (e.g. Russia IRLT ends 2018). */
-const MIN_PERIOD_YEAR = 2022;
+/** Drop series whose latest observation is before this calendar year. */
+const MIN_LATEST_YEAR = 2022;
 
 function round4(n) {
   return Math.round(n * 10000) / 10000;
@@ -25,17 +26,28 @@ function periodYear(period) {
   return Number.isFinite(y) ? y : null;
 }
 
-function latestObservation(doc) {
+/** Rough month index for YYYY or YYYY-MM periods. */
+function periodIndex(period) {
+  const s = String(period);
+  const y = Number(s.slice(0, 4));
+  if (!Number.isFinite(y)) return null;
+  const m = s.length >= 7 ? Number(s.slice(5, 7)) : 6;
+  if (!Number.isFinite(m)) return y * 12 + 6;
+  return y * 12 + m;
+}
+
+function usableObservations(doc) {
   const periods = doc.period ?? [];
   const values = doc.value ?? [];
-  for (let i = periods.length - 1; i >= 0; i--) {
+  const out = [];
+  for (let i = 0; i < periods.length; i++) {
     const v = values[i];
     if (v == null || Number.isNaN(Number(v))) continue;
-    const y = periodYear(periods[i]);
-    if (y == null || y < MIN_PERIOD_YEAR) continue;
-    return { period: String(periods[i]), value: Number(v) };
+    const idx = periodIndex(periods[i]);
+    if (idx == null) continue;
+    out.push({ period: String(periods[i]), value: Number(v), idx });
   }
-  return null;
+  return out;
 }
 
 /**
@@ -51,6 +63,7 @@ export async function fetchBondYieldsBundle(iso3List) {
       UNIT_MEASURE: ["PA"],
     }),
   );
+  // observations=1 tells DBnomics to include the full observation series
   const url = `https://api.db.nomics.world/v22/series/${DATASET}?dimensions=${dimensions}&limit=100&observations=1`;
   const data = await cachedFetchJson(url, {
     headers: { "User-Agent": "gdpincome.com/0.1", Accept: "application/json" },
@@ -61,16 +74,39 @@ export async function fetchBondYieldsBundle(iso3List) {
   for (const doc of docs) {
     const code = doc.dimensions?.REF_AREA;
     if (!code || !iso3List.includes(code)) continue;
-    const latest = latestObservation(doc);
-    if (!latest) {
-      console.warn(`  OECD IRLT: no usable (>=${MIN_PERIOD_YEAR}) observation for ${code}`);
+    const obs = usableObservations(doc);
+    if (!obs.length) {
+      console.warn(`  OECD IRLT: no observations for ${code}`);
       continue;
     }
+    const latest = obs[obs.length - 1];
+    const latestY = periodYear(latest.period);
+    if (latestY == null || latestY < MIN_LATEST_YEAR) {
+      console.warn(`  OECD IRLT: no usable (>=${MIN_LATEST_YEAR}) observation for ${code}`);
+      continue;
+    }
+
+    const targetIdx = latest.idx - 5 * 12;
+    let prior = null;
+    let bestDist = Infinity;
+    for (const row of obs) {
+      if (row.period === latest.period) continue;
+      const dist = Math.abs(row.idx - targetIdx);
+      if (dist < bestDist) {
+        bestDist = dist;
+        prior = row;
+      }
+    }
+    // Require prior within ~18 months of the 5y target so we don't pair 2010 with 2025
+    if (prior && bestDist > 18) prior = null;
+
     out[code] = {
       bondYield10y: round4(latest.value),
       bondYield10yPeriod: latest.period,
       bondYield10yUnit: "% p.a.",
       bondYield10yLabel: "10-year government bond yield",
+      bondYield10yPrior5y: prior ? round4(prior.value) : null,
+      bondYield10yPrior5yPeriod: prior?.period ?? null,
       sources: [SOURCE],
     };
   }

@@ -15,21 +15,38 @@ export type CountryGdpTree = ChartNode & {
   sourceKey?: "bea" | "statcan" | "abs" | "eurostat" | "worldbank" | "oecd";
   population?: number;
   populationYear?: number;
+  populationPrior5y?: number | null;
+  populationPrior5yYear?: number | null;
   gdpPerCapitaUsd?: number;
+  gdpPerCapitaWbUsd?: number | null;
+  gdpPerCapitaWbYear?: number | null;
+  gdpPerCapitaWbPrior5yUsd?: number | null;
+  gdpPerCapitaWbPrior5yYear?: number | null;
+  cpiIndex?: number | null;
+  cpiYear?: number | null;
+  cpiPrior5y?: number | null;
+  cpiPrior5yYear?: number | null;
+  inflationCumulative5yPct?: number | null;
   pctUnder15?: number | null;
   pctUnder15Year?: number | null;
+  pctUnder15Prior5y?: number | null;
+  pctUnder15Prior5yYear?: number | null;
   pct65Plus?: number | null;
   pct65PlusYear?: number | null;
+  pct65PlusPrior5y?: number | null;
+  pct65PlusPrior5yYear?: number | null;
   pctUnder18Proxy?: number | null;
   under18ProxyLabel?: string;
   bondYield10y?: number;
   bondYield10yPeriod?: string;
   bondYield10yUnit?: string;
   bondYield10yLabel?: string;
+  bondYield10yPrior5y?: number | null;
+  bondYield10yPrior5yPeriod?: string | null;
 };
 
 export const GDP_DATA_META = {
-  "fetchedAt": "2026-09-24T05:19:57.051Z",
+  "fetchedAt": "2026-09-24T06:35:26.015Z",
   "yearsByCountry": {
     "CAN": 2026,
     "AUS": 2026,
@@ -485,6 +502,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -960,17 +985,34 @@ export const WORLD_GDP = {
       ],
       "population": 341784857,
       "populationYear": 2025,
+      "populationPrior5y": 331578104,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 93233,
+      "gdpPerCapitaWbUsd": 90027,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 64465,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 143.9,
+      "cpiYear": 2024,
+      "cpiPrior5y": 117.2,
+      "cpiPrior5yYear": 2019,
+      "inflationCumulative5yPct": 22.7,
       "pctUnder15": 17.1,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 18.4,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 18.4,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 16.1,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 17.1,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 4.48,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 1.62,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "chn",
@@ -987,6 +1029,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -1084,17 +1134,34 @@ export const WORLD_GDP = {
       ],
       "population": 1406585000,
       "populationYear": 2025,
+      "populationPrior5y": 1411100000,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 13862,
+      "gdpPerCapitaWbUsd": 13862,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 10627,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 132.6,
+      "cpiYear": 2025,
+      "cpiPrior5y": 128.1,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 3.5,
       "pctUnder15": 15.4,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 18,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 14.9,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 12.6,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 15.4,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 1.75,
       "bondYield10yPeriod": "2026-04",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 3.164,
+      "bondYield10yPrior5yPeriod": "2021-04"
     },
     {
       "id": "deu",
@@ -1115,6 +1182,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -1330,17 +1405,34 @@ export const WORLD_GDP = {
       ],
       "population": 83491249,
       "populationYear": 2025,
+      "populationPrior5y": 83160871,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 53209,
+      "gdpPerCapitaWbUsd": 60496,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 47395,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 137.8,
+      "cpiYear": 2025,
+      "cpiPrior5y": 113,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 21.9,
       "pctUnder15": 13.9,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 13.8,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 23.7,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 21.8,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 13.9,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 3.0465,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": -0.2235,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "jpn",
@@ -1361,6 +1453,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -1918,17 +2018,34 @@ export const WORLD_GDP = {
       ],
       "population": 123366734,
       "populationYear": 2025,
+      "populationPrior5y": 126261000,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 33681,
+      "gdpPerCapitaWbUsd": 35951,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 41099,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 118,
+      "cpiYear": 2025,
+      "cpiPrior5y": 105.5,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 11.9,
       "pctUnder15": 11.2,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 12.2,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 30,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 28.9,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 11.2,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 2.65,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 0.08,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "ind",
@@ -1945,6 +2062,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -2042,17 +2167,34 @@ export const WORLD_GDP = {
       ],
       "population": 1463865525,
       "populationYear": 2025,
+      "populationPrior5y": 1402617695,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 2702,
+      "gdpPerCapitaWbUsd": 2702,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 1907,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 233.1,
+      "cpiYear": 2025,
+      "cpiPrior5y": 183,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 27.4,
       "pctUnder15": 24.2,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 26.3,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 7.4,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 6.4,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 24.2,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 7.02,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 6.2254,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "gbr",
@@ -2073,6 +2215,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -3532,17 +3682,34 @@ export const WORLD_GDP = {
       ],
       "population": 69487000,
       "populationYear": 2025,
+      "populationPrior5y": 66740000,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 45935,
+      "gdpPerCapitaWbUsd": 57602,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 40815,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 153.1,
+      "cpiYear": 2025,
+      "cpiPrior5y": 120.8,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 26.8,
       "pctUnder15": 17,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 18,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 19.7,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 18.6,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 17,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 4.9416,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 0.9058,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "fra",
@@ -3563,6 +3730,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -4088,17 +4263,34 @@ export const WORLD_GDP = {
       ],
       "population": 68720337,
       "populationYear": 2025,
+      "populationPrior5y": 67601110,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 41974,
+      "gdpPerCapitaWbUsd": 48986,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 39170,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 127.7,
+      "cpiYear": 2025,
+      "cpiPrior5y": 110.6,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 15.5,
       "pctUnder15": 16.2,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 17.4,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 22.5,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 20.7,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 16.2,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 3.7416,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 0.2107,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "rus",
@@ -4115,6 +4307,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -4208,11 +4408,26 @@ export const WORLD_GDP = {
       ],
       "population": 143513328,
       "populationYear": 2025,
+      "populationPrior5y": 145245148,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 17847,
+      "gdpPerCapitaWbUsd": 17547,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 10108,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 283,
+      "cpiYear": 2025,
+      "cpiPrior5y": 186.9,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 51.5,
       "pctUnder15": 17,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 17.7,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 17.8,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 15.5,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 17,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -4231,6 +4446,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -4328,17 +4551,34 @@ export const WORLD_GDP = {
       ],
       "population": 212812405,
       "populationYear": 2025,
+      "populationPrior5y": 208660842,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 10713,
+      "gdpPerCapitaWbUsd": 10713,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 7074,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 234.4,
+      "cpiYear": 2025,
+      "cpiPrior5y": 172.8,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 35.7,
       "pctUnder15": 19.4,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 20.8,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 11.5,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 9.6,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 19.4,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 9.13,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 4.61,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "ita",
@@ -4359,6 +4599,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -4884,17 +5132,34 @@ export const WORLD_GDP = {
       ],
       "population": 58915656,
       "populationYear": 2025,
+      "populationPrior5y": 59438851,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 37012,
+      "gdpPerCapitaWbUsd": 43309,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 32091,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 131.9,
+      "cpiYear": 2025,
+      "cpiPrior5y": 110.5,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 19.4,
       "pctUnder15": 11.7,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 12.8,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 25.1,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 23.4,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 11.7,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 3.818,
       "bondYield10yPeriod": "2026-04",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 0.797,
+      "bondYield10yPrior5yPeriod": "2021-04"
     },
     {
       "id": "kor",
@@ -4911,6 +5176,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -5008,17 +5281,34 @@ export const WORLD_GDP = {
       ],
       "population": 51684564,
       "populationYear": 2025,
+      "populationPrior5y": 51836239,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 36227,
+      "gdpPerCapitaWbUsd": 36227,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 33646,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 135,
+      "cpiYear": 2025,
+      "cpiPrior5y": 115.8,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 16.6,
       "pctUnder15": 10.2,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 12.1,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 20.3,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 15.8,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 10.2,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 4.075,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 2.131,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "mex",
@@ -5039,6 +5329,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -7126,17 +7424,34 @@ export const WORLD_GDP = {
       ],
       "population": 131946900,
       "populationYear": 2025,
+      "populationPrior5y": 126799054,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 12972,
+      "gdpPerCapitaWbUsd": 13889,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 8841,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 191.5,
+      "cpiYear": 2025,
+      "cpiPrior5y": 146.4,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 30.8,
       "pctUnder15": 24.1,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 26,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 8.5,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 7.5,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 24.1,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 9.45,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 6.68,
+      "bondYield10yPrior5yPeriod": "2021-04"
     },
     {
       "id": "can",
@@ -7157,6 +7472,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -9610,17 +9933,34 @@ export const WORLD_GDP = {
       ],
       "population": 41651653,
       "populationYear": 2025,
+      "populationPrior5y": 38028638,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 40686,
+      "gdpPerCapitaWbUsd": 55698,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 43538,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 141,
+      "cpiYear": 2025,
+      "cpiPrior5y": 117.6,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 19.9,
       "pctUnder15": 15,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 15.9,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 20.3,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 18,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 15,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 3.5415,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 1.524,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "aus",
@@ -9641,6 +9981,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -10676,17 +11024,34 @@ export const WORLD_GDP = {
       ],
       "population": 27614411,
       "populationYear": 2025,
+      "populationPrior5y": 25649248,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 61091,
+      "gdpPerCapitaWbUsd": 65130,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 51983,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 148.5,
+      "cpiYear": 2025,
+      "cpiPrior5y": 120.8,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 22.9,
       "pctUnder15": 17.7,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 18.6,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 18.1,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 16.3,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 17.7,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 4.99,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 1.66,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "esp",
@@ -10707,6 +11072,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -10922,17 +11295,34 @@ export const WORLD_GDP = {
       ],
       "population": 49355143,
       "populationYear": 2025,
+      "populationPrior5y": 47359424,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 33527,
+      "gdpPerCapitaWbUsd": 38627,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 27234,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 135,
+      "cpiYear": 2025,
+      "cpiPrior5y": 110.6,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 22.1,
       "pctUnder15": 12.6,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 14.2,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 21.6,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 19.6,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 12.6,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 3.4823,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 0.5166,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "idn",
@@ -10949,6 +11339,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -11046,17 +11444,34 @@ export const WORLD_GDP = {
       ],
       "population": 285721236,
       "populationYear": 2025,
+      "populationPrior5y": 274814866,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 5060,
+      "gdpPerCapitaWbUsd": 5060,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 3854,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 176,
+      "cpiYear": 2025,
+      "cpiPrior5y": 154.1,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 14.3,
       "pctUnder15": 24.2,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 25.8,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 7.5,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 6.6,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 24.2,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 7.01,
       "bondYield10yPeriod": "2024-12",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 7.0722,
+      "bondYield10yPrior5yPeriod": "2019-12"
     },
     {
       "id": "sau",
@@ -11073,6 +11488,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -11166,11 +11589,26 @@ export const WORLD_GDP = {
       ],
       "population": 36973555,
       "populationYear": 2025,
+      "populationPrior5y": 31552510,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 34537,
+      "gdpPerCapitaWbUsd": 34537,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 24339,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 138.6,
+      "cpiYear": 2025,
+      "cpiPrior5y": 123.5,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 12.2,
       "pctUnder15": 23.6,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 25.5,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 3.1,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 2.5,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 23.6,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -11193,6 +11631,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2024,
@@ -11604,11 +12050,26 @@ export const WORLD_GDP = {
       ],
       "population": 85878556,
       "populationYear": 2025,
+      "populationPrior5y": 83384680,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 14061,
+      "gdpPerCapitaWbUsd": 18599,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 8798,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 1784.3,
+      "cpiYear": 2025,
+      "cpiPrior5y": 263.2,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 577.9,
       "pctUnder15": 21,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 22.8,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 10.6,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 9,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 21,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -11631,6 +12092,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -12156,17 +12625,34 @@ export const WORLD_GDP = {
       ],
       "population": 18087633,
       "populationYear": 2025,
+      "populationPrior5y": 17441500,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 62823,
+      "gdpPerCapitaWbUsd": 73684,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 53468,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 146.9,
+      "cpiYear": 2025,
+      "cpiPrior5y": 117.4,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 25.2,
       "pctUnder15": 14.9,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 15.6,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 20.9,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 19.4,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 14.9,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 3.15,
       "bondYield10yPeriod": "2026-04",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": -0.296,
+      "bondYield10yPrior5yPeriod": "2021-04"
     },
     {
       "id": "che",
@@ -12187,6 +12673,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -13544,17 +14038,34 @@ export const WORLD_GDP = {
       ],
       "population": 9092436,
       "populationYear": 2025,
+      "populationPrior5y": 8638167,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 103984,
+      "gdpPerCapitaWbUsd": 114769,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 87530,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 105.7,
+      "cpiYear": 2025,
+      "cpiPrior5y": 98.8,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 6.9,
       "pctUnder15": 14.9,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 15.1,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 20.4,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 18.8,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 14.9,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 0.44,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": -0.134,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "pol",
@@ -13575,6 +14086,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -13790,17 +14309,34 @@ export const WORLD_GDP = {
       ],
       "population": 36435861,
       "populationYear": 2025,
+      "populationPrior5y": 37515748,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 24155,
+      "gdpPerCapitaWbUsd": 28420,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 16151,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 170.4,
+      "cpiYear": 2025,
+      "cpiPrior5y": 118,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 44.5,
       "pctUnder15": 14.5,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 15.5,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 20.8,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 18.1,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 14.5,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 5.74,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 1.82,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "arg",
@@ -13817,6 +14353,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -13910,11 +14454,26 @@ export const WORLD_GDP = {
       ],
       "population": 45851378,
       "populationYear": 2025,
+      "populationPrior5y": 45191965,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 14898,
+      "gdpPerCapitaWbUsd": 14898,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 8536,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": null,
+      "cpiYear": null,
+      "cpiPrior5y": null,
+      "cpiPrior5yYear": null,
+      "inflationCumulative5yPct": null,
       "pctUnder15": 21,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 23.7,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 12.6,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 11.8,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 21,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -13937,6 +14496,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -14152,17 +14719,34 @@ export const WORLD_GDP = {
       ],
       "population": 11941781,
       "populationYear": 2025,
+      "populationPrior5y": 11538604,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 52703,
+      "gdpPerCapitaWbUsd": 60750,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 45906,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 145.7,
+      "cpiYear": 2025,
+      "cpiPrior5y": 118,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 23.5,
       "pctUnder15": 15.7,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 16.8,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 21,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 19.2,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 15.7,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 3.6,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 0.179,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "irl",
@@ -14183,6 +14767,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -14398,17 +14990,34 @@ export const WORLD_GDP = {
       ],
       "population": 5484367,
       "populationYear": 2025,
+      "populationPrior5y": 5039747,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 113173,
+      "gdpPerCapitaWbUsd": 131592,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 86514,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 130,
+      "cpiYear": 2025,
+      "cpiPrior5y": 106.2,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 22.4,
       "pctUnder15": 18.1,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 20.1,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 16.2,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 14.6,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 18.1,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 3.2411,
       "bondYield10yPeriod": "2026-04",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 0.082,
+      "bondYield10yPrior5yPeriod": "2021-04"
     },
     {
       "id": "sgp",
@@ -14425,6 +15034,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -14518,11 +15135,26 @@ export const WORLD_GDP = {
       ],
       "population": 6111175,
       "populationYear": 2025,
+      "populationPrior5y": 5685807,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 98814,
+      "gdpPerCapitaWbUsd": 98814,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 61773,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 134.4,
+      "cpiYear": 2025,
+      "cpiPrior5y": 114.2,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 17.6,
       "pctUnder15": 11.7,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 12.2,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 14.2,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 11.6,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 11.7,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -14545,6 +15177,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -14760,17 +15400,34 @@ export const WORLD_GDP = {
       ],
       "population": 10596620,
       "populationYear": 2025,
+      "populationPrior5y": 10353442,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 55013,
+      "gdpPerCapitaWbUsd": 63133,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 52569,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 138.2,
+      "cpiYear": 2025,
+      "cpiPrior5y": 111.1,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 24.4,
       "pctUnder15": 16.7,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 17.7,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 20.9,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 20.1,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 16.7,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 2.7446,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 0.4212,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "tha",
@@ -14787,6 +15444,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -14880,11 +15545,26 @@ export const WORLD_GDP = {
       ],
       "population": 71619863,
       "populationYear": 2025,
+      "populationPrior5y": 71641484,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 8057,
+      "gdpPerCapitaWbUsd": 8057,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 6983,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 122.4,
+      "cpiYear": 2025,
+      "cpiPrior5y": 112.3,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 9,
       "pctUnder15": 14.4,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 16.2,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 16,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 12.9,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 14.4,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -14903,6 +15583,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2024,
@@ -14996,11 +15684,26 @@ export const WORLD_GDP = {
       ],
       "population": 11513149,
       "populationYear": 2025,
+      "populationPrior5y": 9401038,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 47973,
+      "gdpPerCapitaWbUsd": 50274,
+      "gdpPerCapitaWbYear": 2024,
+      "gdpPerCapitaWbPrior5yUsd": 45939,
+      "gdpPerCapitaWbPrior5yYear": 2019,
+      "cpiIndex": 123.7,
+      "cpiYear": 2025,
+      "cpiPrior5y": 112.1,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 10.3,
       "pctUnder15": 16,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 16.6,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 1.8,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 1.6,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 16,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -15019,6 +15722,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -15116,17 +15827,34 @@ export const WORLD_GDP = {
       ],
       "population": 10122800,
       "populationYear": 2025,
+      "populationPrior5y": 9215100,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 53571,
+      "gdpPerCapitaWbUsd": 60337,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 44591,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 126.1,
+      "cpiYear": 2025,
+      "cpiPrior5y": 107.5,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 17.3,
       "pctUnder15": 27.2,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 28,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 12.7,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 12.1,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 27.2,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 3.982,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 1.18,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "vnm",
@@ -15143,6 +15871,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -15236,11 +15972,26 @@ export const WORLD_GDP = {
       ],
       "population": 101598527,
       "populationYear": 2025,
+      "populationPrior5y": 98079191,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 5066,
+      "gdpPerCapitaWbUsd": 5066,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 3534,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 196,
+      "cpiYear": 2025,
+      "cpiPrior5y": 168.8,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 16.1,
       "pctUnder15": 22.9,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 24.4,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 9.5,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 7.6,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 22.9,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -15263,6 +16014,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -15478,17 +16237,34 @@ export const WORLD_GDP = {
       ],
       "population": 9208163,
       "populationYear": 2025,
+      "populationPrior5y": 8916864,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 53989,
+      "gdpPerCapitaWbUsd": 62930,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 48716,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 153.4,
+      "cpiYear": 2025,
+      "cpiPrior5y": 119.7,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 28.2,
       "pctUnder15": 14.1,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 14.4,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 21.1,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 19.2,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 14.1,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 3.3033,
       "bondYield10yPeriod": "2026-04",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": -0.0409,
+      "bondYield10yPrior5yPeriod": "2021-04"
     },
     {
       "id": "phl",
@@ -15505,6 +16281,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -15598,11 +16382,26 @@ export const WORLD_GDP = {
       ],
       "population": 116786962,
       "populationYear": 2025,
+      "populationPrior5y": 112081264,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 4171,
+      "gdpPerCapitaWbUsd": 4171,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 3228,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 162.3,
+      "cpiYear": 2025,
+      "cpiPrior5y": 132.7,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 22.3,
       "pctUnder15": 27.1,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 30.7,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 5.7,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 4.7,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 27.1,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -15621,6 +16420,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2024,
@@ -15714,11 +16521,26 @@ export const WORLD_GDP = {
       ],
       "population": 92417681,
       "populationYear": 2025,
+      "populationPrior5y": 87723443,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 5142,
+      "gdpPerCapitaWbUsd": 3924,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 3203,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 4030.3,
+      "cpiYear": 2025,
+      "cpiPrior5y": 719.5,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 460.2,
       "pctUnder15": 22,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 23.8,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 8.6,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 7.2,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 22,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -15737,6 +16559,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -15830,11 +16660,26 @@ export const WORLD_GDP = {
       ],
       "population": 35977838,
       "populationYear": 2025,
+      "populationPrior5y": 33889558,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 13125,
+      "gdpPerCapitaWbUsd": 13125,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 9958,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 134.6,
+      "cpiYear": 2025,
+      "cpiPrior5y": 120.1,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 12.1,
       "pctUnder15": 21.3,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 24,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 8,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 6.7,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 21.3,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -15857,6 +16702,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -16382,17 +17235,34 @@ export const WORLD_GDP = {
       ],
       "population": 5610870,
       "populationYear": 2025,
+      "populationPrior5y": 5379475,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 82704,
+      "gdpPerCapitaWbUsd": 94594,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 71058,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 149.5,
+      "cpiYear": 2025,
+      "cpiPrior5y": 121.8,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 22.8,
       "pctUnder15": 15.9,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 17.2,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 19.1,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 17.7,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 15.9,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 4.3299,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 1.47,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "col",
@@ -16409,6 +17279,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -16506,17 +17384,34 @@ export const WORLD_GDP = {
       ],
       "population": 53425635,
       "populationYear": 2025,
+      "populationPrior5y": 50629997,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 8562,
+      "gdpPerCapitaWbUsd": 8562,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 5340,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 206.4,
+      "cpiYear": 2025,
+      "cpiPrior5y": 144.5,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 42.8,
       "pctUnder15": 20,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 21.7,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 10.2,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 8.5,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 20,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 14.01,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 7.75,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "bgd",
@@ -16533,6 +17428,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -16626,11 +17529,26 @@ export const WORLD_GDP = {
       ],
       "population": 175686899,
       "populationYear": 2025,
+      "populationPrior5y": 166298024,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 2597,
+      "gdpPerCapitaWbUsd": 2597,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 2249,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 285,
+      "cpiYear": 2025,
+      "cpiPrior5y": 189.9,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 50.1,
       "pctUnder15": 27.6,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 29.3,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 6.7,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 5.8,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 27.6,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -16649,6 +17567,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -16746,17 +17672,34 @@ export const WORLD_GDP = {
       ],
       "population": 64747319,
       "populationYear": 2025,
+      "populationPrior5y": 60562381,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 6598,
+      "gdpPerCapitaWbUsd": 6598,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 5581,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 209.9,
+      "cpiYear": 2025,
+      "cpiPrior5y": 164.1,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 27.9,
       "pctUnder15": 25.7,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 27,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 6.9,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 6.1,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 25.7,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 8.995,
       "bondYield10yPeriod": "2026-05",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 9.8167,
+      "bondYield10yPrior5yPeriod": "2021-05"
     },
     {
       "id": "hkg",
@@ -16773,6 +17716,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2024,
@@ -16866,11 +17817,26 @@ export const WORLD_GDP = {
       ],
       "population": 7498900,
       "populationYear": 2025,
+      "populationPrior5y": 7481000,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 54457,
+      "gdpPerCapitaWbUsd": 56983,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 46109,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 147.2,
+      "cpiYear": 2025,
+      "cpiPrior5y": 135,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 9,
       "pctUnder15": 10.3,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 11.3,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 23.7,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 18.8,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 10.3,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -16889,6 +17855,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -16982,11 +17956,26 @@ export const WORLD_GDP = {
       ],
       "population": 255219554,
       "populationYear": 2025,
+      "populationPrior5y": 235001746,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 1596,
+      "gdpPerCapitaWbUsd": 1596,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 1278,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 400.5,
+      "cpiYear": 2025,
+      "cpiPrior5y": 200.1,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 100.2,
       "pctUnder15": 36.2,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 37.9,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 4.4,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 4,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 36.2,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -17009,6 +17998,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -17534,17 +18531,34 @@ export const WORLD_GDP = {
       ],
       "population": 6009169,
       "populationYear": 2025,
+      "populationPrior5y": 5831404,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 66867,
+      "gdpPerCapitaWbUsd": 76970,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 60985,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 129.7,
+      "cpiYear": 2025,
+      "cpiPrior5y": 110.8,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 17,
       "pctUnder15": 15.6,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 16.3,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 21.1,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 20,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 15.6,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 2.888,
       "bondYield10yPeriod": "2026-04",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 0.003,
+      "bondYield10yPrior5yPeriod": "2021-04"
     },
     {
       "id": "rou",
@@ -17565,6 +18579,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -17776,11 +18798,26 @@ export const WORLD_GDP = {
       ],
       "population": 19020271,
       "populationYear": 2025,
+      "populationPrior5y": 19265250,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 19485,
+      "gdpPerCapitaWbUsd": 22538,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 13009,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 190,
+      "cpiYear": 2025,
+      "cpiPrior5y": 127,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 49.6,
       "pctUnder15": 15.6,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 16.1,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 20.1,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 19,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 15.6,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -17799,6 +18836,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -17892,11 +18937,26 @@ export const WORLD_GDP = {
       ],
       "population": 118365995,
       "populationYear": 2025,
+      "populationPrior5y": 109315124,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 3086,
+      "gdpPerCapitaWbUsd": 3086,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 3511,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 711.6,
+      "cpiYear": 2025,
+      "cpiPrior5y": 303.1,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 134.8,
       "pctUnder15": 31.6,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 33.5,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 5.3,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 4.7,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 31.6,
       "under18ProxyLabel": "Ages 0–14"
     },
@@ -17919,6 +18979,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         },
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -18444,17 +19512,34 @@ export const WORLD_GDP = {
       ],
       "population": 10886878,
       "populationYear": 2025,
+      "populationPrior5y": 10697858,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 31581,
+      "gdpPerCapitaWbUsd": 35917,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 23473,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 166.8,
+      "cpiYear": 2025,
+      "cpiPrior5y": 120.2,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 38.8,
       "pctUnder15": 15.1,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 16,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 21.2,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 20.3,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 15.1,
       "under18ProxyLabel": "Ages 0–14",
       "bondYield10y": 4.7383,
       "bondYield10yPeriod": "2026-04",
       "bondYield10yUnit": "% p.a.",
-      "bondYield10yLabel": "10-year government bond yield"
+      "bondYield10yLabel": "10-year government bond yield",
+      "bondYield10yPrior5y": 1.8605,
+      "bondYield10yPrior5yPeriod": "2021-04"
     },
     {
       "id": "nga",
@@ -18471,6 +19556,14 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI population & age structure",
           "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "World Bank WDI GDP per capita (current US$)",
+          "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+        },
+        {
+          "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+          "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
         }
       ],
       "year": 2025,
@@ -18564,11 +19657,26 @@ export const WORLD_GDP = {
       ],
       "population": 237527782,
       "populationYear": 2025,
+      "populationPrior5y": 213996181,
+      "populationPrior5yYear": 2020,
       "gdpPerCapitaUsd": 1224,
+      "gdpPerCapitaWbUsd": 1224,
+      "gdpPerCapitaWbYear": 2025,
+      "gdpPerCapitaWbPrior5yUsd": 2797,
+      "gdpPerCapitaWbPrior5yYear": 2020,
+      "cpiIndex": 860.3,
+      "cpiYear": 2025,
+      "cpiPrior5y": 302.9,
+      "cpiPrior5yYear": 2020,
+      "inflationCumulative5yPct": 184,
       "pctUnder15": 40.5,
       "pctUnder15Year": 2025,
+      "pctUnder15Prior5y": 42.8,
+      "pctUnder15Prior5yYear": 2020,
       "pct65Plus": 3.1,
       "pct65PlusYear": 2025,
+      "pct65PlusPrior5y": 3,
+      "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 40.5,
       "under18ProxyLabel": "Ages 0–14"
     }
@@ -18591,6 +19699,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -19066,17 +20182,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 341784857,
     "populationYear": 2025,
+    "populationPrior5y": 331578104,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 93233,
+    "gdpPerCapitaWbUsd": 90027,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 64465,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 143.9,
+    "cpiYear": 2024,
+    "cpiPrior5y": 117.2,
+    "cpiPrior5yYear": 2019,
+    "inflationCumulative5yPct": 22.7,
     "pctUnder15": 17.1,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 18.4,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 18.4,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 16.1,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 17.1,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 4.48,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 1.62,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "CHN": {
     "id": "chn",
@@ -19093,6 +20226,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -19190,17 +20331,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 1406585000,
     "populationYear": 2025,
+    "populationPrior5y": 1411100000,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 13862,
+    "gdpPerCapitaWbUsd": 13862,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 10627,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 132.6,
+    "cpiYear": 2025,
+    "cpiPrior5y": 128.1,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 3.5,
     "pctUnder15": 15.4,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 18,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 14.9,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 12.6,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 15.4,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 1.75,
     "bondYield10yPeriod": "2026-04",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 3.164,
+    "bondYield10yPrior5yPeriod": "2021-04"
   },
   "DEU": {
     "id": "deu",
@@ -19221,6 +20379,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -19436,17 +20602,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 83491249,
     "populationYear": 2025,
+    "populationPrior5y": 83160871,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 53209,
+    "gdpPerCapitaWbUsd": 60496,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 47395,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 137.8,
+    "cpiYear": 2025,
+    "cpiPrior5y": 113,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 21.9,
     "pctUnder15": 13.9,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 13.8,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 23.7,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 21.8,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 13.9,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 3.0465,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": -0.2235,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "JPN": {
     "id": "jpn",
@@ -19467,6 +20650,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -20024,17 +21215,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 123366734,
     "populationYear": 2025,
+    "populationPrior5y": 126261000,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 33681,
+    "gdpPerCapitaWbUsd": 35951,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 41099,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 118,
+    "cpiYear": 2025,
+    "cpiPrior5y": 105.5,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 11.9,
     "pctUnder15": 11.2,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 12.2,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 30,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 28.9,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 11.2,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 2.65,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 0.08,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "IND": {
     "id": "ind",
@@ -20051,6 +21259,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -20148,17 +21364,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 1463865525,
     "populationYear": 2025,
+    "populationPrior5y": 1402617695,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 2702,
+    "gdpPerCapitaWbUsd": 2702,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 1907,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 233.1,
+    "cpiYear": 2025,
+    "cpiPrior5y": 183,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 27.4,
     "pctUnder15": 24.2,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 26.3,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 7.4,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 6.4,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 24.2,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 7.02,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 6.2254,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "GBR": {
     "id": "gbr",
@@ -20179,6 +21412,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -21638,17 +22879,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 69487000,
     "populationYear": 2025,
+    "populationPrior5y": 66740000,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 45935,
+    "gdpPerCapitaWbUsd": 57602,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 40815,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 153.1,
+    "cpiYear": 2025,
+    "cpiPrior5y": 120.8,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 26.8,
     "pctUnder15": 17,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 18,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 19.7,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 18.6,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 17,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 4.9416,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 0.9058,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "FRA": {
     "id": "fra",
@@ -21669,6 +22927,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -22194,17 +23460,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 68720337,
     "populationYear": 2025,
+    "populationPrior5y": 67601110,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 41974,
+    "gdpPerCapitaWbUsd": 48986,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 39170,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 127.7,
+    "cpiYear": 2025,
+    "cpiPrior5y": 110.6,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 15.5,
     "pctUnder15": 16.2,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 17.4,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 22.5,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 20.7,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 16.2,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 3.7416,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 0.2107,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "RUS": {
     "id": "rus",
@@ -22221,6 +23504,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -22314,11 +23605,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 143513328,
     "populationYear": 2025,
+    "populationPrior5y": 145245148,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 17847,
+    "gdpPerCapitaWbUsd": 17547,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 10108,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 283,
+    "cpiYear": 2025,
+    "cpiPrior5y": 186.9,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 51.5,
     "pctUnder15": 17,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 17.7,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 17.8,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 15.5,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 17,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -22337,6 +23643,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -22434,17 +23748,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 212812405,
     "populationYear": 2025,
+    "populationPrior5y": 208660842,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 10713,
+    "gdpPerCapitaWbUsd": 10713,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 7074,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 234.4,
+    "cpiYear": 2025,
+    "cpiPrior5y": 172.8,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 35.7,
     "pctUnder15": 19.4,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 20.8,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 11.5,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 9.6,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 19.4,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 9.13,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 4.61,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "ITA": {
     "id": "ita",
@@ -22465,6 +23796,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -22990,17 +24329,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 58915656,
     "populationYear": 2025,
+    "populationPrior5y": 59438851,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 37012,
+    "gdpPerCapitaWbUsd": 43309,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 32091,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 131.9,
+    "cpiYear": 2025,
+    "cpiPrior5y": 110.5,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 19.4,
     "pctUnder15": 11.7,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 12.8,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 25.1,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 23.4,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 11.7,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 3.818,
     "bondYield10yPeriod": "2026-04",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 0.797,
+    "bondYield10yPrior5yPeriod": "2021-04"
   },
   "KOR": {
     "id": "kor",
@@ -23017,6 +24373,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -23114,17 +24478,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 51684564,
     "populationYear": 2025,
+    "populationPrior5y": 51836239,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 36227,
+    "gdpPerCapitaWbUsd": 36227,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 33646,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 135,
+    "cpiYear": 2025,
+    "cpiPrior5y": 115.8,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 16.6,
     "pctUnder15": 10.2,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 12.1,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 20.3,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 15.8,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 10.2,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 4.075,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 2.131,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "MEX": {
     "id": "mex",
@@ -23145,6 +24526,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -25232,17 +26621,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 131946900,
     "populationYear": 2025,
+    "populationPrior5y": 126799054,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 12972,
+    "gdpPerCapitaWbUsd": 13889,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 8841,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 191.5,
+    "cpiYear": 2025,
+    "cpiPrior5y": 146.4,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 30.8,
     "pctUnder15": 24.1,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 26,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 8.5,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 7.5,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 24.1,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 9.45,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 6.68,
+    "bondYield10yPrior5yPeriod": "2021-04"
   },
   "CAN": {
     "id": "can",
@@ -25263,6 +26669,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -27716,17 +29130,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 41651653,
     "populationYear": 2025,
+    "populationPrior5y": 38028638,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 40686,
+    "gdpPerCapitaWbUsd": 55698,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 43538,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 141,
+    "cpiYear": 2025,
+    "cpiPrior5y": 117.6,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 19.9,
     "pctUnder15": 15,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 15.9,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 20.3,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 18,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 15,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 3.5415,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 1.524,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "AUS": {
     "id": "aus",
@@ -27747,6 +29178,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -28782,17 +30221,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 27614411,
     "populationYear": 2025,
+    "populationPrior5y": 25649248,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 61091,
+    "gdpPerCapitaWbUsd": 65130,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 51983,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 148.5,
+    "cpiYear": 2025,
+    "cpiPrior5y": 120.8,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 22.9,
     "pctUnder15": 17.7,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 18.6,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 18.1,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 16.3,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 17.7,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 4.99,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 1.66,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "ESP": {
     "id": "esp",
@@ -28813,6 +30269,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -29028,17 +30492,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 49355143,
     "populationYear": 2025,
+    "populationPrior5y": 47359424,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 33527,
+    "gdpPerCapitaWbUsd": 38627,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 27234,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 135,
+    "cpiYear": 2025,
+    "cpiPrior5y": 110.6,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 22.1,
     "pctUnder15": 12.6,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 14.2,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 21.6,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 19.6,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 12.6,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 3.4823,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 0.5166,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "IDN": {
     "id": "idn",
@@ -29055,6 +30536,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -29152,17 +30641,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 285721236,
     "populationYear": 2025,
+    "populationPrior5y": 274814866,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 5060,
+    "gdpPerCapitaWbUsd": 5060,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 3854,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 176,
+    "cpiYear": 2025,
+    "cpiPrior5y": 154.1,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 14.3,
     "pctUnder15": 24.2,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 25.8,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 7.5,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 6.6,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 24.2,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 7.01,
     "bondYield10yPeriod": "2024-12",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 7.0722,
+    "bondYield10yPrior5yPeriod": "2019-12"
   },
   "SAU": {
     "id": "sau",
@@ -29179,6 +30685,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -29272,11 +30786,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 36973555,
     "populationYear": 2025,
+    "populationPrior5y": 31552510,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 34537,
+    "gdpPerCapitaWbUsd": 34537,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 24339,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 138.6,
+    "cpiYear": 2025,
+    "cpiPrior5y": 123.5,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 12.2,
     "pctUnder15": 23.6,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 25.5,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 3.1,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 2.5,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 23.6,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -29299,6 +30828,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2024,
@@ -29710,11 +31247,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 85878556,
     "populationYear": 2025,
+    "populationPrior5y": 83384680,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 14061,
+    "gdpPerCapitaWbUsd": 18599,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 8798,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 1784.3,
+    "cpiYear": 2025,
+    "cpiPrior5y": 263.2,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 577.9,
     "pctUnder15": 21,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 22.8,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 10.6,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 9,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 21,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -29737,6 +31289,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -30262,17 +31822,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 18087633,
     "populationYear": 2025,
+    "populationPrior5y": 17441500,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 62823,
+    "gdpPerCapitaWbUsd": 73684,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 53468,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 146.9,
+    "cpiYear": 2025,
+    "cpiPrior5y": 117.4,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 25.2,
     "pctUnder15": 14.9,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 15.6,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 20.9,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 19.4,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 14.9,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 3.15,
     "bondYield10yPeriod": "2026-04",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": -0.296,
+    "bondYield10yPrior5yPeriod": "2021-04"
   },
   "CHE": {
     "id": "che",
@@ -30293,6 +31870,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -31650,17 +33235,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 9092436,
     "populationYear": 2025,
+    "populationPrior5y": 8638167,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 103984,
+    "gdpPerCapitaWbUsd": 114769,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 87530,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 105.7,
+    "cpiYear": 2025,
+    "cpiPrior5y": 98.8,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 6.9,
     "pctUnder15": 14.9,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 15.1,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 20.4,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 18.8,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 14.9,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 0.44,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": -0.134,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "POL": {
     "id": "pol",
@@ -31681,6 +33283,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -31896,17 +33506,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 36435861,
     "populationYear": 2025,
+    "populationPrior5y": 37515748,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 24155,
+    "gdpPerCapitaWbUsd": 28420,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 16151,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 170.4,
+    "cpiYear": 2025,
+    "cpiPrior5y": 118,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 44.5,
     "pctUnder15": 14.5,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 15.5,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 20.8,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 18.1,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 14.5,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 5.74,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 1.82,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "ARG": {
     "id": "arg",
@@ -31923,6 +33550,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -32016,11 +33651,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 45851378,
     "populationYear": 2025,
+    "populationPrior5y": 45191965,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 14898,
+    "gdpPerCapitaWbUsd": 14898,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 8536,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": null,
+    "cpiYear": null,
+    "cpiPrior5y": null,
+    "cpiPrior5yYear": null,
+    "inflationCumulative5yPct": null,
     "pctUnder15": 21,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 23.7,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 12.6,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 11.8,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 21,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -32043,6 +33693,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -32258,17 +33916,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 11941781,
     "populationYear": 2025,
+    "populationPrior5y": 11538604,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 52703,
+    "gdpPerCapitaWbUsd": 60750,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 45906,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 145.7,
+    "cpiYear": 2025,
+    "cpiPrior5y": 118,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 23.5,
     "pctUnder15": 15.7,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 16.8,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 21,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 19.2,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 15.7,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 3.6,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 0.179,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "IRL": {
     "id": "irl",
@@ -32289,6 +33964,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -32504,17 +34187,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 5484367,
     "populationYear": 2025,
+    "populationPrior5y": 5039747,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 113173,
+    "gdpPerCapitaWbUsd": 131592,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 86514,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 130,
+    "cpiYear": 2025,
+    "cpiPrior5y": 106.2,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 22.4,
     "pctUnder15": 18.1,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 20.1,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 16.2,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 14.6,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 18.1,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 3.2411,
     "bondYield10yPeriod": "2026-04",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 0.082,
+    "bondYield10yPrior5yPeriod": "2021-04"
   },
   "SGP": {
     "id": "sgp",
@@ -32531,6 +34231,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -32624,11 +34332,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 6111175,
     "populationYear": 2025,
+    "populationPrior5y": 5685807,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 98814,
+    "gdpPerCapitaWbUsd": 98814,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 61773,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 134.4,
+    "cpiYear": 2025,
+    "cpiPrior5y": 114.2,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 17.6,
     "pctUnder15": 11.7,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 12.2,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 14.2,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 11.6,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 11.7,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -32651,6 +34374,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -32866,17 +34597,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 10596620,
     "populationYear": 2025,
+    "populationPrior5y": 10353442,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 55013,
+    "gdpPerCapitaWbUsd": 63133,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 52569,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 138.2,
+    "cpiYear": 2025,
+    "cpiPrior5y": 111.1,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 24.4,
     "pctUnder15": 16.7,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 17.7,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 20.9,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 20.1,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 16.7,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 2.7446,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 0.4212,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "THA": {
     "id": "tha",
@@ -32893,6 +34641,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -32986,11 +34742,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 71619863,
     "populationYear": 2025,
+    "populationPrior5y": 71641484,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 8057,
+    "gdpPerCapitaWbUsd": 8057,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 6983,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 122.4,
+    "cpiYear": 2025,
+    "cpiPrior5y": 112.3,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 9,
     "pctUnder15": 14.4,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 16.2,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 16,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 12.9,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 14.4,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -33009,6 +34780,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2024,
@@ -33102,11 +34881,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 11513149,
     "populationYear": 2025,
+    "populationPrior5y": 9401038,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 47973,
+    "gdpPerCapitaWbUsd": 50274,
+    "gdpPerCapitaWbYear": 2024,
+    "gdpPerCapitaWbPrior5yUsd": 45939,
+    "gdpPerCapitaWbPrior5yYear": 2019,
+    "cpiIndex": 123.7,
+    "cpiYear": 2025,
+    "cpiPrior5y": 112.1,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 10.3,
     "pctUnder15": 16,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 16.6,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 1.8,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 1.6,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 16,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -33125,6 +34919,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -33222,17 +35024,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 10122800,
     "populationYear": 2025,
+    "populationPrior5y": 9215100,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 53571,
+    "gdpPerCapitaWbUsd": 60337,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 44591,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 126.1,
+    "cpiYear": 2025,
+    "cpiPrior5y": 107.5,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 17.3,
     "pctUnder15": 27.2,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 28,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 12.7,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 12.1,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 27.2,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 3.982,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 1.18,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "VNM": {
     "id": "vnm",
@@ -33249,6 +35068,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -33342,11 +35169,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 101598527,
     "populationYear": 2025,
+    "populationPrior5y": 98079191,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 5066,
+    "gdpPerCapitaWbUsd": 5066,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 3534,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 196,
+    "cpiYear": 2025,
+    "cpiPrior5y": 168.8,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 16.1,
     "pctUnder15": 22.9,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 24.4,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 9.5,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 7.6,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 22.9,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -33369,6 +35211,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -33584,17 +35434,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 9208163,
     "populationYear": 2025,
+    "populationPrior5y": 8916864,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 53989,
+    "gdpPerCapitaWbUsd": 62930,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 48716,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 153.4,
+    "cpiYear": 2025,
+    "cpiPrior5y": 119.7,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 28.2,
     "pctUnder15": 14.1,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 14.4,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 21.1,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 19.2,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 14.1,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 3.3033,
     "bondYield10yPeriod": "2026-04",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": -0.0409,
+    "bondYield10yPrior5yPeriod": "2021-04"
   },
   "PHL": {
     "id": "phl",
@@ -33611,6 +35478,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -33704,11 +35579,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 116786962,
     "populationYear": 2025,
+    "populationPrior5y": 112081264,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 4171,
+    "gdpPerCapitaWbUsd": 4171,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 3228,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 162.3,
+    "cpiYear": 2025,
+    "cpiPrior5y": 132.7,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 22.3,
     "pctUnder15": 27.1,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 30.7,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 5.7,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 4.7,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 27.1,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -33727,6 +35617,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2024,
@@ -33820,11 +35718,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 92417681,
     "populationYear": 2025,
+    "populationPrior5y": 87723443,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 5142,
+    "gdpPerCapitaWbUsd": 3924,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 3203,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 4030.3,
+    "cpiYear": 2025,
+    "cpiPrior5y": 719.5,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 460.2,
     "pctUnder15": 22,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 23.8,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 8.6,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 7.2,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 22,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -33843,6 +35756,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -33936,11 +35857,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 35977838,
     "populationYear": 2025,
+    "populationPrior5y": 33889558,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 13125,
+    "gdpPerCapitaWbUsd": 13125,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 9958,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 134.6,
+    "cpiYear": 2025,
+    "cpiPrior5y": 120.1,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 12.1,
     "pctUnder15": 21.3,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 24,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 8,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 6.7,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 21.3,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -33963,6 +35899,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -34488,17 +36432,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 5610870,
     "populationYear": 2025,
+    "populationPrior5y": 5379475,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 82704,
+    "gdpPerCapitaWbUsd": 94594,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 71058,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 149.5,
+    "cpiYear": 2025,
+    "cpiPrior5y": 121.8,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 22.8,
     "pctUnder15": 15.9,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 17.2,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 19.1,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 17.7,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 15.9,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 4.3299,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 1.47,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "COL": {
     "id": "col",
@@ -34515,6 +36476,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -34612,17 +36581,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 53425635,
     "populationYear": 2025,
+    "populationPrior5y": 50629997,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 8562,
+    "gdpPerCapitaWbUsd": 8562,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 5340,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 206.4,
+    "cpiYear": 2025,
+    "cpiPrior5y": 144.5,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 42.8,
     "pctUnder15": 20,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 21.7,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 10.2,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 8.5,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 20,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 14.01,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 7.75,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "BGD": {
     "id": "bgd",
@@ -34639,6 +36625,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -34732,11 +36726,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 175686899,
     "populationYear": 2025,
+    "populationPrior5y": 166298024,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 2597,
+    "gdpPerCapitaWbUsd": 2597,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 2249,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 285,
+    "cpiYear": 2025,
+    "cpiPrior5y": 189.9,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 50.1,
     "pctUnder15": 27.6,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 29.3,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 6.7,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 5.8,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 27.6,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -34755,6 +36764,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -34852,17 +36869,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 64747319,
     "populationYear": 2025,
+    "populationPrior5y": 60562381,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 6598,
+    "gdpPerCapitaWbUsd": 6598,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 5581,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 209.9,
+    "cpiYear": 2025,
+    "cpiPrior5y": 164.1,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 27.9,
     "pctUnder15": 25.7,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 27,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 6.9,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 6.1,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 25.7,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 8.995,
     "bondYield10yPeriod": "2026-05",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 9.8167,
+    "bondYield10yPrior5yPeriod": "2021-05"
   },
   "HKG": {
     "id": "hkg",
@@ -34879,6 +36913,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2024,
@@ -34972,11 +37014,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 7498900,
     "populationYear": 2025,
+    "populationPrior5y": 7481000,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 54457,
+    "gdpPerCapitaWbUsd": 56983,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 46109,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 147.2,
+    "cpiYear": 2025,
+    "cpiPrior5y": 135,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 9,
     "pctUnder15": 10.3,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 11.3,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 23.7,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 18.8,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 10.3,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -34995,6 +37052,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -35088,11 +37153,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 255219554,
     "populationYear": 2025,
+    "populationPrior5y": 235001746,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 1596,
+    "gdpPerCapitaWbUsd": 1596,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 1278,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 400.5,
+    "cpiYear": 2025,
+    "cpiPrior5y": 200.1,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 100.2,
     "pctUnder15": 36.2,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 37.9,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 4.4,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 4,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 36.2,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -35115,6 +37195,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -35640,17 +37728,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 6009169,
     "populationYear": 2025,
+    "populationPrior5y": 5831404,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 66867,
+    "gdpPerCapitaWbUsd": 76970,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 60985,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 129.7,
+    "cpiYear": 2025,
+    "cpiPrior5y": 110.8,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 17,
     "pctUnder15": 15.6,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 16.3,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 21.1,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 20,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 15.6,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 2.888,
     "bondYield10yPeriod": "2026-04",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 0.003,
+    "bondYield10yPrior5yPeriod": "2021-04"
   },
   "ROU": {
     "id": "rou",
@@ -35671,6 +37776,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -35882,11 +37995,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 19020271,
     "populationYear": 2025,
+    "populationPrior5y": 19265250,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 19485,
+    "gdpPerCapitaWbUsd": 22538,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 13009,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 190,
+    "cpiYear": 2025,
+    "cpiPrior5y": 127,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 49.6,
     "pctUnder15": 15.6,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 16.1,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 20.1,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 19,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 15.6,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -35905,6 +38033,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -35998,11 +38134,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 118365995,
     "populationYear": 2025,
+    "populationPrior5y": 109315124,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 3086,
+    "gdpPerCapitaWbUsd": 3086,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 3511,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 711.6,
+    "cpiYear": 2025,
+    "cpiPrior5y": 303.1,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 134.8,
     "pctUnder15": 31.6,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 33.5,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 5.3,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 4.7,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 31.6,
     "under18ProxyLabel": "Ages 0–14"
   },
@@ -36025,6 +38176,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       },
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
@@ -36550,17 +38709,34 @@ export const COUNTRY_GDP = {
     ],
     "population": 10886878,
     "populationYear": 2025,
+    "populationPrior5y": 10697858,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 31581,
+    "gdpPerCapitaWbUsd": 35917,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 23473,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 166.8,
+    "cpiYear": 2025,
+    "cpiPrior5y": 120.2,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 38.8,
     "pctUnder15": 15.1,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 16,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 21.2,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 20.3,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 15.1,
     "under18ProxyLabel": "Ages 0–14",
     "bondYield10y": 4.7383,
     "bondYield10yPeriod": "2026-04",
     "bondYield10yUnit": "% p.a.",
-    "bondYield10yLabel": "10-year government bond yield"
+    "bondYield10yLabel": "10-year government bond yield",
+    "bondYield10yPrior5y": 1.8605,
+    "bondYield10yPrior5yPeriod": "2021-04"
   },
   "NGA": {
     "id": "nga",
@@ -36577,6 +38753,14 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI population & age structure",
         "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "World Bank WDI GDP per capita (current US$)",
+        "url": "https://data.worldbank.org/indicator/NY.GDP.PCAP.CD"
+      },
+      {
+        "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
+        "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
       }
     ],
     "year": 2025,
@@ -36670,11 +38854,26 @@ export const COUNTRY_GDP = {
     ],
     "population": 237527782,
     "populationYear": 2025,
+    "populationPrior5y": 213996181,
+    "populationPrior5yYear": 2020,
     "gdpPerCapitaUsd": 1224,
+    "gdpPerCapitaWbUsd": 1224,
+    "gdpPerCapitaWbYear": 2025,
+    "gdpPerCapitaWbPrior5yUsd": 2797,
+    "gdpPerCapitaWbPrior5yYear": 2020,
+    "cpiIndex": 860.3,
+    "cpiYear": 2025,
+    "cpiPrior5y": 302.9,
+    "cpiPrior5yYear": 2020,
+    "inflationCumulative5yPct": 184,
     "pctUnder15": 40.5,
     "pctUnder15Year": 2025,
+    "pctUnder15Prior5y": 42.8,
+    "pctUnder15Prior5yYear": 2020,
     "pct65Plus": 3.1,
     "pct65PlusYear": 2025,
+    "pct65PlusPrior5y": 3,
+    "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 40.5,
     "under18ProxyLabel": "Ages 0–14"
   }

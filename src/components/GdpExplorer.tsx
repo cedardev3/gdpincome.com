@@ -21,7 +21,12 @@ import {
   formatMillions,
   formatPercent,
   formatPopulation,
+  fiveYearDelta,
+  fiveYearDeltaClass,
   formatUsdPerCapita,
+  gdpTotalFiveYearDelta,
+  inflationFiveYearDrag,
+  realGdpFiveYearDelta,
   hasChildren,
   nodeAtPath,
   type ChartNode,
@@ -113,20 +118,29 @@ function MetricBlock({
   label,
   value,
   hint,
+  delta,
   contested,
   emphasize,
+  valueTone,
 }: {
   label: string;
   value: ReactNode;
   hint: ReactNode;
+  /** Optional 5-year change line under the value */
+  delta?: { text: string; tone: "up" | "down" | "flat" } | null;
   contested?: ReturnType<typeof contestedFor>;
   emphasize?: boolean;
+  /** Color the main value like a 5yr delta */
+  valueTone?: "up" | "down" | "flat" | null;
 }) {
   const heading = (
     <p className="text-[10px] uppercase tracking-[0.12em] text-[#8a7358]">
       {label}
     </p>
   );
+  const valueColor = valueTone
+    ? fiveYearDeltaClass(valueTone)
+    : "text-[#1f3d4d]";
   return (
     <div>
       {contested ? (
@@ -135,12 +149,19 @@ function MetricBlock({
         heading
       )}
       <p
-        className={`mt-0.5 font-semibold tabular-nums tracking-tight text-[#1f3d4d] ${
+        className={`mt-0.5 font-semibold tabular-nums tracking-tight ${valueColor} ${
           emphasize ? "text-2xl" : "text-lg"
         }`}
       >
         {value}
       </p>
+      {delta ? (
+        <p
+          className={`mt-0.5 text-[11px] font-medium tabular-nums ${fiveYearDeltaClass(delta.tone)}`}
+        >
+          {delta.text}
+        </p>
+      ) : null}
       <p className="mt-0.5 text-[11px] text-[#5c6b73]">{hint}</p>
     </div>
   );
@@ -158,6 +179,18 @@ function DemographicsBanner({ country }: { country: CountryGdpTree }) {
     country.sourceKey,
   );
 
+  const pcapDelta = fiveYearDelta(
+    country.gdpPerCapitaWbUsd,
+    country.gdpPerCapitaWbPrior5yUsd,
+  );
+  const yieldDelta = fiveYearDelta(yieldPct, country.bondYield10yPrior5y);
+  const popDelta = fiveYearDelta(country.population, country.populationPrior5y);
+  const underDelta = fiveYearDelta(under18, country.pctUnder15Prior5y);
+  const overDelta = fiveYearDelta(over65, country.pct65PlusPrior5y);
+  const gdp5yr = gdpTotalFiveYearDelta(country);
+  const inflationDrag = inflationFiveYearDrag(country);
+  const realGdp = realGdpFiveYearDelta(country);
+
   return (
     <div className="flex flex-col gap-2">
       {source && quality.measureWarning ? (
@@ -170,37 +203,75 @@ function DemographicsBanner({ country }: { country: CountryGdpTree }) {
         </p>
       ) : null}
       <div
-        className="grid gap-3 rounded-md border border-[#e0d6c6] bg-[#fbf8f2] px-4 py-3 sm:grid-cols-2 lg:grid-cols-5"
+        className="grid gap-3 rounded-md border border-[#e0d6c6] bg-[#fbf8f2] px-4 py-3 sm:grid-cols-2 lg:grid-cols-4"
         role="group"
-        aria-label={`${country.name} population, GDP per capita, and bond yield`}
+        aria-label={`${country.name} 5-year GDP vs inflation`}
       >
         <MetricBlock
-          label="GDP per capita"
+          label="GDP (5yr)"
           emphasize
-          contested={contestedFor(country.code ?? "", "gdpPerCapita")}
-          value={formatUsdPerCapita(country.gdpPerCapitaUsd)}
+          value={gdp5yr?.text ?? "—"}
+          valueTone={gdp5yr?.tone ?? null}
+          delta={null}
+          hint="Nominal · World Bank GDP/capita × population"
+        />
+        <MetricBlock
+          label="Inflation (5yr)"
+          emphasize
+          value={inflationDrag?.text ?? "—"}
+          valueTone={inflationDrag?.tone ?? null}
+          delta={null}
           hint={
-            quality.measureWarning
-              ? `Derived from ${source?.badge ?? "this measure"} ÷ population — not comparable to nominal USD peers`
-              : `USD · industry GDP ÷ population (${country.populationYear})`
+            country.cpiPrior5yYear != null && country.cpiYear != null
+              ? `CPI drag · WB FP.CPI.TOTL · ${country.cpiPrior5yYear}→${country.cpiYear}`
+              : "Cumulative CPI shown as a negative drag on growth"
           }
         />
         <MetricBlock
-          label="10-year yield"
+          label="Real GDP (5yr)"
           emphasize
+          value={realGdp?.text ?? "—"}
+          valueTone={realGdp?.tone ?? null}
+          delta={null}
+          hint="Nominal growth − inflation"
+        />
+        <MetricBlock
+          label="GDP per capita"
+          contested={contestedFor(country.code ?? "", "gdpPerCapita")}
+          value={formatUsdPerCapita(country.gdpPerCapitaUsd)}
+          delta={pcapDelta}
+          hint={
+            quality.measureWarning
+              ? `Derived from ${source?.badge ?? "this measure"} ÷ population — not comparable to nominal USD peers`
+              : pcapDelta
+                ? `USD · industry ÷ pop (${country.populationYear}) · % change uses World Bank GDP/capita`
+                : `USD · industry GDP ÷ population (${country.populationYear})`
+          }
+        />
+      </div>
+      <div
+        className="grid gap-3 rounded-md border border-[#e0d6c6] bg-[#fbf8f2] px-4 py-3 sm:grid-cols-2 lg:grid-cols-4"
+        role="group"
+        aria-label={`${country.name} population, yields, and age structure`}
+      >
+        <MetricBlock
+          label="10-year yield"
           value={yieldPct != null ? `${yieldPct.toFixed(2)}%` : "—"}
+          delta={yieldDelta}
           hint={`Govt bond · OECD IRLT${yieldPeriod ? ` · ${yieldPeriod}` : ""}`}
         />
         <MetricBlock
           label="Population"
           contested={contestedFor(country.code ?? "", "population")}
           value={formatPopulation(country.population)}
+          delta={popDelta}
           hint={`${country.population.toLocaleString("en-US")} · ${country.populationYear}`}
         />
         <MetricBlock
           label="Under 18"
           contested={contestedFor(country.code ?? "", "ageStructure")}
           value={under18 != null ? `${under18}%` : "—"}
+          delta={underDelta}
           hint={`${underLabel} share of population${
             country.pctUnder15Year != null ? ` · ${country.pctUnder15Year}` : ""
           }`}
@@ -209,6 +280,7 @@ function DemographicsBanner({ country }: { country: CountryGdpTree }) {
           label="Ages 65+"
           contested={contestedFor(country.code ?? "", "ageStructure")}
           value={over65 != null ? `${over65}%` : "—"}
+          delta={overDelta}
           hint={`Share of population${
             country.pct65PlusYear != null ? ` · ${country.pct65PlusYear}` : ""
           }`}
@@ -268,6 +340,9 @@ function SliceRow({
     "bondYield10y" in slice && typeof slice.bondYield10y === "number"
       ? `${slice.bondYield10y.toFixed(2)}%`
       : null;
+  const gdp5yr = gdpTotalFiveYearDelta(slice);
+  const inflationDrag = inflationFiveYearDrag(slice);
+  const realGdp = realGdpFiveYearDelta(slice);
   const countryCode =
     "code" in slice && typeof slice.code === "string" ? slice.code : null;
   const contestedPop = countryCode
@@ -284,6 +359,9 @@ function SliceRow({
   const tip = [
     slice.name,
     metrics,
+    gdp5yr ? `GDP 5yr: ${gdp5yr.text}` : null,
+    inflationDrag ? `Inflation 5yr: ${inflationDrag.text}` : null,
+    realGdp ? `Real GDP 5yr: ${realGdp.text}` : null,
     perCapita ? `GDP per capita: ${perCapita}` : null,
     bondYield ? `10y bond yield: ${bondYield}` : null,
     contestedPop ? `Population: contested official series — see country view` : null,
@@ -326,6 +404,27 @@ function SliceRow({
       </span>
       <span className={`shrink-0 text-right text-xs tabular-nums ${amountClass}`}>
         <span className="block">{metrics}</span>
+        {gdp5yr ? (
+          <span
+            className={`block text-[10px] font-medium ${fiveYearDeltaClass(gdp5yr.tone)}`}
+          >
+            {gdp5yr.text}
+          </span>
+        ) : null}
+        {inflationDrag ? (
+          <span
+            className={`block text-[10px] font-medium ${fiveYearDeltaClass(inflationDrag.tone)}`}
+          >
+            infl {inflationDrag.text}
+          </span>
+        ) : null}
+        {realGdp ? (
+          <span
+            className={`block text-[10px] font-medium ${fiveYearDeltaClass(realGdp.tone)}`}
+          >
+            real {realGdp.text}
+          </span>
+        ) : null}
         {perCapita || bondYield ? (
           <span className="block text-[10px] text-[#8a7358]">
             {[perCapita ? `${perCapita}/cap` : null, bondYield ? `${bondYield} 10y` : null]
@@ -730,6 +829,9 @@ function LevelSummary({ node }: { node: ChartNode }) {
   const gdpContest = country?.code
     ? contestedFor(country.code, "gdp")
     : undefined;
+  const gdpDelta = country ? gdpTotalFiveYearDelta(country) : null;
+  const inflationDrag = country ? inflationFiveYearDrag(country) : null;
+  const realGdp = country ? realGdpFiveYearDelta(country) : null;
 
   return (
     <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm text-[#5c6b73]">
@@ -739,6 +841,34 @@ function LevelSummary({ node }: { node: ChartNode }) {
           {formatMillions(node.amountMillions)}
         </span>
         <span className="text-[#8a7358]"> USD</span>
+        {gdpDelta ? (
+          <span
+            className={`text-[11px] font-medium tabular-nums ${fiveYearDeltaClass(gdpDelta.tone)}`}
+            title="Nominal GDP · 5-year change"
+          >
+            {gdpDelta.text}
+          </span>
+        ) : null}
+        {inflationDrag ? (
+          <span
+            className={`text-[11px] font-medium tabular-nums ${fiveYearDeltaClass(inflationDrag.tone)}`}
+            title={
+              country?.cpiPrior5yYear != null && country?.cpiYear != null
+                ? `CPI inflation drag · ${country.cpiPrior5yYear} → ${country.cpiYear}`
+                : "Cumulative CPI as a negative drag"
+            }
+          >
+            infl {inflationDrag.text}
+          </span>
+        ) : null}
+        {realGdp ? (
+          <span
+            className={`text-[11px] font-semibold tabular-nums ${fiveYearDeltaClass(realGdp.tone)}`}
+            title="Real GDP · nominal growth − inflation"
+          >
+            real {realGdp.text}
+          </span>
+        ) : null}
         {source ? <MeasureBadge source={source} /> : null}
         {gdpContest ? <ContestedTooltip field={gdpContest} /> : null}
       </span>
@@ -959,6 +1089,11 @@ export default function GdpExplorer() {
               onHover={setHoveredId}
               onSelect={(id) => {
                 setPath((prev) => [...prev, id]);
+                setHoveredId(null);
+              }}
+              canGoBack={path.length > 0}
+              onBack={() => {
+                setPath((prev) => prev.slice(0, -1));
                 setHoveredId(null);
               }}
             />
