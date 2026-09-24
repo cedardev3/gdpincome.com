@@ -29,7 +29,7 @@ import {
   type SourceLink,
 } from "@/lib/pie";
 
-const VISIBLE_STORAGE_KEY = "gdpincome.visibleCountries.v2";
+const VISIBLE_STORAGE_KEY = "gdpincome.visibleCountries.v3";
 const PATH_STORAGE_KEY = "gdpincome.path.v1";
 /** Match scripts/lib/http-cache.mjs — ~6 months */
 const SNAPSHOT_STALE_MS = 182 * 24 * 60 * 60 * 1000;
@@ -1040,7 +1040,7 @@ export default function GdpExplorer() {
           </a>
           .{" "}
           <strong className="font-medium text-[#1f3d4d]">
-            Euro area (DE/FR/IT/ES/NL):
+            Eurostat (EU/EEA):
           </strong>{" "}
           <a
             className="text-[#2a6f97] hover:underline"

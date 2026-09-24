@@ -32,6 +32,12 @@ const META = {
   EGY: { id: "egy", name: "Egypt", color: "#c47a3c" },
   VNM: { id: "vnm", name: "Vietnam", color: "#2f7d3c" },
   BGD: { id: "bgd", name: "Bangladesh", color: "#5c6b9a" },
+  PHL: { id: "phl", name: "Philippines", color: "#3c6ea8" },
+  MYS: { id: "mys", name: "Malaysia", color: "#8a3c3c" },
+  COL: { id: "col", name: "Colombia", color: "#c45c26" },
+  IRN: { id: "irn", name: "Iran", color: "#2f7d3c" },
+  HKG: { id: "hkg", name: "Hong Kong", color: "#9a3c4a" },
+  PAK: { id: "pak", name: "Pakistan", color: "#5a8f3c" },
 };
 
 function shade(hex, factor) {

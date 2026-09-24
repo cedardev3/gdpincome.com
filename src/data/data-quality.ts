@@ -233,6 +233,15 @@ export const COUNTRY_QUALITY: Record<string, CountryQuality> = {
   EGY: { code: "EGY" },
   VNM: { code: "VNM" },
   BGD: { code: "BGD" },
+  PHL: { code: "PHL" },
+  DNK: { code: "DNK", measureWarning: true },
+  MYS: { code: "MYS" },
+  COL: { code: "COL" },
+  IRN: { code: "IRN" },
+  HKG: { code: "HKG" },
+  ROU: { code: "ROU", measureWarning: true },
+  PAK: { code: "PAK" },
+  CZE: { code: "CZE", measureWarning: true },
 };
 
 export function qualityForCountry(

@@ -56,6 +56,9 @@ const GEO_META = {
   SE: { id: "swe", code: "SWE", name: "Sweden", color: "#3c6ea8" },
   NO: { id: "nor", code: "NOR", name: "Norway", color: "#1f3d4d" },
   AT: { id: "aut", code: "AUT", name: "Austria", color: "#8a5a3c" },
+  DK: { id: "dnk", code: "DNK", name: "Denmark", color: "#9a3c4a" },
+  RO: { id: "rou", code: "ROU", name: "Romania", color: "#c47a3c" },
+  CZ: { id: "cze", code: "CZE", name: "Czechia", color: "#5c7a8a" },
 };
 
 function shade(hex, factor) {

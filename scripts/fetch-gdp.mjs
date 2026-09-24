@@ -40,18 +40,35 @@ const BATCH3_CODES = [
   "POL", "BEL", "IRL", "ARG", "SWE", "NOR", "THA", "ARE", "SGP",
   "NGA", "ZAF", "AUT", "ISR", "EGY", "VNM", "BGD",
 ];
+/**
+ * Top-45 closure (IMF 2024 nominal). Taiwan omitted — no World Bank / OECD
+ * industry series in our feeds. Eurostat for DK/RO/CZ; World Bank otherwise.
+ */
+const BATCH4_CODES = [
+  "PHL", "DNK", "MYS", "COL", "IRN", "HKG", "ROU", "PAK", "CZE",
+];
 const WB_INDUSTRY_CODES = [
   "CHN", "IND", "RUS", "BRA", "KOR", "IDN", "SAU",
   "ARG", "THA", "ARE", "SGP", "NGA", "ZAF", "ISR", "EGY", "VNM", "BGD",
+  "PHL", "MYS", "COL", "IRN", "HKG", "PAK",
 ];
-const EUROSTAT_GEOS = ["DE", "FR", "IT", "ES", "NL", "PL", "BE", "IE", "SE", "NO", "AT"];
+const EUROSTAT_GEOS = [
+  "DE", "FR", "IT", "ES", "NL", "PL", "BE", "IE", "SE", "NO", "AT",
+  "DK", "RO", "CZ",
+];
 const OECD_PRIMARY_CODES = ["JPN", "GBR", "MEX", "TUR", "CHE"];
 const ALL_ISO3 = [
   "USA", "CHN", "DEU", "JPN", "GBR", "IND", "FRA", "ITA", "CAN", "AUS",
   ...BATCH2_CODES,
   ...BATCH3_CODES,
+  ...BATCH4_CODES,
 ];
-const FX_PROVISIONAL_CODES = [...BATCH1_CODES, ...BATCH2_CODES, ...BATCH3_CODES];
+const FX_PROVISIONAL_CODES = [
+  ...BATCH1_CODES,
+  ...BATCH2_CODES,
+  ...BATCH3_CODES,
+  ...BATCH4_CODES,
+];
 const STATCAN_PRODUCT_ID = 36100434;
 const STATCAN_COORD = (naicsMemberId) =>
   `1.1.1.${naicsMemberId}.0.0.0.0.0.0`;
@@ -680,7 +697,10 @@ async function main() {
     }
   } catch (err) {
     console.error("  Eurostat failed:", err.message);
-    for (const code of ["DEU", "FRA", "ITA", "ESP", "NLD", "POL", "BEL", "IRL", "SWE", "NOR", "AUT"]) {
+    for (const code of [
+      "DEU", "FRA", "ITA", "ESP", "NLD", "POL", "BEL", "IRL", "SWE", "NOR", "AUT",
+      "DNK", "ROU", "CZE",
+    ]) {
       const t = await fetchOecdFallback(code, fx[code]);
       trees.push(t);
       yearsByCountry[code] = t.year;
@@ -797,11 +817,13 @@ async function main() {
       under18:
         "Under-18 uses World Bank SP.POP.0014.TO.ZS (ages 0–14) — closest freely published cohort to under 18.",
       ranking:
-        "Batch 3 adds Poland, Belgium, Ireland, Argentina, Sweden, Norway, Thailand, UAE, Singapore, Nigeria, South Africa, Austria, Israel, Egypt, Vietnam, Bangladesh.",
+        "Batch 4 closes the IMF 2024 top-45 set (Taiwan omitted — no industry series in WB/OECD feeds). Nigeria kept as an African regional anchor.",
       batch2Sources:
         "Eurostat for ES/NL; OECD Table 6 for MEX/TUR/CHE; World Bank sector VA for RUS/BRA/KOR/IDN/SAU.",
       batch3Sources:
         "Eurostat for PL/BE/IE/SE/NO/AT; World Bank sector VA for ARG/THA/ARE/SGP/NGA/ZAF/ISR/EGY/VNM/BGD.",
+      batch4Sources:
+        "Eurostat for DK/RO/CZ; World Bank sector VA for PHL/MYS/COL/IRN/HKG/PAK.",
       bondYield10y:
         "OECD KEI measure IRLT — long-term interest rates on government bonds with residual maturity of about 10 years (% per annum). Omitted when missing or older than 2022.",
     },
@@ -826,7 +848,7 @@ async function main() {
       },
       eurostat: {
         dataset: "Eurostat nama_10_a10 / nama_10_a64",
-        countries: ["DEU", "FRA", "ITA", "ESP", "NLD", "POL", "BEL", "IRL", "SWE", "NOR", "AUT"],
+        countries: ["DEU", "FRA", "ITA", "ESP", "NLD", "POL", "BEL", "IRL", "SWE", "NOR", "AUT", "DNK", "ROU", "CZE"],
         url: "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table",
         measure: "Gross value added (B1G), current prices, annual",
       },

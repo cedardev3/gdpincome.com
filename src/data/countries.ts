@@ -29,7 +29,7 @@ export type CountryGdpTree = ChartNode & {
 };
 
 export const GDP_DATA_META = {
-  "fetchedAt": "2026-09-22T07:31:48.205Z",
+  "fetchedAt": "2026-09-24T05:19:57.051Z",
   "yearsByCountry": {
     "CAN": 2026,
     "AUS": 2026,
@@ -66,7 +66,16 @@ export const GDP_DATA_META = {
     "ISR": 2024,
     "EGY": 2025,
     "VNM": 2025,
-    "BGD": 2025
+    "BGD": 2025,
+    "PHL": 2025,
+    "DNK": 2025,
+    "MYS": 2025,
+    "COL": 2025,
+    "IRN": 2024,
+    "HKG": 2024,
+    "ROU": 2025,
+    "PAK": 2025,
+    "CZE": 2025
   },
   "periodByCountry": {
     "CAN": "2026-06-01",
@@ -83,6 +92,9 @@ export const GDP_DATA_META = {
     "SWE": "2025",
     "NOR": "2025",
     "AUT": "2025",
+    "DNK": "2025",
+    "ROU": "2025",
+    "CZE": "2025",
     "CHN": "2025",
     "IND": "2025",
     "RUS": "2025",
@@ -100,6 +112,12 @@ export const GDP_DATA_META = {
     "EGY": "2025",
     "VNM": "2025",
     "BGD": "2025",
+    "PHL": "2025",
+    "MYS": "2025",
+    "COL": "2025",
+    "IRN": "2024",
+    "HKG": "2024",
+    "PAK": "2025",
     "JPN": "2024",
     "GBR": "2023",
     "MEX": "2024",
@@ -142,7 +160,16 @@ export const GDP_DATA_META = {
     "ISR": 2024,
     "EGY": 2025,
     "VNM": 2024,
-    "BGD": 2025
+    "BGD": 2025,
+    "PHL": 2025,
+    "DNK": 2025,
+    "MYS": 2025,
+    "COL": 2025,
+    "IRN": 2023,
+    "HKG": 2024,
+    "ROU": 2025,
+    "PAK": 2025,
+    "CZE": 2025
   },
   "maxYear": 2026,
   "oecdFallbackUsed": [],
@@ -161,6 +188,9 @@ export const GDP_DATA_META = {
     "SWE": "eurostat",
     "NOR": "eurostat",
     "AUT": "eurostat",
+    "DNK": "eurostat",
+    "ROU": "eurostat",
+    "CZE": "eurostat",
     "CHN": "worldbank",
     "IND": "worldbank",
     "RUS": "worldbank",
@@ -178,6 +208,12 @@ export const GDP_DATA_META = {
     "EGY": "worldbank",
     "VNM": "worldbank",
     "BGD": "worldbank",
+    "PHL": "worldbank",
+    "MYS": "worldbank",
+    "COL": "worldbank",
+    "IRN": "worldbank",
+    "HKG": "worldbank",
+    "PAK": "worldbank",
     "JPN": "oecd",
     "GBR": "oecd",
     "MEX": "oecd",
@@ -186,9 +222,10 @@ export const GDP_DATA_META = {
   },
   "notes": {
     "under18": "Under-18 uses World Bank SP.POP.0014.TO.ZS (ages 0–14) — closest freely published cohort to under 18.",
-    "ranking": "Batch 3 adds Poland, Belgium, Ireland, Argentina, Sweden, Norway, Thailand, UAE, Singapore, Nigeria, South Africa, Austria, Israel, Egypt, Vietnam, Bangladesh.",
+    "ranking": "Batch 4 closes the IMF 2024 top-45 set (Taiwan omitted — no industry series in WB/OECD feeds). Nigeria kept as an African regional anchor.",
     "batch2Sources": "Eurostat for ES/NL; OECD Table 6 for MEX/TUR/CHE; World Bank sector VA for RUS/BRA/KOR/IDN/SAU.",
     "batch3Sources": "Eurostat for PL/BE/IE/SE/NO/AT; World Bank sector VA for ARG/THA/ARE/SGP/NGA/ZAF/ISR/EGY/VNM/BGD.",
+    "batch4Sources": "Eurostat for DK/RO/CZ; World Bank sector VA for PHL/MYS/COL/IRN/HKG/PAK.",
     "bondYield10y": "OECD KEI measure IRLT — long-term interest rates on government bonds with residual maturity of about 10 years (% per annum). Omitted when missing or older than 2022."
   },
   "sources": {
@@ -229,7 +266,10 @@ export const GDP_DATA_META = {
         "IRL",
         "SWE",
         "NOR",
-        "AUT"
+        "AUT",
+        "DNK",
+        "ROU",
+        "CZE"
       ],
       "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table",
       "measure": "Gross value added (B1G), current prices, annual"
@@ -253,7 +293,13 @@ export const GDP_DATA_META = {
         "ISR",
         "EGY",
         "VNM",
-        "BGD"
+        "BGD",
+        "PHL",
+        "MYS",
+        "COL",
+        "IRN",
+        "HKG",
+        "PAK"
       ],
       "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD",
       "measure": "GDP + agriculture / industry / manufacturing / services VA (USD)"
@@ -308,7 +354,16 @@ export const GDP_DATA_META = {
         "ISR",
         "EGY",
         "VNM",
-        "BGD"
+        "BGD",
+        "PHL",
+        "DNK",
+        "MYS",
+        "COL",
+        "IRN",
+        "HKG",
+        "ROU",
+        "PAK",
+        "CZE"
       ],
       "url": "https://data.worldbank.org/indicator/SP.POP.TOTL",
       "measure": "Total population; % ages 0–14; % ages 65+"
@@ -351,7 +406,16 @@ export const GDP_DATA_META = {
         "ISR",
         "EGY",
         "VNM",
-        "BGD"
+        "BGD",
+        "PHL",
+        "DNK",
+        "MYS",
+        "COL",
+        "IRN",
+        "HKG",
+        "ROU",
+        "PAK",
+        "CZE"
       ],
       "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI",
       "measure": "Long-term interest rates (~10-year government bonds), % per annum, monthly; omitted if missing/stale"
@@ -362,7 +426,7 @@ export const GDP_DATA_META = {
 export const WORLD_GDP = {
   "id": "world",
   "name": "Selected economies",
-  "amountMillions": 100334941.3,
+  "amountMillions": 104158789.3,
   "color": "#1f3d4d",
   "description": "Combined industry GDP / value added for the largest selected economies in USD. Each country uses its official national source when available; OECD fills gaps.",
   "sources": [
@@ -15427,6 +15491,354 @@ export const WORLD_GDP = {
       "bondYield10yLabel": "10-year government bond yield"
     },
     {
+      "id": "phl",
+      "name": "Philippines",
+      "code": "PHL",
+      "amountMillions": 487086.1,
+      "color": "#3c6ea8",
+      "description": "World Bank GDP and sector value added for 2025 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+      "sources": [
+        {
+          "label": "World Bank WDI (national accounts)",
+          "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+        },
+        {
+          "label": "World Bank WDI population & age structure",
+          "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        }
+      ],
+      "year": 2025,
+      "periodLabel": "2025",
+      "currency": "USD",
+      "fxLcuPerUsd": 1,
+      "sourceKey": "worldbank",
+      "children": [
+        {
+          "id": "phl-agr",
+          "name": "Agriculture, forestry, and fishing",
+          "code": "AGR",
+          "amountMillions": 41849,
+          "color": "#5a8f3c",
+          "description": "Agriculture value added, 2025 (World Bank NV.AGR.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "phl-ind",
+          "name": "Industry",
+          "code": "IND",
+          "amountMillions": 131463.4,
+          "color": "#2a6f97",
+          "description": "Industry value added, 2025 (World Bank NV.IND.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "phl-mfg",
+              "name": "Manufacturing",
+              "code": "MFG",
+              "amountMillions": 74672,
+              "color": "#225979",
+              "description": "Manufacturing value added, 2025 (World Bank NV.IND.MANF.CD).",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "phl-ind-other",
+              "name": "Other industry (excl. manufacturing)",
+              "code": "IND_OTH",
+              "amountMillions": 56791.4,
+              "color": "#1b4862",
+              "description": "Industry minus manufacturing, 2025.",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "phl-srv",
+          "name": "Services",
+          "code": "SRV",
+          "amountMillions": 313773.7,
+          "color": "#6b5c9a",
+          "description": "Services value added, 2025 (World Bank NV.SRV.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        }
+      ],
+      "population": 116786962,
+      "populationYear": 2025,
+      "gdpPerCapitaUsd": 4171,
+      "pctUnder15": 27.1,
+      "pctUnder15Year": 2025,
+      "pct65Plus": 5.7,
+      "pct65PlusYear": 2025,
+      "pctUnder18Proxy": 27.1,
+      "under18ProxyLabel": "Ages 0–14"
+    },
+    {
+      "id": "irn",
+      "name": "Iran",
+      "code": "IRN",
+      "amountMillions": 475252.1,
+      "color": "#2f7d3c",
+      "description": "World Bank GDP and sector value added for 2024 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+      "sources": [
+        {
+          "label": "World Bank WDI (national accounts)",
+          "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+        },
+        {
+          "label": "World Bank WDI population & age structure",
+          "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        }
+      ],
+      "year": 2024,
+      "periodLabel": "2024",
+      "currency": "USD",
+      "fxLcuPerUsd": 1,
+      "sourceKey": "worldbank",
+      "children": [
+        {
+          "id": "irn-agr",
+          "name": "Agriculture, forestry, and fishing",
+          "code": "AGR",
+          "amountMillions": 51329,
+          "color": "#5a8f3c",
+          "description": "Agriculture value added, 2024 (World Bank NV.AGR.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2024,
+          "periodLabel": "2024"
+        },
+        {
+          "id": "irn-ind",
+          "name": "Industry",
+          "code": "IND",
+          "amountMillions": 171422.1,
+          "color": "#2a6f97",
+          "description": "Industry value added, 2024 (World Bank NV.IND.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2024,
+          "periodLabel": "2024",
+          "children": [
+            {
+              "id": "irn-mfg",
+              "name": "Manufacturing",
+              "code": "MFG",
+              "amountMillions": 97858.7,
+              "color": "#225979",
+              "description": "Manufacturing value added, 2024 (World Bank NV.IND.MANF.CD).",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "irn-ind-other",
+              "name": "Other industry (excl. manufacturing)",
+              "code": "IND_OTH",
+              "amountMillions": 73563.4,
+              "color": "#1b4862",
+              "description": "Industry minus manufacturing, 2024.",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            }
+          ]
+        },
+        {
+          "id": "irn-srv",
+          "name": "Services",
+          "code": "SRV",
+          "amountMillions": 236616,
+          "color": "#6b5c9a",
+          "description": "Services value added, 2024 (World Bank NV.SRV.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2024,
+          "periodLabel": "2024"
+        }
+      ],
+      "population": 92417681,
+      "populationYear": 2025,
+      "gdpPerCapitaUsd": 5142,
+      "pctUnder15": 22,
+      "pctUnder15Year": 2025,
+      "pct65Plus": 8.6,
+      "pct65PlusYear": 2025,
+      "pctUnder18Proxy": 22,
+      "under18ProxyLabel": "Ages 0–14"
+    },
+    {
+      "id": "mys",
+      "name": "Malaysia",
+      "code": "MYS",
+      "amountMillions": 472193.1,
+      "color": "#8a3c3c",
+      "description": "World Bank GDP and sector value added for 2025 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+      "sources": [
+        {
+          "label": "World Bank WDI (national accounts)",
+          "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+        },
+        {
+          "label": "World Bank WDI population & age structure",
+          "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        }
+      ],
+      "year": 2025,
+      "periodLabel": "2025",
+      "currency": "USD",
+      "fxLcuPerUsd": 1,
+      "sourceKey": "worldbank",
+      "children": [
+        {
+          "id": "mys-agr",
+          "name": "Agriculture, forestry, and fishing",
+          "code": "AGR",
+          "amountMillions": 38794.9,
+          "color": "#5a8f3c",
+          "description": "Agriculture value added, 2025 (World Bank NV.AGR.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "mys-ind",
+          "name": "Industry",
+          "code": "IND",
+          "amountMillions": 168419.1,
+          "color": "#2a6f97",
+          "description": "Industry value added, 2025 (World Bank NV.IND.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "mys-mfg",
+              "name": "Manufacturing",
+              "code": "MFG",
+              "amountMillions": 104334.2,
+              "color": "#225979",
+              "description": "Manufacturing value added, 2025 (World Bank NV.IND.MANF.CD).",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "mys-ind-other",
+              "name": "Other industry (excl. manufacturing)",
+              "code": "IND_OTH",
+              "amountMillions": 64084.9,
+              "color": "#1b4862",
+              "description": "Industry minus manufacturing, 2025.",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "mys-srv",
+          "name": "Services",
+          "code": "SRV",
+          "amountMillions": 258896.8,
+          "color": "#6b5c9a",
+          "description": "Services value added, 2025 (World Bank NV.SRV.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        }
+      ],
+      "population": 35977838,
+      "populationYear": 2025,
+      "gdpPerCapitaUsd": 13125,
+      "pctUnder15": 21.3,
+      "pctUnder15Year": 2025,
+      "pct65Plus": 8,
+      "pct65PlusYear": 2025,
+      "pctUnder18Proxy": 21.3,
+      "under18ProxyLabel": "Ages 0–14"
+    },
+    {
       "id": "nor",
       "name": "Norway",
       "code": "NOR",
@@ -15983,6 +16395,130 @@ export const WORLD_GDP = {
       "bondYield10yLabel": "10-year government bond yield"
     },
     {
+      "id": "col",
+      "name": "Colombia",
+      "code": "COL",
+      "amountMillions": 457410,
+      "color": "#c45c26",
+      "description": "World Bank GDP and sector value added for 2025 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+      "sources": [
+        {
+          "label": "World Bank WDI (national accounts)",
+          "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+        },
+        {
+          "label": "World Bank WDI population & age structure",
+          "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
+          "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        }
+      ],
+      "year": 2025,
+      "periodLabel": "2025",
+      "currency": "USD",
+      "fxLcuPerUsd": 1,
+      "sourceKey": "worldbank",
+      "children": [
+        {
+          "id": "col-agr",
+          "name": "Agriculture, forestry, and fishing",
+          "code": "AGR",
+          "amountMillions": 45492.9,
+          "color": "#5a8f3c",
+          "description": "Agriculture value added, 2025 (World Bank NV.AGR.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "col-ind",
+          "name": "Industry",
+          "code": "IND",
+          "amountMillions": 99534.3,
+          "color": "#2a6f97",
+          "description": "Industry value added, 2025 (World Bank NV.IND.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "col-mfg",
+              "name": "Manufacturing",
+              "code": "MFG",
+              "amountMillions": 45262,
+              "color": "#225979",
+              "description": "Manufacturing value added, 2025 (World Bank NV.IND.MANF.CD).",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "col-ind-other",
+              "name": "Other industry (excl. manufacturing)",
+              "code": "IND_OTH",
+              "amountMillions": 54272.3,
+              "color": "#1b4862",
+              "description": "Industry minus manufacturing, 2025.",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "col-srv",
+          "name": "Services",
+          "code": "SRV",
+          "amountMillions": 267611.3,
+          "color": "#6b5c9a",
+          "description": "Services value added, 2025 (World Bank NV.SRV.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        }
+      ],
+      "population": 53425635,
+      "populationYear": 2025,
+      "gdpPerCapitaUsd": 8562,
+      "pctUnder15": 20,
+      "pctUnder15Year": 2025,
+      "pct65Plus": 10.2,
+      "pct65PlusYear": 2025,
+      "pctUnder18Proxy": 20,
+      "under18ProxyLabel": "Ages 0–14",
+      "bondYield10y": 14.01,
+      "bondYield10yPeriod": "2026-05",
+      "bondYield10yUnit": "% p.a.",
+      "bondYield10yLabel": "10-year government bond yield"
+    },
+    {
       "id": "bgd",
       "name": "Bangladesh",
       "code": "BGD",
@@ -16223,6 +16759,1032 @@ export const WORLD_GDP = {
       "bondYield10yLabel": "10-year government bond yield"
     },
     {
+      "id": "hkg",
+      "name": "Hong Kong",
+      "code": "HKG",
+      "amountMillions": 408368.7,
+      "color": "#9a3c4a",
+      "description": "World Bank GDP and sector value added for 2024 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+      "sources": [
+        {
+          "label": "World Bank WDI (national accounts)",
+          "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+        },
+        {
+          "label": "World Bank WDI population & age structure",
+          "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        }
+      ],
+      "year": 2024,
+      "periodLabel": "2024",
+      "currency": "USD",
+      "fxLcuPerUsd": 1,
+      "sourceKey": "worldbank",
+      "children": [
+        {
+          "id": "hkg-agr",
+          "name": "Agriculture, forestry, and fishing",
+          "code": "AGR",
+          "amountMillions": 152.4,
+          "color": "#5a8f3c",
+          "description": "Agriculture value added, 2024 (World Bank NV.AGR.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2024,
+          "periodLabel": "2024"
+        },
+        {
+          "id": "hkg-ind",
+          "name": "Industry",
+          "code": "IND",
+          "amountMillions": 25185.7,
+          "color": "#2a6f97",
+          "description": "Industry value added, 2024 (World Bank NV.IND.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2024,
+          "periodLabel": "2024",
+          "children": [
+            {
+              "id": "hkg-mfg",
+              "name": "Manufacturing",
+              "code": "MFG",
+              "amountMillions": 3815.7,
+              "color": "#225979",
+              "description": "Manufacturing value added, 2024 (World Bank NV.IND.MANF.CD).",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "hkg-ind-other",
+              "name": "Other industry (excl. manufacturing)",
+              "code": "IND_OTH",
+              "amountMillions": 21370,
+              "color": "#1b4862",
+              "description": "Industry minus manufacturing, 2024.",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            }
+          ]
+        },
+        {
+          "id": "hkg-srv",
+          "name": "Services",
+          "code": "SRV",
+          "amountMillions": 373464.6,
+          "color": "#6b5c9a",
+          "description": "Services value added, 2024 (World Bank NV.SRV.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2024,
+          "periodLabel": "2024"
+        }
+      ],
+      "population": 7498900,
+      "populationYear": 2025,
+      "gdpPerCapitaUsd": 54457,
+      "pctUnder15": 10.3,
+      "pctUnder15Year": 2025,
+      "pct65Plus": 23.7,
+      "pct65PlusYear": 2025,
+      "pctUnder18Proxy": 10.3,
+      "under18ProxyLabel": "Ages 0–14"
+    },
+    {
+      "id": "pak",
+      "name": "Pakistan",
+      "code": "PAK",
+      "amountMillions": 407307.2,
+      "color": "#5a8f3c",
+      "description": "World Bank GDP and sector value added for 2025 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+      "sources": [
+        {
+          "label": "World Bank WDI (national accounts)",
+          "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+        },
+        {
+          "label": "World Bank WDI population & age structure",
+          "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        }
+      ],
+      "year": 2025,
+      "periodLabel": "2025",
+      "currency": "USD",
+      "fxLcuPerUsd": 1,
+      "sourceKey": "worldbank",
+      "children": [
+        {
+          "id": "pak-agr",
+          "name": "Agriculture, forestry, and fishing",
+          "code": "AGR",
+          "amountMillions": 93767.4,
+          "color": "#5a8f3c",
+          "description": "Agriculture value added, 2025 (World Bank NV.AGR.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "pak-ind",
+          "name": "Industry",
+          "code": "IND",
+          "amountMillions": 81717.3,
+          "color": "#2a6f97",
+          "description": "Industry value added, 2025 (World Bank NV.IND.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "pak-mfg",
+              "name": "Manufacturing",
+              "code": "MFG",
+              "amountMillions": 53035,
+              "color": "#225979",
+              "description": "Manufacturing value added, 2025 (World Bank NV.IND.MANF.CD).",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "pak-ind-other",
+              "name": "Other industry (excl. manufacturing)",
+              "code": "IND_OTH",
+              "amountMillions": 28682.4,
+              "color": "#1b4862",
+              "description": "Industry minus manufacturing, 2025.",
+              "sources": [
+                {
+                  "label": "World Bank WDI (national accounts)",
+                  "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "pak-srv",
+          "name": "Services",
+          "code": "SRV",
+          "amountMillions": 207431,
+          "color": "#6b5c9a",
+          "description": "Services value added, 2025 (World Bank NV.SRV.TOTL.CD).",
+          "sources": [
+            {
+              "label": "World Bank WDI (national accounts)",
+              "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        }
+      ],
+      "population": 255219554,
+      "populationYear": 2025,
+      "gdpPerCapitaUsd": 1596,
+      "pctUnder15": 36.2,
+      "pctUnder15Year": 2025,
+      "pct65Plus": 4.4,
+      "pct65PlusYear": 2025,
+      "pctUnder18Proxy": 36.2,
+      "under18ProxyLabel": "Ages 0–14"
+    },
+    {
+      "id": "dnk",
+      "name": "Denmark",
+      "code": "DNK",
+      "amountMillions": 401815.8,
+      "color": "#9a3c4a",
+      "description": "Eurostat gross value added (B1G), current prices, 2025. Converted from EUR at 0.9239 EUR/USD.",
+      "sources": [
+        {
+          "label": "Eurostat nama_10_a10 / nama_10_a64",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+        },
+        {
+          "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+          "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+        },
+        {
+          "label": "World Bank WDI population & age structure",
+          "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
+          "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        }
+      ],
+      "year": 2025,
+      "periodLabel": "2025",
+      "currency": "EUR",
+      "fxLcuPerUsd": 0.923889546117607,
+      "sourceKey": "eurostat",
+      "children": [
+        {
+          "id": "dnk-a",
+          "name": "Agriculture, forestry and fishing",
+          "code": "A",
+          "amountMillions": 6341,
+          "color": "#5a8f3c",
+          "description": "NACE A. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "dnk-b-e",
+          "name": "Industry (except construction)",
+          "code": "B-E",
+          "amountMillions": 92031.5,
+          "color": "#2a6f97",
+          "description": "NACE B-E. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "dnk-b",
+              "name": "Mining and quarrying",
+              "code": "B",
+              "amountMillions": 2802.1,
+              "color": "#1e506d",
+              "description": "NACE B. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "dnk-c",
+              "name": "Manufacturing",
+              "code": "C",
+              "amountMillions": 81185.6,
+              "color": "#215776",
+              "description": "NACE C. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "dnk-d",
+              "name": "Electricity, gas, steam and air conditioning supply",
+              "code": "D",
+              "amountMillions": 5087.5,
+              "color": "#235d7f",
+              "description": "NACE D. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "dnk-e",
+              "name": "Water supply; sewerage, waste management and reme…",
+              "code": "E",
+              "amountMillions": 2956.3,
+              "color": "#266488",
+              "description": "NACE E. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "dnk-f",
+          "name": "Construction",
+          "code": "F",
+          "amountMillions": 20110.8,
+          "color": "#c45c26",
+          "description": "NACE F. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "dnk-g-i",
+          "name": "Trade, transport, accommodation and food",
+          "code": "G-I",
+          "amountMillions": 74152.9,
+          "color": "#2f7d6d",
+          "description": "NACE G-I. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "dnk-g",
+              "name": "Wholesale and retail trade; repair of motor vehic…",
+              "code": "G",
+              "amountMillions": 45861.3,
+              "color": "#225a4e",
+              "description": "NACE G. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "dnk-h",
+              "name": "Transportation and storage",
+              "code": "H",
+              "amountMillions": 22014,
+              "color": "#256255",
+              "description": "NACE H. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "dnk-i",
+              "name": "Accommodation and food service activities",
+              "code": "I",
+              "amountMillions": 6277.7,
+              "color": "#27695c",
+              "description": "NACE I. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "dnk-j",
+          "name": "Information and communication",
+          "code": "J",
+          "amountMillions": 18244.7,
+          "color": "#3c6ea8",
+          "description": "NACE J. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "dnk-k",
+          "name": "Financial and insurance activities",
+          "code": "K",
+          "amountMillions": 21398.9,
+          "color": "#6b5c9a",
+          "description": "NACE K. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "dnk-l",
+          "name": "Real estate activities",
+          "code": "L",
+          "amountMillions": 40228.8,
+          "color": "#8a7358",
+          "description": "NACE L. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "dnk-m-n",
+          "name": "Professional, scientific, technical; admin support",
+          "code": "M_N",
+          "amountMillions": 39825,
+          "color": "#2a8f97",
+          "description": "NACE M_N. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "dnk-m",
+              "name": "Professional, scientific and technical activities",
+              "code": "M",
+              "amountMillions": 28123.2,
+              "color": "#1e676d",
+              "description": "NACE M. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "dnk-n",
+              "name": "Administrative and support service activities",
+              "code": "N",
+              "amountMillions": 11701.9,
+              "color": "#217076",
+              "description": "NACE N. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "dnk-o-q",
+          "name": "Public admin, defence, education, health",
+          "code": "O-Q",
+          "amountMillions": 78025.9,
+          "color": "#9a5c7a",
+          "description": "NACE O-Q. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "dnk-o",
+              "name": "Public administration and defence; compulsory soc…",
+              "code": "O",
+              "amountMillions": 18552.7,
+              "color": "#6f4258",
+              "description": "NACE O. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "dnk-p",
+              "name": "Education",
+              "code": "P",
+              "amountMillions": 21383.5,
+              "color": "#78485f",
+              "description": "NACE P. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "dnk-q",
+              "name": "Human health and social work activities",
+              "code": "Q",
+              "amountMillions": 38089.7,
+              "color": "#814d66",
+              "description": "NACE Q. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "dnk-r-u",
+          "name": "Arts, other services, households",
+          "code": "R-U",
+          "amountMillions": 11456.2,
+          "color": "#c47a3c",
+          "description": "NACE R-U. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "dnk-r",
+              "name": "Arts, entertainment and recreation",
+              "code": "R",
+              "amountMillions": 5373.3,
+              "color": "#8d582b",
+              "description": "NACE R. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "dnk-s",
+              "name": "Other service activities",
+              "code": "S",
+              "amountMillions": 5347.7,
+              "color": "#995f2f",
+              "description": "NACE S. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "dnk-t",
+              "name": "Activities of households as employers; undifferen…",
+              "code": "T",
+              "amountMillions": 735.4,
+              "color": "#a56632",
+              "description": "NACE T. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        }
+      ],
+      "population": 6009169,
+      "populationYear": 2025,
+      "gdpPerCapitaUsd": 66867,
+      "pctUnder15": 15.6,
+      "pctUnder15Year": 2025,
+      "pct65Plus": 21.1,
+      "pct65PlusYear": 2025,
+      "pctUnder18Proxy": 15.6,
+      "under18ProxyLabel": "Ages 0–14",
+      "bondYield10y": 2.888,
+      "bondYield10yPeriod": "2026-04",
+      "bondYield10yUnit": "% p.a.",
+      "bondYield10yLabel": "10-year government bond yield"
+    },
+    {
+      "id": "rou",
+      "name": "Romania",
+      "code": "ROU",
+      "amountMillions": 370601.3,
+      "color": "#c47a3c",
+      "description": "Eurostat gross value added (B1G), current prices, 2025. Converted from EUR at 0.9239 EUR/USD.",
+      "sources": [
+        {
+          "label": "Eurostat nama_10_a10 / nama_10_a64",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+        },
+        {
+          "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+          "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+        },
+        {
+          "label": "World Bank WDI population & age structure",
+          "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        }
+      ],
+      "year": 2025,
+      "periodLabel": "2025",
+      "currency": "EUR",
+      "fxLcuPerUsd": 0.923889546117607,
+      "sourceKey": "eurostat",
+      "children": [
+        {
+          "id": "rou-a",
+          "name": "Agriculture, forestry and fishing",
+          "code": "A",
+          "amountMillions": 12345.7,
+          "color": "#5a8f3c",
+          "description": "NACE A. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "rou-b-e",
+          "name": "Industry (except construction)",
+          "code": "B-E",
+          "amountMillions": 68757.9,
+          "color": "#2a6f97",
+          "description": "NACE B-E. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "rou-f",
+          "name": "Construction",
+          "code": "F",
+          "amountMillions": 35500.8,
+          "color": "#c45c26",
+          "description": "NACE F. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "rou-g-i",
+          "name": "Trade, transport, accommodation and food",
+          "code": "G-I",
+          "amountMillions": 83514.9,
+          "color": "#2f7d6d",
+          "description": "NACE G-I. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "rou-j",
+          "name": "Information and communication",
+          "code": "J",
+          "amountMillions": 29056.1,
+          "color": "#3c6ea8",
+          "description": "NACE J. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "rou-k",
+          "name": "Financial and insurance activities",
+          "code": "K",
+          "amountMillions": 14213.2,
+          "color": "#6b5c9a",
+          "description": "NACE K. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "rou-l",
+          "name": "Real estate activities",
+          "code": "L",
+          "amountMillions": 29801.6,
+          "color": "#8a7358",
+          "description": "NACE L. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "rou-m-n",
+          "name": "Professional, scientific, technical; admin support",
+          "code": "M_N",
+          "amountMillions": 33357.9,
+          "color": "#2a8f97",
+          "description": "NACE M_N. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "rou-o-q",
+          "name": "Public admin, defence, education, health",
+          "code": "O-Q",
+          "amountMillions": 50497.5,
+          "color": "#9a5c7a",
+          "description": "NACE O-Q. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "rou-r-u",
+          "name": "Arts, other services, households",
+          "code": "R-U",
+          "amountMillions": 13555.9,
+          "color": "#c47a3c",
+          "description": "NACE R-U. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        }
+      ],
+      "population": 19020271,
+      "populationYear": 2025,
+      "gdpPerCapitaUsd": 19485,
+      "pctUnder15": 15.6,
+      "pctUnder15Year": 2025,
+      "pct65Plus": 20.1,
+      "pct65PlusYear": 2025,
+      "pctUnder18Proxy": 15.6,
+      "under18ProxyLabel": "Ages 0–14"
+    },
+    {
       "id": "egy",
       "name": "Egypt",
       "code": "EGY",
@@ -16337,6 +17899,562 @@ export const WORLD_GDP = {
       "pct65PlusYear": 2025,
       "pctUnder18Proxy": 31.6,
       "under18ProxyLabel": "Ages 0–14"
+    },
+    {
+      "id": "cze",
+      "name": "Czechia",
+      "code": "CZE",
+      "amountMillions": 343813.7,
+      "color": "#5c7a8a",
+      "description": "Eurostat gross value added (B1G), current prices, 2025. Converted from EUR at 0.9239 EUR/USD.",
+      "sources": [
+        {
+          "label": "Eurostat nama_10_a10 / nama_10_a64",
+          "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+        },
+        {
+          "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+          "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+        },
+        {
+          "label": "World Bank WDI population & age structure",
+          "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+        },
+        {
+          "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
+          "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        }
+      ],
+      "year": 2025,
+      "periodLabel": "2025",
+      "currency": "EUR",
+      "fxLcuPerUsd": 0.923889546117607,
+      "sourceKey": "eurostat",
+      "children": [
+        {
+          "id": "cze-a",
+          "name": "Agriculture, forestry and fishing",
+          "code": "A",
+          "amountMillions": 7660.2,
+          "color": "#5a8f3c",
+          "description": "NACE A. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "cze-b-e",
+          "name": "Industry (except construction)",
+          "code": "B-E",
+          "amountMillions": 87559.3,
+          "color": "#2a6f97",
+          "description": "NACE B-E. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "cze-b",
+              "name": "Mining and quarrying",
+              "code": "B",
+              "amountMillions": 1568.2,
+              "color": "#1e506d",
+              "description": "NACE B. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "cze-c",
+              "name": "Manufacturing",
+              "code": "C",
+              "amountMillions": 71423.7,
+              "color": "#215776",
+              "description": "NACE C. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "cze-d",
+              "name": "Electricity, gas, steam and air conditioning supply",
+              "code": "D",
+              "amountMillions": 11335.2,
+              "color": "#235d7f",
+              "description": "NACE D. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "cze-e",
+              "name": "Water supply; sewerage, waste management and reme…",
+              "code": "E",
+              "amountMillions": 3232.3,
+              "color": "#266488",
+              "description": "NACE E. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "cze-f",
+          "name": "Construction",
+          "code": "F",
+          "amountMillions": 20427.9,
+          "color": "#c45c26",
+          "description": "NACE F. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "cze-g-i",
+          "name": "Trade, transport, accommodation and food",
+          "code": "G-I",
+          "amountMillions": 59494.2,
+          "color": "#2f7d6d",
+          "description": "NACE G-I. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "cze-g",
+              "name": "Wholesale and retail trade; repair of motor vehic…",
+              "code": "G",
+              "amountMillions": 34951.7,
+              "color": "#225a4e",
+              "description": "NACE G. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "cze-h",
+              "name": "Transportation and storage",
+              "code": "H",
+              "amountMillions": 17973.9,
+              "color": "#256255",
+              "description": "NACE H. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "cze-i",
+              "name": "Accommodation and food service activities",
+              "code": "I",
+              "amountMillions": 6568.6,
+              "color": "#27695c",
+              "description": "NACE I. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "cze-j",
+          "name": "Information and communication",
+          "code": "J",
+          "amountMillions": 25519,
+          "color": "#3c6ea8",
+          "description": "NACE J. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "cze-k",
+          "name": "Financial and insurance activities",
+          "code": "K",
+          "amountMillions": 12640.4,
+          "color": "#6b5c9a",
+          "description": "NACE K. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "cze-l",
+          "name": "Real estate activities",
+          "code": "L",
+          "amountMillions": 42935.5,
+          "color": "#8a7358",
+          "description": "NACE L. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025"
+        },
+        {
+          "id": "cze-m-n",
+          "name": "Professional, scientific, technical; admin support",
+          "code": "M_N",
+          "amountMillions": 25445.2,
+          "color": "#2a8f97",
+          "description": "NACE M_N. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "cze-m",
+              "name": "Professional, scientific and technical activities",
+              "code": "M",
+              "amountMillions": 18243.7,
+              "color": "#1e676d",
+              "description": "NACE M. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "cze-n",
+              "name": "Administrative and support service activities",
+              "code": "N",
+              "amountMillions": 7201.5,
+              "color": "#217076",
+              "description": "NACE N. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "cze-o-q",
+          "name": "Public admin, defence, education, health",
+          "code": "O-Q",
+          "amountMillions": 54306.9,
+          "color": "#9a5c7a",
+          "description": "NACE O-Q. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "cze-o",
+              "name": "Public administration and defence; compulsory soc…",
+              "code": "O",
+              "amountMillions": 19422.8,
+              "color": "#6f4258",
+              "description": "NACE O. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "cze-p",
+              "name": "Education",
+              "code": "P",
+              "amountMillions": 15916.7,
+              "color": "#78485f",
+              "description": "NACE P. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "cze-q",
+              "name": "Human health and social work activities",
+              "code": "Q",
+              "amountMillions": 18967.4,
+              "color": "#814d66",
+              "description": "NACE Q. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        },
+        {
+          "id": "cze-r-u",
+          "name": "Arts, other services, households",
+          "code": "R-U",
+          "amountMillions": 7825.3,
+          "color": "#c47a3c",
+          "description": "NACE R-U. Eurostat gross value added, current prices (2025).",
+          "sources": [
+            {
+              "label": "Eurostat nama_10_a10 / nama_10_a64",
+              "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2025,
+          "periodLabel": "2025",
+          "children": [
+            {
+              "id": "cze-r",
+              "name": "Arts, entertainment and recreation",
+              "code": "R",
+              "amountMillions": 4196.1,
+              "color": "#8d582b",
+              "description": "NACE R. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "cze-s",
+              "name": "Other service activities",
+              "code": "S",
+              "amountMillions": 3149.4,
+              "color": "#995f2f",
+              "description": "NACE S. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            },
+            {
+              "id": "cze-t",
+              "name": "Activities of households as employers; undifferen…",
+              "code": "T",
+              "amountMillions": 479.8,
+              "color": "#a56632",
+              "description": "NACE T. Eurostat gross value added, current prices (2025).",
+              "sources": [
+                {
+                  "label": "Eurostat nama_10_a10 / nama_10_a64",
+                  "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2025,
+              "periodLabel": "2025"
+            }
+          ]
+        }
+      ],
+      "population": 10886878,
+      "populationYear": 2025,
+      "gdpPerCapitaUsd": 31581,
+      "pctUnder15": 15.1,
+      "pctUnder15Year": 2025,
+      "pct65Plus": 21.2,
+      "pct65PlusYear": 2025,
+      "pctUnder18Proxy": 15.1,
+      "under18ProxyLabel": "Ages 0–14",
+      "bondYield10y": 4.7383,
+      "bondYield10yPeriod": "2026-04",
+      "bondYield10yUnit": "% p.a.",
+      "bondYield10yLabel": "10-year government bond yield"
     },
     {
       "id": "nga",
@@ -31478,6 +33596,354 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield"
   },
+  "PHL": {
+    "id": "phl",
+    "name": "Philippines",
+    "code": "PHL",
+    "amountMillions": 487086.1,
+    "color": "#3c6ea8",
+    "description": "World Bank GDP and sector value added for 2025 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+    "sources": [
+      {
+        "label": "World Bank WDI (national accounts)",
+        "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+      },
+      {
+        "label": "World Bank WDI population & age structure",
+        "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      }
+    ],
+    "year": 2025,
+    "periodLabel": "2025",
+    "currency": "USD",
+    "fxLcuPerUsd": 1,
+    "sourceKey": "worldbank",
+    "children": [
+      {
+        "id": "phl-agr",
+        "name": "Agriculture, forestry, and fishing",
+        "code": "AGR",
+        "amountMillions": 41849,
+        "color": "#5a8f3c",
+        "description": "Agriculture value added, 2025 (World Bank NV.AGR.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "phl-ind",
+        "name": "Industry",
+        "code": "IND",
+        "amountMillions": 131463.4,
+        "color": "#2a6f97",
+        "description": "Industry value added, 2025 (World Bank NV.IND.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "phl-mfg",
+            "name": "Manufacturing",
+            "code": "MFG",
+            "amountMillions": 74672,
+            "color": "#225979",
+            "description": "Manufacturing value added, 2025 (World Bank NV.IND.MANF.CD).",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "phl-ind-other",
+            "name": "Other industry (excl. manufacturing)",
+            "code": "IND_OTH",
+            "amountMillions": 56791.4,
+            "color": "#1b4862",
+            "description": "Industry minus manufacturing, 2025.",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "phl-srv",
+        "name": "Services",
+        "code": "SRV",
+        "amountMillions": 313773.7,
+        "color": "#6b5c9a",
+        "description": "Services value added, 2025 (World Bank NV.SRV.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      }
+    ],
+    "population": 116786962,
+    "populationYear": 2025,
+    "gdpPerCapitaUsd": 4171,
+    "pctUnder15": 27.1,
+    "pctUnder15Year": 2025,
+    "pct65Plus": 5.7,
+    "pct65PlusYear": 2025,
+    "pctUnder18Proxy": 27.1,
+    "under18ProxyLabel": "Ages 0–14"
+  },
+  "IRN": {
+    "id": "irn",
+    "name": "Iran",
+    "code": "IRN",
+    "amountMillions": 475252.1,
+    "color": "#2f7d3c",
+    "description": "World Bank GDP and sector value added for 2024 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+    "sources": [
+      {
+        "label": "World Bank WDI (national accounts)",
+        "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+      },
+      {
+        "label": "World Bank WDI population & age structure",
+        "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      }
+    ],
+    "year": 2024,
+    "periodLabel": "2024",
+    "currency": "USD",
+    "fxLcuPerUsd": 1,
+    "sourceKey": "worldbank",
+    "children": [
+      {
+        "id": "irn-agr",
+        "name": "Agriculture, forestry, and fishing",
+        "code": "AGR",
+        "amountMillions": 51329,
+        "color": "#5a8f3c",
+        "description": "Agriculture value added, 2024 (World Bank NV.AGR.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2024,
+        "periodLabel": "2024"
+      },
+      {
+        "id": "irn-ind",
+        "name": "Industry",
+        "code": "IND",
+        "amountMillions": 171422.1,
+        "color": "#2a6f97",
+        "description": "Industry value added, 2024 (World Bank NV.IND.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2024,
+        "periodLabel": "2024",
+        "children": [
+          {
+            "id": "irn-mfg",
+            "name": "Manufacturing",
+            "code": "MFG",
+            "amountMillions": 97858.7,
+            "color": "#225979",
+            "description": "Manufacturing value added, 2024 (World Bank NV.IND.MANF.CD).",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2024,
+            "periodLabel": "2024"
+          },
+          {
+            "id": "irn-ind-other",
+            "name": "Other industry (excl. manufacturing)",
+            "code": "IND_OTH",
+            "amountMillions": 73563.4,
+            "color": "#1b4862",
+            "description": "Industry minus manufacturing, 2024.",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2024,
+            "periodLabel": "2024"
+          }
+        ]
+      },
+      {
+        "id": "irn-srv",
+        "name": "Services",
+        "code": "SRV",
+        "amountMillions": 236616,
+        "color": "#6b5c9a",
+        "description": "Services value added, 2024 (World Bank NV.SRV.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2024,
+        "periodLabel": "2024"
+      }
+    ],
+    "population": 92417681,
+    "populationYear": 2025,
+    "gdpPerCapitaUsd": 5142,
+    "pctUnder15": 22,
+    "pctUnder15Year": 2025,
+    "pct65Plus": 8.6,
+    "pct65PlusYear": 2025,
+    "pctUnder18Proxy": 22,
+    "under18ProxyLabel": "Ages 0–14"
+  },
+  "MYS": {
+    "id": "mys",
+    "name": "Malaysia",
+    "code": "MYS",
+    "amountMillions": 472193.1,
+    "color": "#8a3c3c",
+    "description": "World Bank GDP and sector value added for 2025 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+    "sources": [
+      {
+        "label": "World Bank WDI (national accounts)",
+        "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+      },
+      {
+        "label": "World Bank WDI population & age structure",
+        "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      }
+    ],
+    "year": 2025,
+    "periodLabel": "2025",
+    "currency": "USD",
+    "fxLcuPerUsd": 1,
+    "sourceKey": "worldbank",
+    "children": [
+      {
+        "id": "mys-agr",
+        "name": "Agriculture, forestry, and fishing",
+        "code": "AGR",
+        "amountMillions": 38794.9,
+        "color": "#5a8f3c",
+        "description": "Agriculture value added, 2025 (World Bank NV.AGR.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "mys-ind",
+        "name": "Industry",
+        "code": "IND",
+        "amountMillions": 168419.1,
+        "color": "#2a6f97",
+        "description": "Industry value added, 2025 (World Bank NV.IND.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "mys-mfg",
+            "name": "Manufacturing",
+            "code": "MFG",
+            "amountMillions": 104334.2,
+            "color": "#225979",
+            "description": "Manufacturing value added, 2025 (World Bank NV.IND.MANF.CD).",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "mys-ind-other",
+            "name": "Other industry (excl. manufacturing)",
+            "code": "IND_OTH",
+            "amountMillions": 64084.9,
+            "color": "#1b4862",
+            "description": "Industry minus manufacturing, 2025.",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "mys-srv",
+        "name": "Services",
+        "code": "SRV",
+        "amountMillions": 258896.8,
+        "color": "#6b5c9a",
+        "description": "Services value added, 2025 (World Bank NV.SRV.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      }
+    ],
+    "population": 35977838,
+    "populationYear": 2025,
+    "gdpPerCapitaUsd": 13125,
+    "pctUnder15": 21.3,
+    "pctUnder15Year": 2025,
+    "pct65Plus": 8,
+    "pct65PlusYear": 2025,
+    "pctUnder18Proxy": 21.3,
+    "under18ProxyLabel": "Ages 0–14"
+  },
   "NOR": {
     "id": "nor",
     "name": "Norway",
@@ -32034,6 +34500,130 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield"
   },
+  "COL": {
+    "id": "col",
+    "name": "Colombia",
+    "code": "COL",
+    "amountMillions": 457410,
+    "color": "#c45c26",
+    "description": "World Bank GDP and sector value added for 2025 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+    "sources": [
+      {
+        "label": "World Bank WDI (national accounts)",
+        "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+      },
+      {
+        "label": "World Bank WDI population & age structure",
+        "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
+        "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      }
+    ],
+    "year": 2025,
+    "periodLabel": "2025",
+    "currency": "USD",
+    "fxLcuPerUsd": 1,
+    "sourceKey": "worldbank",
+    "children": [
+      {
+        "id": "col-agr",
+        "name": "Agriculture, forestry, and fishing",
+        "code": "AGR",
+        "amountMillions": 45492.9,
+        "color": "#5a8f3c",
+        "description": "Agriculture value added, 2025 (World Bank NV.AGR.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "col-ind",
+        "name": "Industry",
+        "code": "IND",
+        "amountMillions": 99534.3,
+        "color": "#2a6f97",
+        "description": "Industry value added, 2025 (World Bank NV.IND.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "col-mfg",
+            "name": "Manufacturing",
+            "code": "MFG",
+            "amountMillions": 45262,
+            "color": "#225979",
+            "description": "Manufacturing value added, 2025 (World Bank NV.IND.MANF.CD).",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "col-ind-other",
+            "name": "Other industry (excl. manufacturing)",
+            "code": "IND_OTH",
+            "amountMillions": 54272.3,
+            "color": "#1b4862",
+            "description": "Industry minus manufacturing, 2025.",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "col-srv",
+        "name": "Services",
+        "code": "SRV",
+        "amountMillions": 267611.3,
+        "color": "#6b5c9a",
+        "description": "Services value added, 2025 (World Bank NV.SRV.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      }
+    ],
+    "population": 53425635,
+    "populationYear": 2025,
+    "gdpPerCapitaUsd": 8562,
+    "pctUnder15": 20,
+    "pctUnder15Year": 2025,
+    "pct65Plus": 10.2,
+    "pct65PlusYear": 2025,
+    "pctUnder18Proxy": 20,
+    "under18ProxyLabel": "Ages 0–14",
+    "bondYield10y": 14.01,
+    "bondYield10yPeriod": "2026-05",
+    "bondYield10yUnit": "% p.a.",
+    "bondYield10yLabel": "10-year government bond yield"
+  },
   "BGD": {
     "id": "bgd",
     "name": "Bangladesh",
@@ -32274,6 +34864,1032 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield"
   },
+  "HKG": {
+    "id": "hkg",
+    "name": "Hong Kong",
+    "code": "HKG",
+    "amountMillions": 408368.7,
+    "color": "#9a3c4a",
+    "description": "World Bank GDP and sector value added for 2024 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+    "sources": [
+      {
+        "label": "World Bank WDI (national accounts)",
+        "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+      },
+      {
+        "label": "World Bank WDI population & age structure",
+        "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      }
+    ],
+    "year": 2024,
+    "periodLabel": "2024",
+    "currency": "USD",
+    "fxLcuPerUsd": 1,
+    "sourceKey": "worldbank",
+    "children": [
+      {
+        "id": "hkg-agr",
+        "name": "Agriculture, forestry, and fishing",
+        "code": "AGR",
+        "amountMillions": 152.4,
+        "color": "#5a8f3c",
+        "description": "Agriculture value added, 2024 (World Bank NV.AGR.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2024,
+        "periodLabel": "2024"
+      },
+      {
+        "id": "hkg-ind",
+        "name": "Industry",
+        "code": "IND",
+        "amountMillions": 25185.7,
+        "color": "#2a6f97",
+        "description": "Industry value added, 2024 (World Bank NV.IND.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2024,
+        "periodLabel": "2024",
+        "children": [
+          {
+            "id": "hkg-mfg",
+            "name": "Manufacturing",
+            "code": "MFG",
+            "amountMillions": 3815.7,
+            "color": "#225979",
+            "description": "Manufacturing value added, 2024 (World Bank NV.IND.MANF.CD).",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2024,
+            "periodLabel": "2024"
+          },
+          {
+            "id": "hkg-ind-other",
+            "name": "Other industry (excl. manufacturing)",
+            "code": "IND_OTH",
+            "amountMillions": 21370,
+            "color": "#1b4862",
+            "description": "Industry minus manufacturing, 2024.",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2024,
+            "periodLabel": "2024"
+          }
+        ]
+      },
+      {
+        "id": "hkg-srv",
+        "name": "Services",
+        "code": "SRV",
+        "amountMillions": 373464.6,
+        "color": "#6b5c9a",
+        "description": "Services value added, 2024 (World Bank NV.SRV.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2024,
+        "periodLabel": "2024"
+      }
+    ],
+    "population": 7498900,
+    "populationYear": 2025,
+    "gdpPerCapitaUsd": 54457,
+    "pctUnder15": 10.3,
+    "pctUnder15Year": 2025,
+    "pct65Plus": 23.7,
+    "pct65PlusYear": 2025,
+    "pctUnder18Proxy": 10.3,
+    "under18ProxyLabel": "Ages 0–14"
+  },
+  "PAK": {
+    "id": "pak",
+    "name": "Pakistan",
+    "code": "PAK",
+    "amountMillions": 407307.2,
+    "color": "#5a8f3c",
+    "description": "World Bank GDP and sector value added for 2025 (compiled from national sources). Sector detail is broad (agriculture / industry / services).",
+    "sources": [
+      {
+        "label": "World Bank WDI (national accounts)",
+        "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+      },
+      {
+        "label": "World Bank WDI population & age structure",
+        "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      }
+    ],
+    "year": 2025,
+    "periodLabel": "2025",
+    "currency": "USD",
+    "fxLcuPerUsd": 1,
+    "sourceKey": "worldbank",
+    "children": [
+      {
+        "id": "pak-agr",
+        "name": "Agriculture, forestry, and fishing",
+        "code": "AGR",
+        "amountMillions": 93767.4,
+        "color": "#5a8f3c",
+        "description": "Agriculture value added, 2025 (World Bank NV.AGR.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "pak-ind",
+        "name": "Industry",
+        "code": "IND",
+        "amountMillions": 81717.3,
+        "color": "#2a6f97",
+        "description": "Industry value added, 2025 (World Bank NV.IND.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "pak-mfg",
+            "name": "Manufacturing",
+            "code": "MFG",
+            "amountMillions": 53035,
+            "color": "#225979",
+            "description": "Manufacturing value added, 2025 (World Bank NV.IND.MANF.CD).",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "pak-ind-other",
+            "name": "Other industry (excl. manufacturing)",
+            "code": "IND_OTH",
+            "amountMillions": 28682.4,
+            "color": "#1b4862",
+            "description": "Industry minus manufacturing, 2025.",
+            "sources": [
+              {
+                "label": "World Bank WDI (national accounts)",
+                "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "pak-srv",
+        "name": "Services",
+        "code": "SRV",
+        "amountMillions": 207431,
+        "color": "#6b5c9a",
+        "description": "Services value added, 2025 (World Bank NV.SRV.TOTL.CD).",
+        "sources": [
+          {
+            "label": "World Bank WDI (national accounts)",
+            "url": "https://data.worldbank.org/indicator/NV.IND.TOTL.CD"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      }
+    ],
+    "population": 255219554,
+    "populationYear": 2025,
+    "gdpPerCapitaUsd": 1596,
+    "pctUnder15": 36.2,
+    "pctUnder15Year": 2025,
+    "pct65Plus": 4.4,
+    "pct65PlusYear": 2025,
+    "pctUnder18Proxy": 36.2,
+    "under18ProxyLabel": "Ages 0–14"
+  },
+  "DNK": {
+    "id": "dnk",
+    "name": "Denmark",
+    "code": "DNK",
+    "amountMillions": 401815.8,
+    "color": "#9a3c4a",
+    "description": "Eurostat gross value added (B1G), current prices, 2025. Converted from EUR at 0.9239 EUR/USD.",
+    "sources": [
+      {
+        "label": "Eurostat nama_10_a10 / nama_10_a64",
+        "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+      },
+      {
+        "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+        "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+      },
+      {
+        "label": "World Bank WDI population & age structure",
+        "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
+        "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      }
+    ],
+    "year": 2025,
+    "periodLabel": "2025",
+    "currency": "EUR",
+    "fxLcuPerUsd": 0.923889546117607,
+    "sourceKey": "eurostat",
+    "children": [
+      {
+        "id": "dnk-a",
+        "name": "Agriculture, forestry and fishing",
+        "code": "A",
+        "amountMillions": 6341,
+        "color": "#5a8f3c",
+        "description": "NACE A. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "dnk-b-e",
+        "name": "Industry (except construction)",
+        "code": "B-E",
+        "amountMillions": 92031.5,
+        "color": "#2a6f97",
+        "description": "NACE B-E. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "dnk-b",
+            "name": "Mining and quarrying",
+            "code": "B",
+            "amountMillions": 2802.1,
+            "color": "#1e506d",
+            "description": "NACE B. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "dnk-c",
+            "name": "Manufacturing",
+            "code": "C",
+            "amountMillions": 81185.6,
+            "color": "#215776",
+            "description": "NACE C. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "dnk-d",
+            "name": "Electricity, gas, steam and air conditioning supply",
+            "code": "D",
+            "amountMillions": 5087.5,
+            "color": "#235d7f",
+            "description": "NACE D. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "dnk-e",
+            "name": "Water supply; sewerage, waste management and reme…",
+            "code": "E",
+            "amountMillions": 2956.3,
+            "color": "#266488",
+            "description": "NACE E. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "dnk-f",
+        "name": "Construction",
+        "code": "F",
+        "amountMillions": 20110.8,
+        "color": "#c45c26",
+        "description": "NACE F. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "dnk-g-i",
+        "name": "Trade, transport, accommodation and food",
+        "code": "G-I",
+        "amountMillions": 74152.9,
+        "color": "#2f7d6d",
+        "description": "NACE G-I. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "dnk-g",
+            "name": "Wholesale and retail trade; repair of motor vehic…",
+            "code": "G",
+            "amountMillions": 45861.3,
+            "color": "#225a4e",
+            "description": "NACE G. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "dnk-h",
+            "name": "Transportation and storage",
+            "code": "H",
+            "amountMillions": 22014,
+            "color": "#256255",
+            "description": "NACE H. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "dnk-i",
+            "name": "Accommodation and food service activities",
+            "code": "I",
+            "amountMillions": 6277.7,
+            "color": "#27695c",
+            "description": "NACE I. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "dnk-j",
+        "name": "Information and communication",
+        "code": "J",
+        "amountMillions": 18244.7,
+        "color": "#3c6ea8",
+        "description": "NACE J. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "dnk-k",
+        "name": "Financial and insurance activities",
+        "code": "K",
+        "amountMillions": 21398.9,
+        "color": "#6b5c9a",
+        "description": "NACE K. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "dnk-l",
+        "name": "Real estate activities",
+        "code": "L",
+        "amountMillions": 40228.8,
+        "color": "#8a7358",
+        "description": "NACE L. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "dnk-m-n",
+        "name": "Professional, scientific, technical; admin support",
+        "code": "M_N",
+        "amountMillions": 39825,
+        "color": "#2a8f97",
+        "description": "NACE M_N. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "dnk-m",
+            "name": "Professional, scientific and technical activities",
+            "code": "M",
+            "amountMillions": 28123.2,
+            "color": "#1e676d",
+            "description": "NACE M. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "dnk-n",
+            "name": "Administrative and support service activities",
+            "code": "N",
+            "amountMillions": 11701.9,
+            "color": "#217076",
+            "description": "NACE N. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "dnk-o-q",
+        "name": "Public admin, defence, education, health",
+        "code": "O-Q",
+        "amountMillions": 78025.9,
+        "color": "#9a5c7a",
+        "description": "NACE O-Q. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "dnk-o",
+            "name": "Public administration and defence; compulsory soc…",
+            "code": "O",
+            "amountMillions": 18552.7,
+            "color": "#6f4258",
+            "description": "NACE O. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "dnk-p",
+            "name": "Education",
+            "code": "P",
+            "amountMillions": 21383.5,
+            "color": "#78485f",
+            "description": "NACE P. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "dnk-q",
+            "name": "Human health and social work activities",
+            "code": "Q",
+            "amountMillions": 38089.7,
+            "color": "#814d66",
+            "description": "NACE Q. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "dnk-r-u",
+        "name": "Arts, other services, households",
+        "code": "R-U",
+        "amountMillions": 11456.2,
+        "color": "#c47a3c",
+        "description": "NACE R-U. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "dnk-r",
+            "name": "Arts, entertainment and recreation",
+            "code": "R",
+            "amountMillions": 5373.3,
+            "color": "#8d582b",
+            "description": "NACE R. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "dnk-s",
+            "name": "Other service activities",
+            "code": "S",
+            "amountMillions": 5347.7,
+            "color": "#995f2f",
+            "description": "NACE S. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "dnk-t",
+            "name": "Activities of households as employers; undifferen…",
+            "code": "T",
+            "amountMillions": 735.4,
+            "color": "#a56632",
+            "description": "NACE T. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      }
+    ],
+    "population": 6009169,
+    "populationYear": 2025,
+    "gdpPerCapitaUsd": 66867,
+    "pctUnder15": 15.6,
+    "pctUnder15Year": 2025,
+    "pct65Plus": 21.1,
+    "pct65PlusYear": 2025,
+    "pctUnder18Proxy": 15.6,
+    "under18ProxyLabel": "Ages 0–14",
+    "bondYield10y": 2.888,
+    "bondYield10yPeriod": "2026-04",
+    "bondYield10yUnit": "% p.a.",
+    "bondYield10yLabel": "10-year government bond yield"
+  },
+  "ROU": {
+    "id": "rou",
+    "name": "Romania",
+    "code": "ROU",
+    "amountMillions": 370601.3,
+    "color": "#c47a3c",
+    "description": "Eurostat gross value added (B1G), current prices, 2025. Converted from EUR at 0.9239 EUR/USD.",
+    "sources": [
+      {
+        "label": "Eurostat nama_10_a10 / nama_10_a64",
+        "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+      },
+      {
+        "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+        "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+      },
+      {
+        "label": "World Bank WDI population & age structure",
+        "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      }
+    ],
+    "year": 2025,
+    "periodLabel": "2025",
+    "currency": "EUR",
+    "fxLcuPerUsd": 0.923889546117607,
+    "sourceKey": "eurostat",
+    "children": [
+      {
+        "id": "rou-a",
+        "name": "Agriculture, forestry and fishing",
+        "code": "A",
+        "amountMillions": 12345.7,
+        "color": "#5a8f3c",
+        "description": "NACE A. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "rou-b-e",
+        "name": "Industry (except construction)",
+        "code": "B-E",
+        "amountMillions": 68757.9,
+        "color": "#2a6f97",
+        "description": "NACE B-E. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "rou-f",
+        "name": "Construction",
+        "code": "F",
+        "amountMillions": 35500.8,
+        "color": "#c45c26",
+        "description": "NACE F. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "rou-g-i",
+        "name": "Trade, transport, accommodation and food",
+        "code": "G-I",
+        "amountMillions": 83514.9,
+        "color": "#2f7d6d",
+        "description": "NACE G-I. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "rou-j",
+        "name": "Information and communication",
+        "code": "J",
+        "amountMillions": 29056.1,
+        "color": "#3c6ea8",
+        "description": "NACE J. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "rou-k",
+        "name": "Financial and insurance activities",
+        "code": "K",
+        "amountMillions": 14213.2,
+        "color": "#6b5c9a",
+        "description": "NACE K. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "rou-l",
+        "name": "Real estate activities",
+        "code": "L",
+        "amountMillions": 29801.6,
+        "color": "#8a7358",
+        "description": "NACE L. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "rou-m-n",
+        "name": "Professional, scientific, technical; admin support",
+        "code": "M_N",
+        "amountMillions": 33357.9,
+        "color": "#2a8f97",
+        "description": "NACE M_N. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "rou-o-q",
+        "name": "Public admin, defence, education, health",
+        "code": "O-Q",
+        "amountMillions": 50497.5,
+        "color": "#9a5c7a",
+        "description": "NACE O-Q. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "rou-r-u",
+        "name": "Arts, other services, households",
+        "code": "R-U",
+        "amountMillions": 13555.9,
+        "color": "#c47a3c",
+        "description": "NACE R-U. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      }
+    ],
+    "population": 19020271,
+    "populationYear": 2025,
+    "gdpPerCapitaUsd": 19485,
+    "pctUnder15": 15.6,
+    "pctUnder15Year": 2025,
+    "pct65Plus": 20.1,
+    "pct65PlusYear": 2025,
+    "pctUnder18Proxy": 15.6,
+    "under18ProxyLabel": "Ages 0–14"
+  },
   "EGY": {
     "id": "egy",
     "name": "Egypt",
@@ -32389,6 +36005,562 @@ export const COUNTRY_GDP = {
     "pct65PlusYear": 2025,
     "pctUnder18Proxy": 31.6,
     "under18ProxyLabel": "Ages 0–14"
+  },
+  "CZE": {
+    "id": "cze",
+    "name": "Czechia",
+    "code": "CZE",
+    "amountMillions": 343813.7,
+    "color": "#5c7a8a",
+    "description": "Eurostat gross value added (B1G), current prices, 2025. Converted from EUR at 0.9239 EUR/USD.",
+    "sources": [
+      {
+        "label": "Eurostat nama_10_a10 / nama_10_a64",
+        "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+      },
+      {
+        "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+        "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+      },
+      {
+        "label": "World Bank WDI population & age structure",
+        "url": "https://data.worldbank.org/indicator/SP.POP.TOTL"
+      },
+      {
+        "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
+        "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      }
+    ],
+    "year": 2025,
+    "periodLabel": "2025",
+    "currency": "EUR",
+    "fxLcuPerUsd": 0.923889546117607,
+    "sourceKey": "eurostat",
+    "children": [
+      {
+        "id": "cze-a",
+        "name": "Agriculture, forestry and fishing",
+        "code": "A",
+        "amountMillions": 7660.2,
+        "color": "#5a8f3c",
+        "description": "NACE A. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "cze-b-e",
+        "name": "Industry (except construction)",
+        "code": "B-E",
+        "amountMillions": 87559.3,
+        "color": "#2a6f97",
+        "description": "NACE B-E. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "cze-b",
+            "name": "Mining and quarrying",
+            "code": "B",
+            "amountMillions": 1568.2,
+            "color": "#1e506d",
+            "description": "NACE B. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "cze-c",
+            "name": "Manufacturing",
+            "code": "C",
+            "amountMillions": 71423.7,
+            "color": "#215776",
+            "description": "NACE C. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "cze-d",
+            "name": "Electricity, gas, steam and air conditioning supply",
+            "code": "D",
+            "amountMillions": 11335.2,
+            "color": "#235d7f",
+            "description": "NACE D. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "cze-e",
+            "name": "Water supply; sewerage, waste management and reme…",
+            "code": "E",
+            "amountMillions": 3232.3,
+            "color": "#266488",
+            "description": "NACE E. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "cze-f",
+        "name": "Construction",
+        "code": "F",
+        "amountMillions": 20427.9,
+        "color": "#c45c26",
+        "description": "NACE F. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "cze-g-i",
+        "name": "Trade, transport, accommodation and food",
+        "code": "G-I",
+        "amountMillions": 59494.2,
+        "color": "#2f7d6d",
+        "description": "NACE G-I. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "cze-g",
+            "name": "Wholesale and retail trade; repair of motor vehic…",
+            "code": "G",
+            "amountMillions": 34951.7,
+            "color": "#225a4e",
+            "description": "NACE G. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "cze-h",
+            "name": "Transportation and storage",
+            "code": "H",
+            "amountMillions": 17973.9,
+            "color": "#256255",
+            "description": "NACE H. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "cze-i",
+            "name": "Accommodation and food service activities",
+            "code": "I",
+            "amountMillions": 6568.6,
+            "color": "#27695c",
+            "description": "NACE I. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "cze-j",
+        "name": "Information and communication",
+        "code": "J",
+        "amountMillions": 25519,
+        "color": "#3c6ea8",
+        "description": "NACE J. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "cze-k",
+        "name": "Financial and insurance activities",
+        "code": "K",
+        "amountMillions": 12640.4,
+        "color": "#6b5c9a",
+        "description": "NACE K. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "cze-l",
+        "name": "Real estate activities",
+        "code": "L",
+        "amountMillions": 42935.5,
+        "color": "#8a7358",
+        "description": "NACE L. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025"
+      },
+      {
+        "id": "cze-m-n",
+        "name": "Professional, scientific, technical; admin support",
+        "code": "M_N",
+        "amountMillions": 25445.2,
+        "color": "#2a8f97",
+        "description": "NACE M_N. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "cze-m",
+            "name": "Professional, scientific and technical activities",
+            "code": "M",
+            "amountMillions": 18243.7,
+            "color": "#1e676d",
+            "description": "NACE M. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "cze-n",
+            "name": "Administrative and support service activities",
+            "code": "N",
+            "amountMillions": 7201.5,
+            "color": "#217076",
+            "description": "NACE N. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "cze-o-q",
+        "name": "Public admin, defence, education, health",
+        "code": "O-Q",
+        "amountMillions": 54306.9,
+        "color": "#9a5c7a",
+        "description": "NACE O-Q. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "cze-o",
+            "name": "Public administration and defence; compulsory soc…",
+            "code": "O",
+            "amountMillions": 19422.8,
+            "color": "#6f4258",
+            "description": "NACE O. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "cze-p",
+            "name": "Education",
+            "code": "P",
+            "amountMillions": 15916.7,
+            "color": "#78485f",
+            "description": "NACE P. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "cze-q",
+            "name": "Human health and social work activities",
+            "code": "Q",
+            "amountMillions": 18967.4,
+            "color": "#814d66",
+            "description": "NACE Q. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      },
+      {
+        "id": "cze-r-u",
+        "name": "Arts, other services, households",
+        "code": "R-U",
+        "amountMillions": 7825.3,
+        "color": "#c47a3c",
+        "description": "NACE R-U. Eurostat gross value added, current prices (2025).",
+        "sources": [
+          {
+            "label": "Eurostat nama_10_a10 / nama_10_a64",
+            "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+          },
+          {
+            "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+            "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+          }
+        ],
+        "year": 2025,
+        "periodLabel": "2025",
+        "children": [
+          {
+            "id": "cze-r",
+            "name": "Arts, entertainment and recreation",
+            "code": "R",
+            "amountMillions": 4196.1,
+            "color": "#8d582b",
+            "description": "NACE R. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "cze-s",
+            "name": "Other service activities",
+            "code": "S",
+            "amountMillions": 3149.4,
+            "color": "#995f2f",
+            "description": "NACE S. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          },
+          {
+            "id": "cze-t",
+            "name": "Activities of households as employers; undifferen…",
+            "code": "T",
+            "amountMillions": 479.8,
+            "color": "#a56632",
+            "description": "NACE T. Eurostat gross value added, current prices (2025).",
+            "sources": [
+              {
+                "label": "Eurostat nama_10_a10 / nama_10_a64",
+                "url": "https://ec.europa.eu/eurostat/databrowser/view/nama_10_a10/default/table"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2025,
+            "periodLabel": "2025"
+          }
+        ]
+      }
+    ],
+    "population": 10886878,
+    "populationYear": 2025,
+    "gdpPerCapitaUsd": 31581,
+    "pctUnder15": 15.1,
+    "pctUnder15Year": 2025,
+    "pct65Plus": 21.2,
+    "pct65PlusYear": 2025,
+    "pctUnder18Proxy": 15.1,
+    "under18ProxyLabel": "Ages 0–14",
+    "bondYield10y": 4.7383,
+    "bondYield10yPeriod": "2026-04",
+    "bondYield10yUnit": "% p.a.",
+    "bondYield10yLabel": "10-year government bond yield"
   },
   "NGA": {
     "id": "nga",
@@ -32511,4 +36683,4 @@ export const COUNTRY_GDP = {
   CountryGdpTree
 >;
 
-export const COUNTRY_ORDER = ["USA","CHN","DEU","JPN","IND","GBR","FRA","RUS","BRA","ITA","KOR","MEX","CAN","AUS","ESP","IDN","SAU","TUR","NLD","CHE","POL","ARG","BEL","IRL","SGP","SWE","THA","ARE","ISR","VNM","AUT","NOR","BGD","ZAF","EGY","NGA"] as const;
+export const COUNTRY_ORDER = ["USA","CHN","DEU","JPN","IND","GBR","FRA","RUS","BRA","ITA","KOR","MEX","CAN","AUS","ESP","IDN","SAU","TUR","NLD","CHE","POL","ARG","BEL","IRL","SGP","SWE","THA","ARE","ISR","VNM","AUT","PHL","IRN","MYS","NOR","COL","BGD","ZAF","HKG","PAK","DNK","ROU","EGY","CZE","NGA"] as const;
