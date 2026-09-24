@@ -1011,37 +1011,34 @@ export default function GdpExplorer() {
 
       <footer className="border-t border-[#e0d6c6] pt-4 text-xs leading-relaxed text-[#5c6b73]">
         <p>
-          <strong className="font-medium text-[#1f3d4d]">USA:</strong>{" "}
+          Sources:{" "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.bea.url}
             target="_blank"
             rel="noreferrer"
           >
-            BEA via FRED
+            BEA/FRED
           </a>
-          . <strong className="font-medium text-[#1f3d4d]">Canada:</strong>{" "}
+          ,{" "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.statcan.url}
             target="_blank"
             rel="noreferrer"
           >
-            Statistics Canada 36-10-0434
+            StatCan
           </a>
-          . <strong className="font-medium text-[#1f3d4d]">Australia:</strong>{" "}
+          ,{" "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.abs.url}
             target="_blank"
             rel="noreferrer"
           >
-            ABS GDP(P)
+            ABS
           </a>
-          .{" "}
-          <strong className="font-medium text-[#1f3d4d]">
-            Eurostat (EU/EEA):
-          </strong>{" "}
+          ,{" "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.eurostat.url}
@@ -1050,58 +1047,26 @@ export default function GdpExplorer() {
           >
             Eurostat
           </a>
-          .{" "}
-          <strong className="font-medium text-[#1f3d4d]">
-            WB sector VA:
-          </strong>{" "}
+          ,{" "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.worldbank.url}
             target="_blank"
             rel="noreferrer"
           >
-            World Bank WDI
+            World Bank
           </a>
-          .{" "}
-          <strong className="font-medium text-[#1f3d4d]">
-            OECD Table 6:
-          </strong>{" "}
+          ,{" "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.oecd.url}
             target="_blank"
             rel="noreferrer"
           >
-            JP/GB/MX/TR/CH
+            OECD
           </a>
-          . Population &amp; age structure from{" "}
-          <a
-            className="text-[#2a6f97] hover:underline"
-            href={GDP_DATA_META.sources.population.url}
-            target="_blank"
-            rel="noreferrer"
-          >
-            World Bank WDI
-          </a>{" "}
-          (under-18 shown as ages 0–14). 10-year yields from{" "}
-          <a
-            className="text-[#2a6f97] hover:underline"
-            href={GDP_DATA_META.sources.bondYields.url}
-            target="_blank"
-            rel="noreferrer"
-          >
-            OECD IRLT
-          </a>
-          . OECD is also the fallback when a national feed fails
-          {GDP_DATA_META.oecdFallbackUsed.length
-            ? ` (active for ${GDP_DATA_META.oecdFallbackUsed.join(", ")})`
-            : ""}.
-          USD via World Bank PA.NUS.FCRF. Fetched{" "}
+          . Data as of{" "}
           {new Date(GDP_DATA_META.fetchedAt).toLocaleDateString("en-CA")}.
-        </p>
-        <p className="mt-1">
-          Refresh with{" "}
-          <code className="text-[#1f3d4d]">npm run fetch:gdp</code>.
         </p>
       </footer>
     </div>
