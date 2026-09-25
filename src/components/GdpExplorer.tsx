@@ -702,9 +702,9 @@ function ComparabilityNotice({
     >
       <p>
         <span className="font-medium text-[#1f3d4d]">Comparability check: </span>
-        Country slices are the latest industry totals from each feed — they are{" "}
-        <span className="font-medium text-[#1f3d4d]">not</span> a single SNA
-        concept. Nominal current-price GDP/VA: USA, China, India, and other
+        Country slices are the latest industry totals. They are{" "}
+        <span className="font-medium text-[#1f3d4d]">not</span> a perfect comparison.
+        Nominal current-price GDP/VA: USA, China, India, and other
         World Bank sector series. Gross value added (below GDP):{" "}
         {gva.length ? gva.join(", ") : "none in this selection"}. Chain-volume
         series converted with market FX (levels not nominal USD):{" "}
@@ -713,7 +713,7 @@ function ComparabilityNotice({
       {contested.length > 0 ? (
         <p className="mt-1.5">
           <span className="font-medium text-[#c45c26]">Contested official data: </span>
-          {contested.join(", ")} — open the country view and click{" "}
+          {contested.join(", ")} : open the country view and click{" "}
           <span className="font-medium text-[#1f3d4d]">Contested</span> on a
           metric for independent estimates (population, growth, implied GDP
           size). Chart totals still show the official series.
@@ -771,8 +771,8 @@ function YearLagNotice({
             {c !== staleCountries[staleCountries.length - 1] ? "; " : ". "}
           </span>
         ))}
-        Newer industry detail for those economies is not in our feeds yet —
-        figures are still the most recent available, not held back to a common
+        Newer industry detail for those economies is not in our feeds yet.
+        Figures are still the most recent available, not held back to a common
         year.
       </p>
     );
@@ -987,8 +987,15 @@ export default function GdpExplorer() {
     }
   }, [root, path]);
   const chart = useMemo(() => buildPieChart(current), [current]);
-  const sectionRoot: ChartNode | null =
-    path.length > 0 ? nodeAtPath(root, path.slice(0, 1)) : null;
+  const contextParent: ChartNode | null = (() => {
+    if (path.length === 0) return null;
+    if (path.length === 1) return root;
+    try {
+      return nodeAtPath(root, path.slice(0, -1));
+    } catch {
+      return null;
+    }
+  })();
   const activeCountry = countryForNode(current);
 
   function goWorld() {
@@ -1026,7 +1033,7 @@ export default function GdpExplorer() {
             GDP Income
           </h1>
           <p className="max-w-2xl text-sm leading-relaxed text-[#5c6b73]">
-            Large economies in USD — drill from the global mix into each
+            Large economies in USD. Drill from the global mix into each
             country’s industries. Use <span className="font-medium text-[#1f3d4d]">Edit list</span>{" "}
             to drop countries from the pie for side-by-side comparisons. Tap a
             labeled slice to open it.
@@ -1100,12 +1107,13 @@ export default function GdpExplorer() {
           </div>
 
           <div className="flex flex-col gap-4">
-            {sectionRoot && path.length > 0 ? (
+            {contextParent ? (
               <ContextPie
-                root={root}
-                section={sectionRoot}
+                root={contextParent}
+                section={current}
                 hoveredId={hoveredId}
-                totalLabel={root.name}
+                totalLabel={contextParent.name}
+                economy={activeCountry}
               />
             ) : null}
             <ul className="flex max-h-[520px] flex-col gap-0.5 overflow-y-auto overscroll-contain pr-1 [scrollbar-gutter:stable]">
@@ -1153,7 +1161,7 @@ export default function GdpExplorer() {
             target="_blank"
             rel="noreferrer"
           >
-            BEA/FRED
+            BEA
           </a>
           ,{" "}
           <a

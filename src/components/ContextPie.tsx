@@ -5,7 +5,6 @@ import {
   buildPieChart,
   childWedgeInParentSlice,
   formatMillions,
-  formatPercent,
   pieSlicePath,
   shareOf,
   type ChartNode,
@@ -16,7 +15,15 @@ type ContextPieProps = {
   section: ChartNode;
   hoveredId: string | null;
   totalLabel: string;
+  /** Country total. Sector percents are shares of this, including deeper layers. */
+  economy: ChartNode | null;
 };
+
+function formatContextPercent(percent: number): string {
+  const points = percent * 100;
+  const decimals = Math.abs(points) > 0 && Math.abs(points) < 1 ? 2 : 1;
+  return `${points.toFixed(decimals)}%`;
+}
 
 const SIZE = 168;
 const CX = SIZE / 2;
@@ -24,7 +31,13 @@ const CY = SIZE / 2;
 const RADIUS = 72;
 const GLOW_RADIUS = 76;
 
-export default function ContextPie({ root, section, hoveredId, totalLabel }: ContextPieProps) {
+export default function ContextPie({
+  root,
+  section,
+  hoveredId,
+  totalLabel,
+  economy,
+}: ContextPieProps) {
   const glowId = useId();
   const hatchId = useId();
   const rootNet = root.amountMillions;
@@ -41,7 +54,12 @@ export default function ContextPie({ root, section, hoveredId, totalLabel }: Con
   const focusAmount =
     hovered != null ? hovered.amountMillions : section.amountMillions;
   const focusName = hovered != null ? hovered.name : section.name;
-  const focusPercent = shareOf(focusAmount, rootNet);
+  const ofCountry = economy != null && (hovered != null || section.id !== economy.id);
+  const percentOf = ofCountry ? economy.name : totalLabel;
+  const focusPercent = shareOf(
+    focusAmount,
+    ofCountry ? economy.amountMillions : rootNet,
+  );
   const focusIsOffset = focusAmount < 0;
 
   return (
@@ -49,7 +67,7 @@ export default function ContextPie({ root, section, hoveredId, totalLabel }: Con
       <svg
         viewBox={`0 0 ${SIZE} ${SIZE}`}
         role="img"
-        aria-label={`Share of ${totalLabel}: ${section.name}`}
+        aria-label={`Share of ${percentOf}: ${focusName}`}
         className="h-auto w-full"
       >
         <defs>
@@ -162,7 +180,7 @@ export default function ContextPie({ root, section, hoveredId, totalLabel }: Con
           className="fill-[#1f3d4d]"
           style={{ fontSize: 11, fontWeight: 700 }}
         >
-          {formatPercent(focusPercent)}
+          {formatContextPercent(focusPercent)}
         </text>
       </svg>
       <p className="mt-1 text-center text-[11px] leading-4 text-[#5c6b73]">
@@ -171,6 +189,7 @@ export default function ContextPie({ root, section, hoveredId, totalLabel }: Con
           {formatMillions(focusAmount)}
           {focusIsOffset ? " offset" : ""}
         </span>
+        <span className="block">of {percentOf}</span>
       </p>
     </div>
   );

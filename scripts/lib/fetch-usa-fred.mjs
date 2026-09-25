@@ -1,127 +1,105 @@
 /**
- * USA GDP by industry via FRED (BEA Gross Domestic Product by Industry release).
- * Levels = industry share of GDP × VAAI (billions SAAR) → USD millions.
- * No API key required (public FRED CSV).
+ * USA GDP by industry from BEA's published Value Added by Industry table
+ * (current dollars, seasonally adjusted at annual rates).
+ *
+ * FRED release 331 only carries the summary industries. The same published
+ * quarterly table on BEA includes one finer group under those summaries.
+ * This fetch uses that table and adds only that next group.
  */
 
-import { cachedFetchText } from "./http-cache.mjs";
+import { cachedFetchJson } from "./http-cache.mjs";
 
-const FRED_CSV = (id) =>
-  `https://fred.stlouisfed.org/graph/fredgraph.csv?id=${id}`;
+const BEA_STEPS = "https://apps.bea.gov/iTable/core/data/app/GetSteps";
+const BEA_SOURCE = {
+  label: "BEA GDP by Industry",
+  url: "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1",
+};
 
-/** Top-level industries + optional subsectors (share-of-GDP series). */
+/** Published summary industries. Children are the groups already on the chart. */
 export const USA_INDUSTRY_TREE = [
   {
     code: "AFH",
-    series: "VAPGDPAFH",
     name: "Agriculture, forestry, fishing, and hunting",
     color: "#5a8f3c",
   },
-  { code: "MIN", series: "VAPGDPM", name: "Mining", color: "#8a6b3c" },
-  { code: "UTL", series: "VAPGDPU", name: "Utilities", color: "#d4a017" },
-  { code: "CON", series: "VAPGDPC", name: "Construction", color: "#c45c26" },
+  { code: "MIN", name: "Mining", color: "#8a6b3c" },
+  { code: "UTL", name: "Utilities", color: "#d4a017" },
+  { code: "CON", name: "Construction", color: "#c45c26" },
   {
     code: "MFG",
-    series: "VAPGDPMA",
     name: "Manufacturing",
     color: "#2a6f97",
     children: [
-      { code: "MFG-D", series: "VAPGDPMD", name: "Durable goods" },
-      { code: "MFG-N", series: "VAPGDPMN", name: "Nondurable goods" },
+      { code: "MFG-D", name: "Durable goods" },
+      { code: "MFG-N", name: "Nondurable goods" },
     ],
   },
-  { code: "WHL", series: "VAPGDPW", name: "Wholesale trade", color: "#2f7d6d" },
-  { code: "RTL", series: "VAPGDPR", name: "Retail trade", color: "#3d8a7a" },
+  { code: "WHL", name: "Wholesale trade", color: "#2f7d6d" },
+  { code: "RTL", name: "Retail trade", color: "#3d8a7a" },
   {
     code: "TW",
-    series: "VAPGDPT",
     name: "Transportation and warehousing",
     color: "#5c6b9a",
   },
-  { code: "INF", series: "VAPGDPI", name: "Information", color: "#3c6ea8" },
+  { code: "INF", name: "Information", color: "#3c6ea8" },
   {
     code: "FIRL",
-    series: "VAPGDPFIRL",
     name: "Finance, insurance, real estate, rental, and leasing",
     color: "#6b5c9a",
     children: [
-      { code: "FI", series: "VAPGDPFI", name: "Finance and insurance" },
-      {
-        code: "RL",
-        series: "VAPGDPRL",
-        name: "Real estate and rental and leasing",
-      },
+      { code: "FI", name: "Finance and insurance" },
+      { code: "RL", name: "Real estate and rental and leasing" },
     ],
   },
   {
     code: "PBS",
-    series: "VAPGDPPBS",
     name: "Professional and business services",
     color: "#2a8f97",
     children: [
       {
         code: "PST",
-        series: "VAPGDPPST",
         name: "Professional, scientific, and technical services",
       },
       {
         code: "MCE",
-        series: "VAPGDPMCE",
         name: "Management of companies and enterprises",
       },
       {
         code: "AWMS",
-        series: "VAPGDPAWMS",
         name: "Administrative and waste management services",
       },
     ],
   },
   {
     code: "ESHS",
-    series: "VAPGDPESHS",
     name: "Educational services, health care, and social assistance",
     color: "#9a5c7a",
     children: [
-      { code: "ES", series: "VAPGDPES", name: "Educational services" },
-      {
-        code: "HCSA",
-        series: "VAPGDPHCSA",
-        name: "Health care and social assistance",
-      },
+      { code: "ES", name: "Educational services" },
+      { code: "HCSA", name: "Health care and social assistance" },
     ],
   },
   {
     code: "AERAF",
-    series: "VAPGDPAERAF",
     name: "Arts, entertainment, recreation, accommodation, and food services",
     color: "#c47a3c",
     children: [
-      {
-        code: "AER",
-        series: "VAPGDPAER",
-        name: "Arts, entertainment, and recreation",
-      },
-      {
-        code: "AF",
-        series: "VAPGDPAF",
-        name: "Accommodation and food services",
-      },
+      { code: "AER", name: "Arts, entertainment, and recreation" },
+      { code: "AF", name: "Accommodation and food services" },
     ],
   },
   {
     code: "OSEG",
-    series: "VAPGDPOSEG",
     name: "Other services, except government",
     color: "#6a7a8a",
   },
   {
     code: "GOV",
-    series: "VAPGDPG",
     name: "Government",
     color: "#1f3d4d",
     children: [
-      { code: "FED", series: "VAPGDPF", name: "Federal" },
-      { code: "SL", series: "VAPGDPSL", name: "State and local" },
+      { code: "FED", name: "Federal" },
+      { code: "SL", name: "State and local" },
     ],
   },
 ];
@@ -138,136 +116,134 @@ function round1(n) {
   return Math.round(n * 10) / 10;
 }
 
-function shortenName(name) {
-  let n = name;
-  if (n.length > 52) n = n.slice(0, 49) + "…";
+function slug(name) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function parseBillions(raw) {
+  const s = String(raw ?? "").replace(/,/g, "").trim();
+  if (s === "" || s === "---") return null;
+  const n = Number(s);
+  if (!Number.isFinite(n)) {
+    throw new Error(`BEA value added: unreadable amount "${raw}"`);
+  }
   return n;
 }
 
-async function fetchFredSeries(seriesId) {
-  const text = await cachedFetchText(FRED_CSV(seriesId), {
-    headers: { "User-Agent": "gdpincome.com/0.1" },
-  });
-  if (!text.startsWith("observation_date")) {
-    throw new Error(`FRED ${seriesId}: unexpected response`);
-  }
-  const points = [];
-  for (const line of text.trim().split(/\r?\n/).slice(1)) {
-    const [date, raw] = line.split(",");
-    if (!date || raw === "" || raw == null) continue;
-    const value = Number(raw);
-    if (Number.isNaN(value)) continue;
-    points.push({ date, value });
-  }
-  if (!points.length) throw new Error(`FRED ${seriesId}: no observations`);
-  return points;
+function stripHtml(value) {
+  return String(value ?? "").replace(/<[^>]+>/g, "").trim();
 }
 
-function formatPeriodLabel(date) {
-  const d = new Date(date + "T00:00:00Z");
-  const q = Math.floor(d.getUTCMonth() / 3) + 1;
-  return `Q${q} ${d.getUTCFullYear()}`;
+async function fetchBeaValueAdded() {
+  const body = JSON.stringify({
+    appid: 1603,
+    steps: [4],
+    data: [
+      ["Categories", "GDPxInd"],
+      ["Table_List", "TVA105"],
+    ],
+  });
+  const payload = await cachedFetchJson(BEA_STEPS, {
+    method: "POST",
+    headers: {
+      "User-Agent": "gdpincome.com/0.1",
+      "Content-Type": "application/json",
+    },
+    body,
+  });
+  const prompt = payload?.Steps?.[0]?.Prompts?.find((p) => p.Name === "TheTable");
+  if (!prompt?.PromtData) throw new Error("BEA value added: table missing");
+  let table = JSON.parse(prompt.PromtData).Table;
+  if (typeof table === "string") table = JSON.parse(table);
+  const subtitle = String(table.Sub_Title ?? "");
+  if (
+    !/billions of dollars/i.test(subtitle) ||
+    !/seasonally adjusted at annual rates/i.test(subtitle)
+  ) {
+    throw new Error(`BEA value added: unexpected units (${subtitle})`);
+  }
+
+  const years = table.Data_Rows[0];
+  const quarters = table.Data_Rows[1];
+  let col = -1;
+  for (let i = 2; i < years.length; i++) {
+    const year = stripHtml(years[i].CV);
+    const quarter = stripHtml(quarters[i].CV);
+    if (/^\d{4}$/.test(year) && /^Q[1-4]$/.test(quarter)) col = i;
+  }
+  if (col < 0) throw new Error("BEA value added: no quarterly column");
+  const year = Number(stripHtml(years[col].CV));
+  const periodLabel = `${stripHtml(quarters[col].CV)} ${year}`;
+
+  const roots = [];
+  const stack = [];
+  for (const row of table.Data_Rows.slice(2)) {
+    const name = stripHtml(row[1]?.CV);
+    if (!name || name.startsWith("Addenda")) break;
+    const indent = Number(row[1].IL);
+    const billions = parseBillions(row[col].CV);
+    if (billions == null) {
+      throw new Error(`BEA value added: missing ${name} for ${periodLabel}`);
+    }
+    const node = { name, billions, indent, children: [] };
+    while (stack.length && stack[stack.length - 1].indent >= indent) stack.pop();
+    if (!stack.length) roots.push(node);
+    else stack[stack.length - 1].children.push(node);
+    stack.push(node);
+  }
+
+  return { year, periodLabel, roots };
+}
+
+function requireNamed(nodes, name) {
+  const hit = nodes.find((node) => node.name === name);
+  if (!hit) throw new Error(`BEA value added: missing "${name}"`);
+  return hit;
+}
+
+function toChartNode({ id, code, name, billions, color, year, periodLabel, children }) {
+  return {
+    id,
+    name,
+    code,
+    amountMillions: round1(billions * 1000),
+    color,
+    description: `BEA value added by industry, ${periodLabel}, SAAR current dollars.`,
+    sources: [BEA_SOURCE],
+    year,
+    periodLabel,
+    ...(children?.length ? { children } : {}),
+  };
 }
 
 /**
  * @returns {Promise<object>} CountryGdpTree for USA
  */
 export async function fetchUsaFromFred() {
-  const source = {
-    label: "BEA GDP by Industry (via FRED)",
-    url: "https://fred.stlouisfed.org/release?rid=331",
-  };
+  const { year, periodLabel, roots } = await fetchBeaValueAdded();
+  const gdp = requireNamed(roots, "Gross domestic product");
+  const privateIndustries = requireNamed(roots, "Private industries");
+  const government = requireNamed(roots, "Government");
 
-  const seriesIds = [
-    "VAAI",
-    ...USA_INDUSTRY_TREE.flatMap((s) => [
-      s.series,
-      ...(s.children?.map((c) => c.series) ?? []),
-    ]),
-  ];
-
-  const byId = new Map();
-  for (const id of seriesIds) {
-    byId.set(id, await fetchFredSeries(id));
-  }
-
-  const totalPts = byId.get("VAAI");
-  const latestDate = totalPts.at(-1).date;
-  const totalBillions = totalPts.at(-1).value;
-  const totalMillions = totalBillions * 1000;
-  const year = Number(latestDate.slice(0, 4));
-  const periodLabel = formatPeriodLabel(latestDate);
-
-  function valueOnDate(seriesId) {
-    const pts = byId.get(seriesId);
-    const hit = pts.find((p) => p.date === latestDate) ?? pts.at(-1);
-    if (!hit) throw new Error(`FRED ${seriesId}: missing ${latestDate}`);
-    return hit.value;
-  }
-
-  function millionsFromShare(sharePct) {
-    return (sharePct / 100) * totalMillions;
-  }
-
-  const sections = USA_INDUSTRY_TREE.map((sector, si) => {
-    const share = valueOnDate(sector.series);
-    const usd = millionsFromShare(share);
-    const children = [];
-    let childSum = 0;
-    (sector.children ?? []).forEach((child, i) => {
-      const childShare = valueOnDate(child.series);
-      const childUsd = millionsFromShare(childShare);
-      childSum += childUsd;
-      children.push({
-        id: `usa-${child.code.toLowerCase()}`,
-        name: shortenName(child.name),
-        code: child.code,
-        amountMillions: round1(childUsd),
-        color: shade(sector.color, 0.72 + (i % 5) * 0.06),
-        description: `BEA value added, ${periodLabel}, seasonally adjusted annual rate (share of GDP × GDP).`,
-        sources: [source],
-        year,
-        periodLabel,
-      });
-    });
-
-    const residual = usd - childSum;
-    if (children.length > 0 && residual > usd * 0.005) {
-      children.push({
-        id: `usa-${sector.code.toLowerCase()}-other`,
-        name: "Other / not detailed",
-        code: `${sector.code}_RES`,
-        amountMillions: round1(residual),
-        color: shade(sector.color, 0.55),
-        description: `Residual within ${sector.name} after published subsectors (${periodLabel}).`,
-        sources: [source],
-        year,
-        periodLabel,
-      });
-    }
-
-    return {
-      id: `usa-${sector.code.toLowerCase()}`,
-      name: shortenName(sector.name),
-      code: sector.code,
-      amountMillions: round1(usd),
-      color: sector.color,
-      description: `BEA value added by industry, ${periodLabel}, SAAR current dollars.`,
-      sources: [source],
-      year,
-      periodLabel,
-      ...(children.length > 0 ? { children } : {}),
-    };
-  }).filter((s) => s.amountMillions > 0);
+  const sections = USA_INDUSTRY_TREE.map((sector) => {
+    const bea =
+      sector.name === "Government"
+        ? government
+        : requireNamed(privateIndustries.children, sector.name);
+    return buildNode(sector, bea, sector.color, sector.color, year, periodLabel);
+  }).filter((section) => section.amountMillions > 0);
 
   return {
     id: "usa",
     name: "United States",
     code: "USA",
-    amountMillions: round1(totalMillions),
+    amountMillions: round1(gdp.billions * 1000),
     color: "#2a6f97",
-    description: `BEA value added / GDP by industry as of ${periodLabel}, seasonally adjusted annual rate, current dollars (FRED series VAAI and industry shares).`,
-    sources: [source],
+    description: `BEA value added / GDP by industry as of ${periodLabel}, seasonally adjusted annual rate, current dollars.`,
+    sources: [BEA_SOURCE],
     year,
     periodLabel,
     currency: "USD",
@@ -275,4 +251,49 @@ export async function fetchUsaFromFred() {
     sourceKey: "bea",
     children: sections,
   };
+}
+
+function buildNode(spec, bea, color, sectorColor, year, periodLabel) {
+  const childSpecs = spec.children?.length
+    ? spec.children.map((child) => {
+        const match = requireNamed(bea.children, child.name);
+        return { spec: child, bea: match, stop: false };
+      })
+    : bea.children.map((child) => ({
+        spec: { code: `${spec.code}-${slug(child.name)}`, name: child.name },
+        bea: child,
+        stop: true,
+      }));
+
+  if (childSpecs.length) {
+    const sum = childSpecs.reduce((total, child) => total + child.bea.billions, 0);
+    const gap = Math.abs(sum - bea.billions);
+    if (gap > 0.25) {
+      throw new Error(
+        `BEA value added: ${bea.name} children sum to ${sum.toFixed(1)} vs parent ${bea.billions}`,
+      );
+    }
+  }
+
+  const children = childSpecs.map((child, i) =>
+    buildNode(
+      child.stop ? { ...child.spec, children: [] } : child.spec,
+      child.stop ? { ...child.bea, children: [] } : child.bea,
+      shade(sectorColor, 0.72 + (i % 5) * 0.06),
+      sectorColor,
+      year,
+      periodLabel,
+    ),
+  );
+
+  return toChartNode({
+    id: `usa-${spec.code.toLowerCase()}`,
+    code: spec.code,
+    name: spec.name,
+    billions: bea.billions,
+    color,
+    year,
+    periodLabel,
+    children,
+  });
 }

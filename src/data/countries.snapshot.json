@@ -1,6 +1,6 @@
 {
   "meta": {
-    "fetchedAt": "2026-09-24T06:35:26.014Z",
+    "fetchedAt": "2026-09-25T03:52:16.614Z",
     "yearsByCountry": {
       "CAN": 2026,
       "AUS": 2026,
@@ -201,12 +201,12 @@
     },
     "sources": {
       "bea": {
-        "dataset": "BEA GDP by Industry via FRED release 331",
+        "dataset": "BEA GDP by Industry, Value Added by Industry",
         "countries": [
           "USA"
         ],
-        "url": "https://fred.stlouisfed.org/release?rid=331",
-        "measure": "Value added / GDP by industry, current $, SAAR"
+        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1",
+        "measure": "Value added by industry, current $, SAAR, published summary plus one finer group"
       },
       "statcan": {
         "dataset": "Statistics Canada 36-10-0434",
@@ -401,8 +401,8 @@
     "description": "Combined industry GDP / value added for the largest selected economies in USD. Each country uses its official national source when available; OECD fills gaps.",
     "sources": [
       {
-        "label": "BEA GDP by Industry (via FRED)",
-        "url": "https://fred.stlouisfed.org/release?rid=331"
+        "label": "BEA GDP by Industry",
+        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
       },
       {
         "label": "Statistics Canada Table 36-10-0434",
@@ -446,11 +446,11 @@
         "code": "USA",
         "amountMillions": 31865700,
         "color": "#2a6f97",
-        "description": "BEA value added / GDP by industry as of Q1 2026, seasonally adjusted annual rate, current dollars (FRED series VAAI and industry shares).",
+        "description": "BEA value added / GDP by industry as of Q1 2026, seasonally adjusted annual rate, current dollars.",
         "sources": [
           {
-            "label": "BEA GDP by Industry (via FRED)",
-            "url": "https://fred.stlouisfed.org/release?rid=331"
+            "label": "BEA GDP by Industry",
+            "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
           },
           {
             "label": "World Bank WDI population & age structure",
@@ -479,45 +479,129 @@
             "id": "usa-afh",
             "name": "Agriculture, forestry, fishing, and hunting",
             "code": "AFH",
-            "amountMillions": 223059.9,
+            "amountMillions": 235300,
             "color": "#5a8f3c",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
-            "periodLabel": "Q1 2026"
+            "periodLabel": "Q1 2026",
+            "children": [
+              {
+                "id": "usa-afh-farms",
+                "name": "Farms",
+                "code": "AFH-farms",
+                "amountMillions": 186200,
+                "color": "#41672b",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-afh-forestry-fishing-and-related-activities",
+                "name": "Forestry, fishing, and related activities",
+                "code": "AFH-forestry-fishing-and-related-activities",
+                "amountMillions": 49100,
+                "color": "#46702f",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              }
+            ]
           },
           {
             "id": "usa-min",
             "name": "Mining",
             "code": "MIN",
-            "amountMillions": 446119.8,
+            "amountMillions": 455300,
             "color": "#8a6b3c",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
-            "periodLabel": "Q1 2026"
+            "periodLabel": "Q1 2026",
+            "children": [
+              {
+                "id": "usa-min-oil-and-gas-extraction",
+                "name": "Oil and gas extraction",
+                "code": "MIN-oil-and-gas-extraction",
+                "amountMillions": 290700,
+                "color": "#634d2b",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-min-mining-except-oil-and-gas",
+                "name": "Mining, except oil and gas",
+                "code": "MIN-mining-except-oil-and-gas",
+                "amountMillions": 98300,
+                "color": "#6c532f",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-min-support-activities-for-mining",
+                "name": "Support activities for mining",
+                "code": "MIN-support-activities-for-mining",
+                "amountMillions": 66300,
+                "color": "#745a32",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              }
+            ]
           },
           {
             "id": "usa-utl",
             "name": "Utilities",
             "code": "UTL",
-            "amountMillions": 477985.5,
+            "amountMillions": 491900,
             "color": "#d4a017",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
@@ -527,13 +611,13 @@
             "id": "usa-con",
             "name": "Construction",
             "code": "CON",
-            "amountMillions": 1370225.1,
+            "amountMillions": 1358600,
             "color": "#c45c26",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
@@ -543,13 +627,13 @@
             "id": "usa-mfg",
             "name": "Manufacturing",
             "code": "MFG",
-            "amountMillions": 2995375.8,
+            "amountMillions": 3000400,
             "color": "#2a6f97",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
@@ -559,33 +643,341 @@
                 "id": "usa-mfg-d",
                 "name": "Durable goods",
                 "code": "MFG-D",
-                "amountMillions": 1625150.7,
+                "amountMillions": 1624300,
                 "color": "#1e506d",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
-                "periodLabel": "Q1 2026"
+                "periodLabel": "Q1 2026",
+                "children": [
+                  {
+                    "id": "usa-mfg-d-wood-products",
+                    "name": "Wood products",
+                    "code": "MFG-D-wood-products",
+                    "amountMillions": 57500,
+                    "color": "#1e506d",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-d-nonmetallic-mineral-products",
+                    "name": "Nonmetallic mineral products",
+                    "code": "MFG-D-nonmetallic-mineral-products",
+                    "amountMillions": 78500,
+                    "color": "#215776",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-d-primary-metals",
+                    "name": "Primary metals",
+                    "code": "MFG-D-primary-metals",
+                    "amountMillions": 85300,
+                    "color": "#235d7f",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-d-fabricated-metal-products",
+                    "name": "Fabricated metal products",
+                    "code": "MFG-D-fabricated-metal-products",
+                    "amountMillions": 200200,
+                    "color": "#266488",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-d-machinery",
+                    "name": "Machinery",
+                    "code": "MFG-D-machinery",
+                    "amountMillions": 213600,
+                    "color": "#286b91",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-d-computer-and-electronic-products",
+                    "name": "Computer and electronic products",
+                    "code": "MFG-D-computer-and-electronic-products",
+                    "amountMillions": 339100,
+                    "color": "#1e506d",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-d-electrical-equipment-appliances-and-components",
+                    "name": "Electrical equipment, appliances, and components",
+                    "code": "MFG-D-electrical-equipment-appliances-and-components",
+                    "amountMillions": 82700,
+                    "color": "#215776",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-d-motor-vehicles-bodies-and-trailers-and-parts",
+                    "name": "Motor vehicles, bodies and trailers, and parts",
+                    "code": "MFG-D-motor-vehicles-bodies-and-trailers-and-parts",
+                    "amountMillions": 186000,
+                    "color": "#235d7f",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-d-other-transportation-equipment",
+                    "name": "Other transportation equipment",
+                    "code": "MFG-D-other-transportation-equipment",
+                    "amountMillions": 225700,
+                    "color": "#266488",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-d-furniture-and-related-products",
+                    "name": "Furniture and related products",
+                    "code": "MFG-D-furniture-and-related-products",
+                    "amountMillions": 34900,
+                    "color": "#286b91",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-d-miscellaneous-manufacturing",
+                    "name": "Miscellaneous manufacturing",
+                    "code": "MFG-D-miscellaneous-manufacturing",
+                    "amountMillions": 120700,
+                    "color": "#1e506d",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  }
+                ]
               },
               {
                 "id": "usa-mfg-n",
                 "name": "Nondurable goods",
                 "code": "MFG-N",
-                "amountMillions": 1370225.1,
+                "amountMillions": 1376100,
                 "color": "#215776",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
-                "periodLabel": "Q1 2026"
+                "periodLabel": "Q1 2026",
+                "children": [
+                  {
+                    "id": "usa-mfg-n-food-and-beverage-and-tobacco-products",
+                    "name": "Food and beverage and tobacco products",
+                    "code": "MFG-N-food-and-beverage-and-tobacco-products",
+                    "amountMillions": 365300,
+                    "color": "#1e506d",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-n-textile-mills-and-textile-product-mills",
+                    "name": "Textile mills and textile product mills",
+                    "code": "MFG-N-textile-mills-and-textile-product-mills",
+                    "amountMillions": 17000,
+                    "color": "#215776",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-n-apparel-and-leather-and-allied-products",
+                    "name": "Apparel and leather and allied products",
+                    "code": "MFG-N-apparel-and-leather-and-allied-products",
+                    "amountMillions": 12100,
+                    "color": "#235d7f",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-n-paper-products",
+                    "name": "Paper products",
+                    "code": "MFG-N-paper-products",
+                    "amountMillions": 75900,
+                    "color": "#266488",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-n-printing-and-related-support-activities",
+                    "name": "Printing and related support activities",
+                    "code": "MFG-N-printing-and-related-support-activities",
+                    "amountMillions": 41700,
+                    "color": "#286b91",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-n-petroleum-and-coal-products",
+                    "name": "Petroleum and coal products",
+                    "code": "MFG-N-petroleum-and-coal-products",
+                    "amountMillions": 167300,
+                    "color": "#1e506d",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-n-chemical-products",
+                    "name": "Chemical products",
+                    "code": "MFG-N-chemical-products",
+                    "amountMillions": 591400,
+                    "color": "#215776",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-mfg-n-plastics-and-rubber-products",
+                    "name": "Plastics and rubber products",
+                    "code": "MFG-N-plastics-and-rubber-products",
+                    "amountMillions": 105500,
+                    "color": "#235d7f",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  }
+                ]
               }
             ]
           },
@@ -593,13 +985,13 @@
             "id": "usa-whl",
             "name": "Wholesale trade",
             "code": "WHL",
-            "amountMillions": 2039404.8,
+            "amountMillions": 2041800,
             "color": "#2f7d6d",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
@@ -609,61 +1001,323 @@
             "id": "usa-rtl",
             "name": "Retail trade",
             "code": "RTL",
-            "amountMillions": 1975673.4,
+            "amountMillions": 1989600,
             "color": "#3d8a7a",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
-            "periodLabel": "Q1 2026"
+            "periodLabel": "Q1 2026",
+            "children": [
+              {
+                "id": "usa-rtl-motor-vehicle-and-parts-dealers",
+                "name": "Motor vehicle and parts dealers",
+                "code": "RTL-motor-vehicle-and-parts-dealers",
+                "amountMillions": 379500,
+                "color": "#2c6358",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-rtl-food-and-beverage-stores",
+                "name": "Food and beverage stores",
+                "code": "RTL-food-and-beverage-stores",
+                "amountMillions": 247200,
+                "color": "#306c5f",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-rtl-general-merchandise-stores",
+                "name": "General merchandise stores",
+                "code": "RTL-general-merchandise-stores",
+                "amountMillions": 239600,
+                "color": "#337466",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-rtl-other-retail",
+                "name": "Other retail",
+                "code": "RTL-other-retail",
+                "amountMillions": 1123300,
+                "color": "#377c6e",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              }
+            ]
           },
           {
             "id": "usa-tw",
             "name": "Transportation and warehousing",
             "code": "TW",
-            "amountMillions": 1051568.1,
+            "amountMillions": 1054600,
             "color": "#5c6b9a",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
-            "periodLabel": "Q1 2026"
+            "periodLabel": "Q1 2026",
+            "children": [
+              {
+                "id": "usa-tw-air-transportation",
+                "name": "Air transportation",
+                "code": "TW-air-transportation",
+                "amountMillions": 197000,
+                "color": "#424d6f",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-tw-rail-transportation",
+                "name": "Rail transportation",
+                "code": "TW-rail-transportation",
+                "amountMillions": 50600,
+                "color": "#485378",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-tw-water-transportation",
+                "name": "Water transportation",
+                "code": "TW-water-transportation",
+                "amountMillions": 23500,
+                "color": "#4d5a81",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-tw-truck-transportation",
+                "name": "Truck transportation",
+                "code": "TW-truck-transportation",
+                "amountMillions": 271200,
+                "color": "#53608b",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-tw-transit-and-ground-passenger-transportation",
+                "name": "Transit and ground passenger transportation",
+                "code": "TW-transit-and-ground-passenger-transportation",
+                "amountMillions": 93300,
+                "color": "#586794",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-tw-pipeline-transportation",
+                "name": "Pipeline transportation",
+                "code": "TW-pipeline-transportation",
+                "amountMillions": 52700,
+                "color": "#424d6f",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-tw-other-transportation-and-support-activities",
+                "name": "Other transportation and support activities",
+                "code": "TW-other-transportation-and-support-activities",
+                "amountMillions": 231500,
+                "color": "#485378",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-tw-warehousing-and-storage",
+                "name": "Warehousing and storage",
+                "code": "TW-warehousing-and-storage",
+                "amountMillions": 134700,
+                "color": "#4d5a81",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              }
+            ]
           },
           {
             "id": "usa-inf",
             "name": "Information",
             "code": "INF",
-            "amountMillions": 1784479.2,
+            "amountMillions": 1787000,
             "color": "#3c6ea8",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
-            "periodLabel": "Q1 2026"
+            "periodLabel": "Q1 2026",
+            "children": [
+              {
+                "id": "usa-inf-publishing-industries-except-internet-includes-software",
+                "name": "Publishing industries, except internet (includes software)",
+                "code": "INF-publishing-industries-except-internet-includes-software",
+                "amountMillions": 502800,
+                "color": "#2b4f79",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-inf-motion-picture-and-sound-recording-industries",
+                "name": "Motion picture and sound recording industries",
+                "code": "INF-motion-picture-and-sound-recording-industries",
+                "amountMillions": 123000,
+                "color": "#2f5683",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-inf-broadcasting-and-telecommunications",
+                "name": "Broadcasting and telecommunications",
+                "code": "INF-broadcasting-and-telecommunications",
+                "amountMillions": 514200,
+                "color": "#325c8d",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              },
+              {
+                "id": "usa-inf-data-processing-internet-publishing-and-other-information-services",
+                "name": "Data processing, internet publishing, and other information services",
+                "code": "INF-data-processing-internet-publishing-and-other-information-services",
+                "amountMillions": 646900,
+                "color": "#366397",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                "sources": [
+                  {
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                  }
+                ],
+                "year": 2026,
+                "periodLabel": "Q1 2026"
+              }
+            ]
           },
           {
             "id": "usa-firl",
             "name": "Finance, insurance, real estate, rental, and leasing",
             "code": "FIRL",
-            "amountMillions": 6914856.9,
+            "amountMillions": 6907500,
             "color": "#6b5c9a",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
@@ -673,33 +1327,133 @@
                 "id": "usa-fi",
                 "name": "Finance and insurance",
                 "code": "FI",
-                "amountMillions": 2549256,
+                "amountMillions": 2564200,
                 "color": "#4d426f",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
-                "periodLabel": "Q1 2026"
+                "periodLabel": "Q1 2026",
+                "children": [
+                  {
+                    "id": "usa-fi-federal-reserve-banks-credit-intermediation-and-related-activities",
+                    "name": "Federal Reserve banks, credit intermediation, and related activities",
+                    "code": "FI-federal-reserve-banks-credit-intermediation-and-related-activities",
+                    "amountMillions": 1126000,
+                    "color": "#4d426f",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-fi-securities-commodity-contracts-and-investments",
+                    "name": "Securities, commodity contracts, and investments",
+                    "code": "FI-securities-commodity-contracts-and-investments",
+                    "amountMillions": 535600,
+                    "color": "#534878",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-fi-insurance-carriers-and-related-activities",
+                    "name": "Insurance carriers and related activities",
+                    "code": "FI-insurance-carriers-and-related-activities",
+                    "amountMillions": 857400,
+                    "color": "#5a4d81",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-fi-funds-trusts-and-other-financial-vehicles",
+                    "name": "Funds, trusts, and other financial vehicles",
+                    "code": "FI-funds-trusts-and-other-financial-vehicles",
+                    "amountMillions": 45100,
+                    "color": "#60538b",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  }
+                ]
               },
               {
                 "id": "usa-rl",
                 "name": "Real estate and rental and leasing",
                 "code": "RL",
-                "amountMillions": 4333735.2,
+                "amountMillions": 4343300,
                 "color": "#534878",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
-                "periodLabel": "Q1 2026"
+                "periodLabel": "Q1 2026",
+                "children": [
+                  {
+                    "id": "usa-rl-real-estate",
+                    "name": "Real estate",
+                    "code": "RL-real-estate",
+                    "amountMillions": 3944300,
+                    "color": "#4d426f",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-rl-rental-and-leasing-services-and-lessors-of-intangible-assets",
+                    "name": "Rental and leasing services and lessors of intangible assets",
+                    "code": "RL-rental-and-leasing-services-and-lessors-of-intangible-assets",
+                    "amountMillions": 399000,
+                    "color": "#534878",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  }
+                ]
               }
             ]
           },
@@ -707,13 +1461,13 @@
             "id": "usa-pbs",
             "name": "Professional and business services",
             "code": "PBS",
-            "amountMillions": 4174406.7,
+            "amountMillions": 4160300,
             "color": "#2a8f97",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
@@ -723,29 +1477,79 @@
                 "id": "usa-pst",
                 "name": "Professional, scientific, and technical services",
                 "code": "PST",
-                "amountMillions": 2581121.7,
+                "amountMillions": 2581900,
                 "color": "#1e676d",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
-                "periodLabel": "Q1 2026"
+                "periodLabel": "Q1 2026",
+                "children": [
+                  {
+                    "id": "usa-pst-legal-services",
+                    "name": "Legal services",
+                    "code": "PST-legal-services",
+                    "amountMillions": 445500,
+                    "color": "#1e676d",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-pst-computer-systems-design-and-related-services",
+                    "name": "Computer systems design and related services",
+                    "code": "PST-computer-systems-design-and-related-services",
+                    "amountMillions": 565500,
+                    "color": "#217076",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-pst-miscellaneous-professional-scientific-and-technical-services",
+                    "name": "Miscellaneous professional, scientific, and technical services",
+                    "code": "PST-miscellaneous-professional-scientific-and-technical-services",
+                    "amountMillions": 1570900,
+                    "color": "#23787f",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  }
+                ]
               },
               {
                 "id": "usa-mce",
                 "name": "Management of companies and enterprises",
                 "code": "MCE",
-                "amountMillions": 605448.3,
+                "amountMillions": 590300,
                 "color": "#217076",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
@@ -755,31 +1559,65 @@
                 "id": "usa-awms",
                 "name": "Administrative and waste management services",
                 "code": "AWMS",
-                "amountMillions": 987836.7,
+                "amountMillions": 988100,
                 "color": "#23787f",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
-                "periodLabel": "Q1 2026"
+                "periodLabel": "Q1 2026",
+                "children": [
+                  {
+                    "id": "usa-awms-administrative-and-support-services",
+                    "name": "Administrative and support services",
+                    "code": "AWMS-administrative-and-support-services",
+                    "amountMillions": 895400,
+                    "color": "#1e676d",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-awms-waste-management-and-remediation-services",
+                    "name": "Waste management and remediation services",
+                    "code": "AWMS-waste-management-and-remediation-services",
+                    "amountMillions": 92800,
+                    "color": "#217076",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  }
+                ]
               }
             ]
           },
           {
             "id": "usa-eshs",
-            "name": "Educational services, health care, and social ass…",
+            "name": "Educational services, health care, and social assistance",
             "code": "ESHS",
-            "amountMillions": 2804181.6,
+            "amountMillions": 2819600,
             "color": "#9a5c7a",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
@@ -789,13 +1627,13 @@
                 "id": "usa-es",
                 "name": "Educational services",
                 "code": "ES",
-                "amountMillions": 350522.7,
+                "amountMillions": 352900,
                 "color": "#6f4258",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
@@ -805,31 +1643,97 @@
                 "id": "usa-hcsa",
                 "name": "Health care and social assistance",
                 "code": "HCSA",
-                "amountMillions": 2453658.9,
+                "amountMillions": 2466800,
                 "color": "#78485f",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
-                "periodLabel": "Q1 2026"
+                "periodLabel": "Q1 2026",
+                "children": [
+                  {
+                    "id": "usa-hcsa-ambulatory-health-care-services",
+                    "name": "Ambulatory health care services",
+                    "code": "HCSA-ambulatory-health-care-services",
+                    "amountMillions": 1200300,
+                    "color": "#6f4258",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-hcsa-hospitals",
+                    "name": "Hospitals",
+                    "code": "HCSA-hospitals",
+                    "amountMillions": 770500,
+                    "color": "#78485f",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-hcsa-nursing-and-residential-care-facilities",
+                    "name": "Nursing and residential care facilities",
+                    "code": "HCSA-nursing-and-residential-care-facilities",
+                    "amountMillions": 235300,
+                    "color": "#814d66",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-hcsa-social-assistance",
+                    "name": "Social assistance",
+                    "code": "HCSA-social-assistance",
+                    "amountMillions": 260600,
+                    "color": "#8b536e",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  }
+                ]
               }
             ]
           },
           {
             "id": "usa-aeraf",
-            "name": "Arts, entertainment, recreation, accommodation, a…",
+            "name": "Arts, entertainment, recreation, accommodation, and food services",
             "code": "AERAF",
-            "amountMillions": 1370225.1,
+            "amountMillions": 1376700,
             "color": "#c47a3c",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
@@ -839,33 +1743,101 @@
                 "id": "usa-aer",
                 "name": "Arts, entertainment, and recreation",
                 "code": "AER",
-                "amountMillions": 382388.4,
+                "amountMillions": 369500,
                 "color": "#8d582b",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
-                "periodLabel": "Q1 2026"
+                "periodLabel": "Q1 2026",
+                "children": [
+                  {
+                    "id": "usa-aer-performing-arts-spectator-sports-museums-and-related-activities",
+                    "name": "Performing arts, spectator sports, museums, and related activities",
+                    "code": "AER-performing-arts-spectator-sports-museums-and-related-activities",
+                    "amountMillions": 220300,
+                    "color": "#8d582b",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-aer-amusements-gambling-and-recreation-industries",
+                    "name": "Amusements, gambling, and recreation industries",
+                    "code": "AER-amusements-gambling-and-recreation-industries",
+                    "amountMillions": 149200,
+                    "color": "#995f2f",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  }
+                ]
               },
               {
                 "id": "usa-af",
                 "name": "Accommodation and food services",
                 "code": "AF",
-                "amountMillions": 1019702.4,
+                "amountMillions": 1007200,
                 "color": "#995f2f",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
-                "periodLabel": "Q1 2026"
+                "periodLabel": "Q1 2026",
+                "children": [
+                  {
+                    "id": "usa-af-accommodation",
+                    "name": "Accommodation",
+                    "code": "AF-accommodation",
+                    "amountMillions": 277000,
+                    "color": "#8d582b",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-af-food-services-and-drinking-places",
+                    "name": "Food services and drinking places",
+                    "code": "AF-food-services-and-drinking-places",
+                    "amountMillions": 730200,
+                    "color": "#995f2f",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  }
+                ]
               }
             ]
           },
@@ -873,13 +1845,13 @@
             "id": "usa-oseg",
             "name": "Other services, except government",
             "code": "OSEG",
-            "amountMillions": 669179.7,
+            "amountMillions": 672000,
             "color": "#6a7a8a",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
@@ -889,13 +1861,13 @@
             "id": "usa-gov",
             "name": "Government",
             "code": "GOV",
-            "amountMillions": 3505227,
+            "amountMillions": 3515200,
             "color": "#1f3d4d",
             "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
             "sources": [
               {
-                "label": "BEA GDP by Industry (via FRED)",
-                "url": "https://fred.stlouisfed.org/release?rid=331"
+                "label": "BEA GDP by Industry",
+                "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
               }
             ],
             "year": 2026,
@@ -905,33 +1877,101 @@
                 "id": "usa-fed",
                 "name": "Federal",
                 "code": "FED",
-                "amountMillions": 1115299.5,
+                "amountMillions": 1118000,
                 "color": "#162c37",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
-                "periodLabel": "Q1 2026"
+                "periodLabel": "Q1 2026",
+                "children": [
+                  {
+                    "id": "usa-fed-general-government",
+                    "name": "General government",
+                    "code": "FED-general-government",
+                    "amountMillions": 1038300,
+                    "color": "#162c37",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-fed-government-enterprises",
+                    "name": "Government enterprises",
+                    "code": "FED-government-enterprises",
+                    "amountMillions": 79700,
+                    "color": "#18303c",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  }
+                ]
               },
               {
                 "id": "usa-sl",
                 "name": "State and local",
                 "code": "SL",
-                "amountMillions": 2389927.5,
+                "amountMillions": 2397200,
                 "color": "#18303c",
-                "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+                "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
                 "sources": [
                   {
-                    "label": "BEA GDP by Industry (via FRED)",
-                    "url": "https://fred.stlouisfed.org/release?rid=331"
+                    "label": "BEA GDP by Industry",
+                    "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                   }
                 ],
                 "year": 2026,
-                "periodLabel": "Q1 2026"
+                "periodLabel": "Q1 2026",
+                "children": [
+                  {
+                    "id": "usa-sl-general-government",
+                    "name": "General government",
+                    "code": "SL-general-government",
+                    "amountMillions": 2225100,
+                    "color": "#162c37",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  },
+                  {
+                    "id": "usa-sl-government-enterprises",
+                    "name": "Government enterprises",
+                    "code": "SL-government-enterprises",
+                    "amountMillions": 172000,
+                    "color": "#18303c",
+                    "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                    "sources": [
+                      {
+                        "label": "BEA GDP by Industry",
+                        "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                      }
+                    ],
+                    "year": 2026,
+                    "periodLabel": "Q1 2026"
+                  }
+                ]
               }
             ]
           }
@@ -19642,11 +20682,11 @@
       "code": "USA",
       "amountMillions": 31865700,
       "color": "#2a6f97",
-      "description": "BEA value added / GDP by industry as of Q1 2026, seasonally adjusted annual rate, current dollars (FRED series VAAI and industry shares).",
+      "description": "BEA value added / GDP by industry as of Q1 2026, seasonally adjusted annual rate, current dollars.",
       "sources": [
         {
-          "label": "BEA GDP by Industry (via FRED)",
-          "url": "https://fred.stlouisfed.org/release?rid=331"
+          "label": "BEA GDP by Industry",
+          "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
         },
         {
           "label": "World Bank WDI population & age structure",
@@ -19675,45 +20715,129 @@
           "id": "usa-afh",
           "name": "Agriculture, forestry, fishing, and hunting",
           "code": "AFH",
-          "amountMillions": 223059.9,
+          "amountMillions": 235300,
           "color": "#5a8f3c",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
-          "periodLabel": "Q1 2026"
+          "periodLabel": "Q1 2026",
+          "children": [
+            {
+              "id": "usa-afh-farms",
+              "name": "Farms",
+              "code": "AFH-farms",
+              "amountMillions": 186200,
+              "color": "#41672b",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-afh-forestry-fishing-and-related-activities",
+              "name": "Forestry, fishing, and related activities",
+              "code": "AFH-forestry-fishing-and-related-activities",
+              "amountMillions": 49100,
+              "color": "#46702f",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            }
+          ]
         },
         {
           "id": "usa-min",
           "name": "Mining",
           "code": "MIN",
-          "amountMillions": 446119.8,
+          "amountMillions": 455300,
           "color": "#8a6b3c",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
-          "periodLabel": "Q1 2026"
+          "periodLabel": "Q1 2026",
+          "children": [
+            {
+              "id": "usa-min-oil-and-gas-extraction",
+              "name": "Oil and gas extraction",
+              "code": "MIN-oil-and-gas-extraction",
+              "amountMillions": 290700,
+              "color": "#634d2b",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-min-mining-except-oil-and-gas",
+              "name": "Mining, except oil and gas",
+              "code": "MIN-mining-except-oil-and-gas",
+              "amountMillions": 98300,
+              "color": "#6c532f",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-min-support-activities-for-mining",
+              "name": "Support activities for mining",
+              "code": "MIN-support-activities-for-mining",
+              "amountMillions": 66300,
+              "color": "#745a32",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            }
+          ]
         },
         {
           "id": "usa-utl",
           "name": "Utilities",
           "code": "UTL",
-          "amountMillions": 477985.5,
+          "amountMillions": 491900,
           "color": "#d4a017",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
@@ -19723,13 +20847,13 @@
           "id": "usa-con",
           "name": "Construction",
           "code": "CON",
-          "amountMillions": 1370225.1,
+          "amountMillions": 1358600,
           "color": "#c45c26",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
@@ -19739,13 +20863,13 @@
           "id": "usa-mfg",
           "name": "Manufacturing",
           "code": "MFG",
-          "amountMillions": 2995375.8,
+          "amountMillions": 3000400,
           "color": "#2a6f97",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
@@ -19755,33 +20879,341 @@
               "id": "usa-mfg-d",
               "name": "Durable goods",
               "code": "MFG-D",
-              "amountMillions": 1625150.7,
+              "amountMillions": 1624300,
               "color": "#1e506d",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
-              "periodLabel": "Q1 2026"
+              "periodLabel": "Q1 2026",
+              "children": [
+                {
+                  "id": "usa-mfg-d-wood-products",
+                  "name": "Wood products",
+                  "code": "MFG-D-wood-products",
+                  "amountMillions": 57500,
+                  "color": "#1e506d",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-d-nonmetallic-mineral-products",
+                  "name": "Nonmetallic mineral products",
+                  "code": "MFG-D-nonmetallic-mineral-products",
+                  "amountMillions": 78500,
+                  "color": "#215776",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-d-primary-metals",
+                  "name": "Primary metals",
+                  "code": "MFG-D-primary-metals",
+                  "amountMillions": 85300,
+                  "color": "#235d7f",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-d-fabricated-metal-products",
+                  "name": "Fabricated metal products",
+                  "code": "MFG-D-fabricated-metal-products",
+                  "amountMillions": 200200,
+                  "color": "#266488",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-d-machinery",
+                  "name": "Machinery",
+                  "code": "MFG-D-machinery",
+                  "amountMillions": 213600,
+                  "color": "#286b91",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-d-computer-and-electronic-products",
+                  "name": "Computer and electronic products",
+                  "code": "MFG-D-computer-and-electronic-products",
+                  "amountMillions": 339100,
+                  "color": "#1e506d",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-d-electrical-equipment-appliances-and-components",
+                  "name": "Electrical equipment, appliances, and components",
+                  "code": "MFG-D-electrical-equipment-appliances-and-components",
+                  "amountMillions": 82700,
+                  "color": "#215776",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-d-motor-vehicles-bodies-and-trailers-and-parts",
+                  "name": "Motor vehicles, bodies and trailers, and parts",
+                  "code": "MFG-D-motor-vehicles-bodies-and-trailers-and-parts",
+                  "amountMillions": 186000,
+                  "color": "#235d7f",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-d-other-transportation-equipment",
+                  "name": "Other transportation equipment",
+                  "code": "MFG-D-other-transportation-equipment",
+                  "amountMillions": 225700,
+                  "color": "#266488",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-d-furniture-and-related-products",
+                  "name": "Furniture and related products",
+                  "code": "MFG-D-furniture-and-related-products",
+                  "amountMillions": 34900,
+                  "color": "#286b91",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-d-miscellaneous-manufacturing",
+                  "name": "Miscellaneous manufacturing",
+                  "code": "MFG-D-miscellaneous-manufacturing",
+                  "amountMillions": 120700,
+                  "color": "#1e506d",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                }
+              ]
             },
             {
               "id": "usa-mfg-n",
               "name": "Nondurable goods",
               "code": "MFG-N",
-              "amountMillions": 1370225.1,
+              "amountMillions": 1376100,
               "color": "#215776",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
-              "periodLabel": "Q1 2026"
+              "periodLabel": "Q1 2026",
+              "children": [
+                {
+                  "id": "usa-mfg-n-food-and-beverage-and-tobacco-products",
+                  "name": "Food and beverage and tobacco products",
+                  "code": "MFG-N-food-and-beverage-and-tobacco-products",
+                  "amountMillions": 365300,
+                  "color": "#1e506d",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-n-textile-mills-and-textile-product-mills",
+                  "name": "Textile mills and textile product mills",
+                  "code": "MFG-N-textile-mills-and-textile-product-mills",
+                  "amountMillions": 17000,
+                  "color": "#215776",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-n-apparel-and-leather-and-allied-products",
+                  "name": "Apparel and leather and allied products",
+                  "code": "MFG-N-apparel-and-leather-and-allied-products",
+                  "amountMillions": 12100,
+                  "color": "#235d7f",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-n-paper-products",
+                  "name": "Paper products",
+                  "code": "MFG-N-paper-products",
+                  "amountMillions": 75900,
+                  "color": "#266488",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-n-printing-and-related-support-activities",
+                  "name": "Printing and related support activities",
+                  "code": "MFG-N-printing-and-related-support-activities",
+                  "amountMillions": 41700,
+                  "color": "#286b91",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-n-petroleum-and-coal-products",
+                  "name": "Petroleum and coal products",
+                  "code": "MFG-N-petroleum-and-coal-products",
+                  "amountMillions": 167300,
+                  "color": "#1e506d",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-n-chemical-products",
+                  "name": "Chemical products",
+                  "code": "MFG-N-chemical-products",
+                  "amountMillions": 591400,
+                  "color": "#215776",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-mfg-n-plastics-and-rubber-products",
+                  "name": "Plastics and rubber products",
+                  "code": "MFG-N-plastics-and-rubber-products",
+                  "amountMillions": 105500,
+                  "color": "#235d7f",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                }
+              ]
             }
           ]
         },
@@ -19789,13 +21221,13 @@
           "id": "usa-whl",
           "name": "Wholesale trade",
           "code": "WHL",
-          "amountMillions": 2039404.8,
+          "amountMillions": 2041800,
           "color": "#2f7d6d",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
@@ -19805,61 +21237,323 @@
           "id": "usa-rtl",
           "name": "Retail trade",
           "code": "RTL",
-          "amountMillions": 1975673.4,
+          "amountMillions": 1989600,
           "color": "#3d8a7a",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
-          "periodLabel": "Q1 2026"
+          "periodLabel": "Q1 2026",
+          "children": [
+            {
+              "id": "usa-rtl-motor-vehicle-and-parts-dealers",
+              "name": "Motor vehicle and parts dealers",
+              "code": "RTL-motor-vehicle-and-parts-dealers",
+              "amountMillions": 379500,
+              "color": "#2c6358",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-rtl-food-and-beverage-stores",
+              "name": "Food and beverage stores",
+              "code": "RTL-food-and-beverage-stores",
+              "amountMillions": 247200,
+              "color": "#306c5f",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-rtl-general-merchandise-stores",
+              "name": "General merchandise stores",
+              "code": "RTL-general-merchandise-stores",
+              "amountMillions": 239600,
+              "color": "#337466",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-rtl-other-retail",
+              "name": "Other retail",
+              "code": "RTL-other-retail",
+              "amountMillions": 1123300,
+              "color": "#377c6e",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            }
+          ]
         },
         {
           "id": "usa-tw",
           "name": "Transportation and warehousing",
           "code": "TW",
-          "amountMillions": 1051568.1,
+          "amountMillions": 1054600,
           "color": "#5c6b9a",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
-          "periodLabel": "Q1 2026"
+          "periodLabel": "Q1 2026",
+          "children": [
+            {
+              "id": "usa-tw-air-transportation",
+              "name": "Air transportation",
+              "code": "TW-air-transportation",
+              "amountMillions": 197000,
+              "color": "#424d6f",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-tw-rail-transportation",
+              "name": "Rail transportation",
+              "code": "TW-rail-transportation",
+              "amountMillions": 50600,
+              "color": "#485378",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-tw-water-transportation",
+              "name": "Water transportation",
+              "code": "TW-water-transportation",
+              "amountMillions": 23500,
+              "color": "#4d5a81",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-tw-truck-transportation",
+              "name": "Truck transportation",
+              "code": "TW-truck-transportation",
+              "amountMillions": 271200,
+              "color": "#53608b",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-tw-transit-and-ground-passenger-transportation",
+              "name": "Transit and ground passenger transportation",
+              "code": "TW-transit-and-ground-passenger-transportation",
+              "amountMillions": 93300,
+              "color": "#586794",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-tw-pipeline-transportation",
+              "name": "Pipeline transportation",
+              "code": "TW-pipeline-transportation",
+              "amountMillions": 52700,
+              "color": "#424d6f",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-tw-other-transportation-and-support-activities",
+              "name": "Other transportation and support activities",
+              "code": "TW-other-transportation-and-support-activities",
+              "amountMillions": 231500,
+              "color": "#485378",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-tw-warehousing-and-storage",
+              "name": "Warehousing and storage",
+              "code": "TW-warehousing-and-storage",
+              "amountMillions": 134700,
+              "color": "#4d5a81",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            }
+          ]
         },
         {
           "id": "usa-inf",
           "name": "Information",
           "code": "INF",
-          "amountMillions": 1784479.2,
+          "amountMillions": 1787000,
           "color": "#3c6ea8",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
-          "periodLabel": "Q1 2026"
+          "periodLabel": "Q1 2026",
+          "children": [
+            {
+              "id": "usa-inf-publishing-industries-except-internet-includes-software",
+              "name": "Publishing industries, except internet (includes software)",
+              "code": "INF-publishing-industries-except-internet-includes-software",
+              "amountMillions": 502800,
+              "color": "#2b4f79",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-inf-motion-picture-and-sound-recording-industries",
+              "name": "Motion picture and sound recording industries",
+              "code": "INF-motion-picture-and-sound-recording-industries",
+              "amountMillions": 123000,
+              "color": "#2f5683",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-inf-broadcasting-and-telecommunications",
+              "name": "Broadcasting and telecommunications",
+              "code": "INF-broadcasting-and-telecommunications",
+              "amountMillions": 514200,
+              "color": "#325c8d",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            },
+            {
+              "id": "usa-inf-data-processing-internet-publishing-and-other-information-services",
+              "name": "Data processing, internet publishing, and other information services",
+              "code": "INF-data-processing-internet-publishing-and-other-information-services",
+              "amountMillions": 646900,
+              "color": "#366397",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+              "sources": [
+                {
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                }
+              ],
+              "year": 2026,
+              "periodLabel": "Q1 2026"
+            }
+          ]
         },
         {
           "id": "usa-firl",
           "name": "Finance, insurance, real estate, rental, and leasing",
           "code": "FIRL",
-          "amountMillions": 6914856.9,
+          "amountMillions": 6907500,
           "color": "#6b5c9a",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
@@ -19869,33 +21563,133 @@
               "id": "usa-fi",
               "name": "Finance and insurance",
               "code": "FI",
-              "amountMillions": 2549256,
+              "amountMillions": 2564200,
               "color": "#4d426f",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
-              "periodLabel": "Q1 2026"
+              "periodLabel": "Q1 2026",
+              "children": [
+                {
+                  "id": "usa-fi-federal-reserve-banks-credit-intermediation-and-related-activities",
+                  "name": "Federal Reserve banks, credit intermediation, and related activities",
+                  "code": "FI-federal-reserve-banks-credit-intermediation-and-related-activities",
+                  "amountMillions": 1126000,
+                  "color": "#4d426f",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-fi-securities-commodity-contracts-and-investments",
+                  "name": "Securities, commodity contracts, and investments",
+                  "code": "FI-securities-commodity-contracts-and-investments",
+                  "amountMillions": 535600,
+                  "color": "#534878",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-fi-insurance-carriers-and-related-activities",
+                  "name": "Insurance carriers and related activities",
+                  "code": "FI-insurance-carriers-and-related-activities",
+                  "amountMillions": 857400,
+                  "color": "#5a4d81",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-fi-funds-trusts-and-other-financial-vehicles",
+                  "name": "Funds, trusts, and other financial vehicles",
+                  "code": "FI-funds-trusts-and-other-financial-vehicles",
+                  "amountMillions": 45100,
+                  "color": "#60538b",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                }
+              ]
             },
             {
               "id": "usa-rl",
               "name": "Real estate and rental and leasing",
               "code": "RL",
-              "amountMillions": 4333735.2,
+              "amountMillions": 4343300,
               "color": "#534878",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
-              "periodLabel": "Q1 2026"
+              "periodLabel": "Q1 2026",
+              "children": [
+                {
+                  "id": "usa-rl-real-estate",
+                  "name": "Real estate",
+                  "code": "RL-real-estate",
+                  "amountMillions": 3944300,
+                  "color": "#4d426f",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-rl-rental-and-leasing-services-and-lessors-of-intangible-assets",
+                  "name": "Rental and leasing services and lessors of intangible assets",
+                  "code": "RL-rental-and-leasing-services-and-lessors-of-intangible-assets",
+                  "amountMillions": 399000,
+                  "color": "#534878",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                }
+              ]
             }
           ]
         },
@@ -19903,13 +21697,13 @@
           "id": "usa-pbs",
           "name": "Professional and business services",
           "code": "PBS",
-          "amountMillions": 4174406.7,
+          "amountMillions": 4160300,
           "color": "#2a8f97",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
@@ -19919,29 +21713,79 @@
               "id": "usa-pst",
               "name": "Professional, scientific, and technical services",
               "code": "PST",
-              "amountMillions": 2581121.7,
+              "amountMillions": 2581900,
               "color": "#1e676d",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
-              "periodLabel": "Q1 2026"
+              "periodLabel": "Q1 2026",
+              "children": [
+                {
+                  "id": "usa-pst-legal-services",
+                  "name": "Legal services",
+                  "code": "PST-legal-services",
+                  "amountMillions": 445500,
+                  "color": "#1e676d",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-pst-computer-systems-design-and-related-services",
+                  "name": "Computer systems design and related services",
+                  "code": "PST-computer-systems-design-and-related-services",
+                  "amountMillions": 565500,
+                  "color": "#217076",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-pst-miscellaneous-professional-scientific-and-technical-services",
+                  "name": "Miscellaneous professional, scientific, and technical services",
+                  "code": "PST-miscellaneous-professional-scientific-and-technical-services",
+                  "amountMillions": 1570900,
+                  "color": "#23787f",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                }
+              ]
             },
             {
               "id": "usa-mce",
               "name": "Management of companies and enterprises",
               "code": "MCE",
-              "amountMillions": 605448.3,
+              "amountMillions": 590300,
               "color": "#217076",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
@@ -19951,31 +21795,65 @@
               "id": "usa-awms",
               "name": "Administrative and waste management services",
               "code": "AWMS",
-              "amountMillions": 987836.7,
+              "amountMillions": 988100,
               "color": "#23787f",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
-              "periodLabel": "Q1 2026"
+              "periodLabel": "Q1 2026",
+              "children": [
+                {
+                  "id": "usa-awms-administrative-and-support-services",
+                  "name": "Administrative and support services",
+                  "code": "AWMS-administrative-and-support-services",
+                  "amountMillions": 895400,
+                  "color": "#1e676d",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-awms-waste-management-and-remediation-services",
+                  "name": "Waste management and remediation services",
+                  "code": "AWMS-waste-management-and-remediation-services",
+                  "amountMillions": 92800,
+                  "color": "#217076",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                }
+              ]
             }
           ]
         },
         {
           "id": "usa-eshs",
-          "name": "Educational services, health care, and social ass…",
+          "name": "Educational services, health care, and social assistance",
           "code": "ESHS",
-          "amountMillions": 2804181.6,
+          "amountMillions": 2819600,
           "color": "#9a5c7a",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
@@ -19985,13 +21863,13 @@
               "id": "usa-es",
               "name": "Educational services",
               "code": "ES",
-              "amountMillions": 350522.7,
+              "amountMillions": 352900,
               "color": "#6f4258",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
@@ -20001,31 +21879,97 @@
               "id": "usa-hcsa",
               "name": "Health care and social assistance",
               "code": "HCSA",
-              "amountMillions": 2453658.9,
+              "amountMillions": 2466800,
               "color": "#78485f",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
-              "periodLabel": "Q1 2026"
+              "periodLabel": "Q1 2026",
+              "children": [
+                {
+                  "id": "usa-hcsa-ambulatory-health-care-services",
+                  "name": "Ambulatory health care services",
+                  "code": "HCSA-ambulatory-health-care-services",
+                  "amountMillions": 1200300,
+                  "color": "#6f4258",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-hcsa-hospitals",
+                  "name": "Hospitals",
+                  "code": "HCSA-hospitals",
+                  "amountMillions": 770500,
+                  "color": "#78485f",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-hcsa-nursing-and-residential-care-facilities",
+                  "name": "Nursing and residential care facilities",
+                  "code": "HCSA-nursing-and-residential-care-facilities",
+                  "amountMillions": 235300,
+                  "color": "#814d66",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-hcsa-social-assistance",
+                  "name": "Social assistance",
+                  "code": "HCSA-social-assistance",
+                  "amountMillions": 260600,
+                  "color": "#8b536e",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                }
+              ]
             }
           ]
         },
         {
           "id": "usa-aeraf",
-          "name": "Arts, entertainment, recreation, accommodation, a…",
+          "name": "Arts, entertainment, recreation, accommodation, and food services",
           "code": "AERAF",
-          "amountMillions": 1370225.1,
+          "amountMillions": 1376700,
           "color": "#c47a3c",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
@@ -20035,33 +21979,101 @@
               "id": "usa-aer",
               "name": "Arts, entertainment, and recreation",
               "code": "AER",
-              "amountMillions": 382388.4,
+              "amountMillions": 369500,
               "color": "#8d582b",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
-              "periodLabel": "Q1 2026"
+              "periodLabel": "Q1 2026",
+              "children": [
+                {
+                  "id": "usa-aer-performing-arts-spectator-sports-museums-and-related-activities",
+                  "name": "Performing arts, spectator sports, museums, and related activities",
+                  "code": "AER-performing-arts-spectator-sports-museums-and-related-activities",
+                  "amountMillions": 220300,
+                  "color": "#8d582b",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-aer-amusements-gambling-and-recreation-industries",
+                  "name": "Amusements, gambling, and recreation industries",
+                  "code": "AER-amusements-gambling-and-recreation-industries",
+                  "amountMillions": 149200,
+                  "color": "#995f2f",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                }
+              ]
             },
             {
               "id": "usa-af",
               "name": "Accommodation and food services",
               "code": "AF",
-              "amountMillions": 1019702.4,
+              "amountMillions": 1007200,
               "color": "#995f2f",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
-              "periodLabel": "Q1 2026"
+              "periodLabel": "Q1 2026",
+              "children": [
+                {
+                  "id": "usa-af-accommodation",
+                  "name": "Accommodation",
+                  "code": "AF-accommodation",
+                  "amountMillions": 277000,
+                  "color": "#8d582b",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-af-food-services-and-drinking-places",
+                  "name": "Food services and drinking places",
+                  "code": "AF-food-services-and-drinking-places",
+                  "amountMillions": 730200,
+                  "color": "#995f2f",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                }
+              ]
             }
           ]
         },
@@ -20069,13 +22081,13 @@
           "id": "usa-oseg",
           "name": "Other services, except government",
           "code": "OSEG",
-          "amountMillions": 669179.7,
+          "amountMillions": 672000,
           "color": "#6a7a8a",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
@@ -20085,13 +22097,13 @@
           "id": "usa-gov",
           "name": "Government",
           "code": "GOV",
-          "amountMillions": 3505227,
+          "amountMillions": 3515200,
           "color": "#1f3d4d",
           "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
           "sources": [
             {
-              "label": "BEA GDP by Industry (via FRED)",
-              "url": "https://fred.stlouisfed.org/release?rid=331"
+              "label": "BEA GDP by Industry",
+              "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
             }
           ],
           "year": 2026,
@@ -20101,33 +22113,101 @@
               "id": "usa-fed",
               "name": "Federal",
               "code": "FED",
-              "amountMillions": 1115299.5,
+              "amountMillions": 1118000,
               "color": "#162c37",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
-              "periodLabel": "Q1 2026"
+              "periodLabel": "Q1 2026",
+              "children": [
+                {
+                  "id": "usa-fed-general-government",
+                  "name": "General government",
+                  "code": "FED-general-government",
+                  "amountMillions": 1038300,
+                  "color": "#162c37",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-fed-government-enterprises",
+                  "name": "Government enterprises",
+                  "code": "FED-government-enterprises",
+                  "amountMillions": 79700,
+                  "color": "#18303c",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                }
+              ]
             },
             {
               "id": "usa-sl",
               "name": "State and local",
               "code": "SL",
-              "amountMillions": 2389927.5,
+              "amountMillions": 2397200,
               "color": "#18303c",
-              "description": "BEA value added, Q1 2026, seasonally adjusted annual rate (share of GDP × GDP).",
+              "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
               "sources": [
                 {
-                  "label": "BEA GDP by Industry (via FRED)",
-                  "url": "https://fred.stlouisfed.org/release?rid=331"
+                  "label": "BEA GDP by Industry",
+                  "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
                 }
               ],
               "year": 2026,
-              "periodLabel": "Q1 2026"
+              "periodLabel": "Q1 2026",
+              "children": [
+                {
+                  "id": "usa-sl-general-government",
+                  "name": "General government",
+                  "code": "SL-general-government",
+                  "amountMillions": 2225100,
+                  "color": "#162c37",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                },
+                {
+                  "id": "usa-sl-government-enterprises",
+                  "name": "Government enterprises",
+                  "code": "SL-government-enterprises",
+                  "amountMillions": 172000,
+                  "color": "#18303c",
+                  "description": "BEA value added by industry, Q1 2026, SAAR current dollars.",
+                  "sources": [
+                    {
+                      "label": "BEA GDP by Industry",
+                      "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+                    }
+                  ],
+                  "year": 2026,
+                  "periodLabel": "Q1 2026"
+                }
+              ]
             }
           ]
         }
