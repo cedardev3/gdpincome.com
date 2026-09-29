@@ -1,6 +1,6 @@
 {
   "meta": {
-    "fetchedAt": "2026-09-25T03:52:16.614Z",
+    "fetchedAt": "2026-09-29T07:11:28.878Z",
     "yearsByCountry": {
       "CAN": 2026,
       "AUS": 2026,
@@ -185,7 +185,7 @@
       "IRN": "worldbank",
       "HKG": "worldbank",
       "PAK": "worldbank",
-      "JPN": "oecd",
+      "JPN": "esri",
       "GBR": "oecd",
       "MEX": "oecd",
       "TUR": "oecd",
@@ -207,6 +207,14 @@
         ],
         "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1",
         "measure": "Value added by industry, current $, SAAR, published summary plus one finer group"
+      },
+      "esri": {
+        "dataset": "Cabinet Office GDP classified by economic activities",
+        "countries": [
+          "JPN"
+        ],
+        "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html",
+        "measure": "Current-price calendar-year GDP by economic activity, plus one published finer group"
       },
       "statcan": {
         "dataset": "Statistics Canada 36-10-0434",
@@ -278,14 +286,13 @@
       "oecd": {
         "dataset": "OECD/DSD_NAMAIN10@DF_TABLE6",
         "countries": [
-          "JPN",
           "GBR",
           "MEX",
           "TUR",
           "CHE"
         ],
         "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6",
-        "measure": "Primary for JPN/GBR/MEX/TUR/CHE; fallback elsewhere — GVA current prices, annual"
+        "measure": "Primary for GBR/MEX/TUR/CHE; fallback elsewhere — GVA current prices, annual"
       },
       "population": {
         "dataset": "World Bank WDI SP.POP.TOTL / 0014 / 65UP",
@@ -396,13 +403,17 @@
   "world": {
     "id": "world",
     "name": "Selected economies",
-    "amountMillions": 104158789.3,
+    "amountMillions": 104193737.6,
     "color": "#1f3d4d",
     "description": "Combined industry GDP / value added for the largest selected economies in USD. Each country uses its official national source when available; OECD fills gaps.",
     "sources": [
       {
         "label": "BEA GDP by Industry",
         "url": "https://apps.bea.gov/iTable/?reqid=1603&step=2&Categories=GDPxInd&isURI=1"
+      },
+      {
+        "label": "Cabinet Office ESRI National Accounts",
+        "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
       },
       {
         "label": "Statistics Canada Table 36-10-0434",
@@ -2431,13 +2442,13 @@
         "id": "jpn",
         "name": "Japan",
         "code": "JPN",
-        "amountMillions": 4155059.9,
+        "amountMillions": 4190008.2,
         "color": "#8a5a3c",
-        "description": "OECD Table 6 GVA for 2024; USD from JPY at 151.3663.",
+        "description": "Cabinet Office GDP by economic activity for 2024, current prices; USD from JPY at 151.3663.",
         "sources": [
           {
-            "label": "OECD National Accounts — Table 6 (via DBnomics)",
-            "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+            "label": "Cabinet Office ESRI National Accounts",
+            "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
           },
           {
             "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2464,59 +2475,19 @@
         "periodLabel": "2024",
         "currency": "JPY",
         "fxLcuPerUsd": 151.366291302752,
-        "sourceKey": "oecd",
+        "sourceKey": "esri",
         "children": [
           {
-            "id": "jpn-a",
+            "id": "jpn-agriculture-forestry-and-fishing",
             "name": "Agriculture, forestry and fishing",
-            "code": "A",
+            "code": "AGRICULTURE-FORESTRY-AND-FISHING",
             "amountMillions": 40151.6,
             "color": "#5a8f3c",
-            "description": "ISIC section A. OECD GVA current prices (2024).",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-              },
-              {
-                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-              }
-            ],
-            "year": 2024,
-            "periodLabel": "2024"
-          },
-          {
-            "id": "jpn-b",
-            "name": "Mining and quarrying",
-            "code": "B",
-            "amountMillions": 2347.3,
-            "color": "#8a6b3c",
-            "description": "ISIC section B. OECD GVA current prices (2024).",
-            "sources": [
-              {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-              },
-              {
-                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-              }
-            ],
-            "year": 2024,
-            "periodLabel": "2024"
-          },
-          {
-            "id": "jpn-c",
-            "name": "Manufacturing",
-            "code": "C",
-            "amountMillions": 788452.3,
-            "color": "#2a6f97",
-            "description": "ISIC section C. OECD GVA current prices (2024).",
-            "sources": [
-              {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2527,16 +2498,16 @@
             "periodLabel": "2024",
             "children": [
               {
-                "id": "jpn-c13",
-                "name": "Manufacture of textiles",
-                "code": "C13",
-                "amountMillions": 8865.2,
-                "color": "#1e506d",
-                "description": "ISIC division C13. OECD GVA current prices (2024).",
+                "id": "jpn-agriculture-forestry-and-fishing-agriculture",
+                "name": "Agriculture",
+                "code": "AGRICULTURE",
+                "amountMillions": 32837.6,
+                "color": "#41672b",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
                 "sources": [
                   {
-                    "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                    "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
                   },
                   {
                     "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2547,16 +2518,16 @@
                 "periodLabel": "2024"
               },
               {
-                "id": "jpn-c17",
-                "name": "Manufacture of paper and paper products",
-                "code": "C17",
-                "amountMillions": 15763.1,
-                "color": "#215776",
-                "description": "ISIC division C17. OECD GVA current prices (2024).",
+                "id": "jpn-agriculture-forestry-and-fishing-forestry",
+                "name": "Forestry",
+                "code": "FORESTRY",
+                "amountMillions": 2065.8,
+                "color": "#46702f",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
                 "sources": [
                   {
-                    "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                    "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
                   },
                   {
                     "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2567,176 +2538,16 @@
                 "periodLabel": "2024"
               },
               {
-                "id": "jpn-c19",
-                "name": "Manufacture of coke and refined petroleum products",
-                "code": "C19",
-                "amountMillions": 28321.4,
-                "color": "#235d7f",
-                "description": "ISIC division C19. OECD GVA current prices (2024).",
+                "id": "jpn-agriculture-forestry-and-fishing-fishing",
+                "name": "Fishing",
+                "code": "FISHING",
+                "amountMillions": 5248.2,
+                "color": "#4c7832",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
                 "sources": [
                   {
-                    "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                    "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                  },
-                  {
-                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                  }
-                ],
-                "year": 2024,
-                "periodLabel": "2024"
-              },
-              {
-                "id": "jpn-c20",
-                "name": "Manufacture of chemicals and chemical products",
-                "code": "C20",
-                "amountMillions": 60532.6,
-                "color": "#266488",
-                "description": "ISIC division C20. OECD GVA current prices (2024).",
-                "sources": [
-                  {
-                    "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                    "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                  },
-                  {
-                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                  }
-                ],
-                "year": 2024,
-                "periodLabel": "2024"
-              },
-              {
-                "id": "jpn-c23",
-                "name": "Manufacture of other non-metallic mineral products",
-                "code": "C23",
-                "amountMillions": 19386.1,
-                "color": "#286b91",
-                "description": "ISIC division C23. OECD GVA current prices (2024).",
-                "sources": [
-                  {
-                    "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                    "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                  },
-                  {
-                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                  }
-                ],
-                "year": 2024,
-                "periodLabel": "2024"
-              },
-              {
-                "id": "jpn-c24",
-                "name": "Manufacture of basic metals",
-                "code": "C24",
-                "amountMillions": 73138.5,
-                "color": "#1e506d",
-                "description": "ISIC division C24. OECD GVA current prices (2024).",
-                "sources": [
-                  {
-                    "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                    "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                  },
-                  {
-                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                  }
-                ],
-                "year": 2024,
-                "periodLabel": "2024"
-              },
-              {
-                "id": "jpn-c25",
-                "name": "Manufacture of fabricated metal products, except …",
-                "code": "C25",
-                "amountMillions": 42841.1,
-                "color": "#215776",
-                "description": "ISIC division C25. OECD GVA current prices (2024).",
-                "sources": [
-                  {
-                    "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                    "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                  },
-                  {
-                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                  }
-                ],
-                "year": 2024,
-                "periodLabel": "2024"
-              },
-              {
-                "id": "jpn-c26",
-                "name": "Manufacture of computer, electronic and optical p…",
-                "code": "C26",
-                "amountMillions": 67107.4,
-                "color": "#235d7f",
-                "description": "ISIC division C26. OECD GVA current prices (2024).",
-                "sources": [
-                  {
-                    "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                    "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                  },
-                  {
-                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                  }
-                ],
-                "year": 2024,
-                "periodLabel": "2024"
-              },
-              {
-                "id": "jpn-c27",
-                "name": "Manufacture of electrical equipment",
-                "code": "C27",
-                "amountMillions": 42544.5,
-                "color": "#266488",
-                "description": "ISIC division C27. OECD GVA current prices (2024).",
-                "sources": [
-                  {
-                    "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                    "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                  },
-                  {
-                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                  }
-                ],
-                "year": 2024,
-                "periodLabel": "2024"
-              },
-              {
-                "id": "jpn-c28",
-                "name": "Manufacture of machinery and equipment n.e.c.",
-                "code": "C28",
-                "amountMillions": 119230,
-                "color": "#286b91",
-                "description": "ISIC division C28. OECD GVA current prices (2024).",
-                "sources": [
-                  {
-                    "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                    "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                  },
-                  {
-                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                  }
-                ],
-                "year": 2024,
-                "periodLabel": "2024"
-              },
-              {
-                "id": "jpn-c-other",
-                "name": "Other / not detailed",
-                "code": "C_RES",
-                "amountMillions": 310722.4,
-                "color": "#173d53",
-                "description": "Residual of section C (2024).",
-                "sources": [
-                  {
-                    "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                    "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
                   },
                   {
                     "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2749,16 +2560,358 @@
             ]
           },
           {
-            "id": "jpn-d",
-            "name": "Electricity, gas, steam and air conditioning supply",
-            "code": "D",
+            "id": "jpn-mining",
+            "name": "Mining",
+            "code": "MINING",
+            "amountMillions": 2347.3,
+            "color": "#8a6b3c",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+            "sources": [
+              {
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2024,
+            "periodLabel": "2024"
+          },
+          {
+            "id": "jpn-manufacturing",
+            "name": "Manufacturing",
+            "code": "MANUFACTURING",
+            "amountMillions": 788452.3,
+            "color": "#2a6f97",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+            "sources": [
+              {
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2024,
+            "periodLabel": "2024",
+            "children": [
+              {
+                "id": "jpn-manufacturing-food-products-and-beverages",
+                "name": "Food products and beverages",
+                "code": "FOOD-PRODUCTS-AND-BEVERAGES",
+                "amountMillions": 96454.8,
+                "color": "#1e506d",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-textile-products",
+                "name": "Textile products",
+                "code": "TEXTILE-PRODUCTS",
+                "amountMillions": 8865.2,
+                "color": "#215776",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-pulp-paper-and-paper-products",
+                "name": "Pulp, paper and paper products",
+                "code": "PULP-PAPER-AND-PAPER-PRODUCTS",
+                "amountMillions": 15763.1,
+                "color": "#235d7f",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-chemicals",
+                "name": "Chemicals",
+                "code": "CHEMICALS",
+                "amountMillions": 60532.6,
+                "color": "#266488",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-petroleum-and-coal-products",
+                "name": "Petroleum and coal products",
+                "code": "PETROLEUM-AND-COAL-PRODUCTS",
+                "amountMillions": 28321.4,
+                "color": "#286b91",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-non-metallic-mineral-products",
+                "name": "Non-metallic mineral products",
+                "code": "NON-METALLIC-MINERAL-PRODUCTS",
+                "amountMillions": 19386.1,
+                "color": "#1e506d",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-basic-metal",
+                "name": "Basic metal",
+                "code": "BASIC-METAL",
+                "amountMillions": 73138.5,
+                "color": "#215776",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-fabricated-metal-products",
+                "name": "Fabricated metal products",
+                "code": "FABRICATED-METAL-PRODUCTS",
+                "amountMillions": 42841.1,
+                "color": "#235d7f",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-general-purpose-production-and-business-oriented-machinery",
+                "name": "General-purpose, production and business oriented machinery",
+                "code": "GENERAL-PURPOSE-PRODUCTION-AND-BUSINESS-ORIENTED-MACHINERY",
+                "amountMillions": 119230,
+                "color": "#266488",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-electronic-components-and-devices",
+                "name": "Electronic components and devices",
+                "code": "ELECTRONIC-COMPONENTS-AND-DEVICES",
+                "amountMillions": 53049.5,
+                "color": "#286b91",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-electrical-machinery-equipment-and-supplies",
+                "name": "Electrical machinery, equipment and supplies",
+                "code": "ELECTRICAL-MACHINERY-EQUIPMENT-AND-SUPPLIES",
+                "amountMillions": 42544.5,
+                "color": "#1e506d",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-information-and-communication-electronics-equipment",
+                "name": "Information and communication electronics equipment",
+                "code": "INFORMATION-AND-COMMUNICATION-ELECTRONICS-EQUIPMENT",
+                "amountMillions": 14058,
+                "color": "#215776",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-transport-equipment",
+                "name": "Transport equipment",
+                "code": "TRANSPORT-EQUIPMENT",
+                "amountMillions": 132401.3,
+                "color": "#235d7f",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-printing",
+                "name": "Printing",
+                "code": "PRINTING",
+                "amountMillions": 15913.1,
+                "color": "#266488",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-manufacturing-others",
+                "name": "Others",
+                "code": "OTHERS",
+                "amountMillions": 65952.6,
+                "color": "#286b91",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              }
+            ]
+          },
+          {
+            "id": "jpn-electricity-gas-and-water-supply-and-waste-management-service",
+            "name": "Electricity, gas and water supply and waste management service",
+            "code": "ELECTRICITY-GAS-AND-WATER-SUPPLY-AND-WASTE-MANAGEMENT-SERVICE",
             "amountMillions": 109793.9,
             "color": "#d4a017",
-            "description": "ISIC section D. OECD GVA current prices (2024).",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2766,19 +2919,61 @@
               }
             ],
             "year": 2024,
-            "periodLabel": "2024"
+            "periodLabel": "2024",
+            "children": [
+              {
+                "id": "jpn-electricity-gas-and-water-supply-and-waste-management-service-electricity-supply",
+                "name": "Electricity supply",
+                "code": "ELECTRICITY-SUPPLY",
+                "amountMillions": 49189.9,
+                "color": "#997311",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-electricity-gas-and-water-supply-and-waste-management-service-gas-and-water-supply-and-waste-management-service",
+                "name": "Gas and water supply, and waste management service",
+                "code": "GAS-AND-WATER-SUPPLY-AND-WASTE-MANAGEMENT-SERVICE",
+                "amountMillions": 60604,
+                "color": "#a57d12",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              }
+            ]
           },
           {
-            "id": "jpn-f",
+            "id": "jpn-construction",
             "name": "Construction",
-            "code": "F",
+            "code": "CONSTRUCTION",
             "amountMillions": 221411.3,
             "color": "#c45c26",
-            "description": "ISIC section F. OECD GVA current prices (2024).",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2789,16 +2984,16 @@
             "periodLabel": "2024"
           },
           {
-            "id": "jpn-g",
-            "name": "Wholesale and retail trade; repair of motor vehic…",
-            "code": "G",
+            "id": "jpn-wholesale-and-retail-trade",
+            "name": "Wholesale and retail trade",
+            "code": "WHOLESALE-AND-RETAIL-TRADE",
             "amountMillions": 519630.2,
             "color": "#2f7d6d",
-            "description": "ISIC section G. OECD GVA current prices (2024).",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2806,19 +3001,61 @@
               }
             ],
             "year": 2024,
-            "periodLabel": "2024"
+            "periodLabel": "2024",
+            "children": [
+              {
+                "id": "jpn-wholesale-and-retail-trade-wholesale-trade",
+                "name": "Wholesale trade",
+                "code": "WHOLESALE-TRADE",
+                "amountMillions": 296146.5,
+                "color": "#225a4e",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-wholesale-and-retail-trade-retail-trade",
+                "name": "Retail trade",
+                "code": "RETAIL-TRADE",
+                "amountMillions": 223483.7,
+                "color": "#256255",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              }
+            ]
           },
           {
-            "id": "jpn-h",
-            "name": "Transportation and storage",
-            "code": "H",
+            "id": "jpn-transport-and-postal-services",
+            "name": "Transport and postal services",
+            "code": "TRANSPORT-AND-POSTAL-SERVICES",
             "amountMillions": 218414.5,
             "color": "#5c6b9a",
-            "description": "ISIC section H. OECD GVA current prices (2024).",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2829,16 +3066,16 @@
             "periodLabel": "2024"
           },
           {
-            "id": "jpn-i",
-            "name": "Accommodation and food service",
-            "code": "I",
+            "id": "jpn-accommodation-and-food-service-activities",
+            "name": "Accommodation and food service activities",
+            "code": "ACCOMMODATION-AND-FOOD-SERVICE-ACTIVITIES",
             "amountMillions": 75528,
-            "color": "#b85c6e",
-            "description": "ISIC section I. OECD GVA current prices (2024).",
+            "color": "#c47a3c",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2849,16 +3086,16 @@
             "periodLabel": "2024"
           },
           {
-            "id": "jpn-j",
-            "name": "Information and communication",
-            "code": "J",
+            "id": "jpn-information-and-communications",
+            "name": "Information and communications",
+            "code": "INFORMATION-AND-COMMUNICATIONS",
             "amountMillions": 259133.7,
             "color": "#3c6ea8",
-            "description": "ISIC section J. OECD GVA current prices (2024).",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2866,19 +3103,61 @@
               }
             ],
             "year": 2024,
-            "periodLabel": "2024"
+            "periodLabel": "2024",
+            "children": [
+              {
+                "id": "jpn-information-and-communications-communications-and-broadcasting",
+                "name": "Communications and broadcasting",
+                "code": "COMMUNICATIONS-AND-BROADCASTING",
+                "amountMillions": 89544.4,
+                "color": "#2b4f79",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-information-and-communications-information-services-and-image-sound-and-character-information-production-and-distribution",
+                "name": "Information services, and Image, sound and character information production and distribution",
+                "code": "INFORMATION-SERVICES-AND-IMAGE-SOUND-AND-CHARACTER-INFORMATION-PRODUCTION-AND-DISTRIBUTION",
+                "amountMillions": 169589.3,
+                "color": "#2f5683",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              }
+            ]
           },
           {
-            "id": "jpn-k",
-            "name": "Financial and insurance",
-            "code": "K",
+            "id": "jpn-finance-and-insurance",
+            "name": "Finance and insurance",
+            "code": "FINANCE-AND-INSURANCE",
             "amountMillions": 183525.7,
             "color": "#6b5c9a",
-            "description": "ISIC section K. OECD GVA current prices (2024).",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2889,16 +3168,16 @@
             "periodLabel": "2024"
           },
           {
-            "id": "jpn-l",
+            "id": "jpn-real-estate",
             "name": "Real estate",
-            "code": "L",
+            "code": "REAL-ESTATE",
             "amountMillions": 531014.5,
             "color": "#8a7358",
-            "description": "ISIC section L. OECD GVA current prices (2024).",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2906,19 +3185,61 @@
               }
             ],
             "year": 2024,
-            "periodLabel": "2024"
+            "periodLabel": "2024",
+            "children": [
+              {
+                "id": "jpn-real-estate-renting-of-dwellings",
+                "name": "Renting of dwellings",
+                "code": "RENTING-OF-DWELLINGS",
+                "amountMillions": 390762.7,
+                "color": "#63533f",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              },
+              {
+                "id": "jpn-real-estate-other-real-estate",
+                "name": "Other real estate",
+                "code": "OTHER-REAL-ESTATE",
+                "amountMillions": 140251.8,
+                "color": "#6c5a45",
+                "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+                "sources": [
+                  {
+                    "label": "Cabinet Office ESRI National Accounts",
+                    "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                  },
+                  {
+                    "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                    "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                  }
+                ],
+                "year": 2024,
+                "periodLabel": "2024"
+              }
+            ]
           },
           {
-            "id": "jpn-m",
-            "name": "Professional, scientific and technical",
-            "code": "M",
+            "id": "jpn-professional-scientific-and-technical-activities",
+            "name": "Professional, scientific and technical activities",
+            "code": "PROFESSIONAL-SCIENTIFIC-AND-TECHNICAL-ACTIVITIES",
             "amountMillions": 383630.3,
             "color": "#2a8f97",
-            "description": "ISIC section M. OECD GVA current prices (2024).",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2929,16 +3250,16 @@
             "periodLabel": "2024"
           },
           {
-            "id": "jpn-o",
-            "name": "Public administration and defence; compulsory soc…",
-            "code": "O",
+            "id": "jpn-public-administration",
+            "name": "Public administration",
+            "code": "PUBLIC-ADMINISTRATION",
             "amountMillions": 202875.4,
-            "color": "#5c7a8a",
-            "description": "ISIC section O. OECD GVA current prices (2024).",
+            "color": "#1f3d4d",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2949,16 +3270,16 @@
             "periodLabel": "2024"
           },
           {
-            "id": "jpn-p",
+            "id": "jpn-education",
             "name": "Education",
-            "code": "P",
+            "code": "EDUCATION",
             "amountMillions": 150135.1,
             "color": "#4a7a5c",
-            "description": "ISIC section P. OECD GVA current prices (2024).",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2969,16 +3290,16 @@
             "periodLabel": "2024"
           },
           {
-            "id": "jpn-q",
-            "name": "Human health and social work",
-            "code": "Q",
+            "id": "jpn-human-health-and-social-work-activities",
+            "name": "Human health and social work activities",
+            "code": "HUMAN-HEALTH-AND-SOCIAL-WORK-ACTIVITIES",
             "amountMillions": 284346,
             "color": "#9a5c7a",
-            "description": "ISIC section Q. OECD GVA current prices (2024).",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -2989,16 +3310,76 @@
             "periodLabel": "2024"
           },
           {
-            "id": "jpn-r",
-            "name": "Arts, entertainment and recreation",
-            "code": "R",
+            "id": "jpn-other-service-activities",
+            "name": "Other service activities",
+            "code": "OTHER-SERVICE-ACTIVITIES",
             "amountMillions": 184670.6,
-            "color": "#c47a3c",
-            "description": "ISIC section R. OECD GVA current prices (2024).",
+            "color": "#6a7a8a",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
             "sources": [
               {
-                "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2024,
+            "periodLabel": "2024"
+          },
+          {
+            "id": "jpn-taxes-imports",
+            "name": "Taxes and duties on imports",
+            "code": "TAX_M",
+            "amountMillions": 93043.8,
+            "color": "#b08968",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+            "sources": [
+              {
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2024,
+            "periodLabel": "2024"
+          },
+          {
+            "id": "jpn-consumption-tax-gfcf",
+            "name": "Consumption taxes for gross capital formation",
+            "code": "TAX_C",
+            "amountMillions": -68850.9,
+            "color": "#8a7358",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+            "sources": [
+              {
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+              },
+              {
+                "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+              }
+            ],
+            "year": 2024,
+            "periodLabel": "2024"
+          },
+          {
+            "id": "jpn-statistical-discrepancy",
+            "name": "Statistical discrepancy",
+            "code": "SD",
+            "amountMillions": 10755.4,
+            "color": "#9a9a9a",
+            "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+            "sources": [
+              {
+                "label": "Cabinet Office ESRI National Accounts",
+                "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
               },
               {
                 "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -3013,7 +3394,7 @@
         "populationYear": 2025,
         "populationPrior5y": 126261000,
         "populationPrior5yYear": 2020,
-        "gdpPerCapitaUsd": 33681,
+        "gdpPerCapitaUsd": 33964,
         "gdpPerCapitaWbUsd": 35951,
         "gdpPerCapitaWbYear": 2025,
         "gdpPerCapitaWbPrior5yUsd": 41099,
@@ -22667,13 +23048,13 @@
       "id": "jpn",
       "name": "Japan",
       "code": "JPN",
-      "amountMillions": 4155059.9,
+      "amountMillions": 4190008.2,
       "color": "#8a5a3c",
-      "description": "OECD Table 6 GVA for 2024; USD from JPY at 151.3663.",
+      "description": "Cabinet Office GDP by economic activity for 2024, current prices; USD from JPY at 151.3663.",
       "sources": [
         {
-          "label": "OECD National Accounts — Table 6 (via DBnomics)",
-          "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+          "label": "Cabinet Office ESRI National Accounts",
+          "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
         },
         {
           "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -22700,59 +23081,19 @@
       "periodLabel": "2024",
       "currency": "JPY",
       "fxLcuPerUsd": 151.366291302752,
-      "sourceKey": "oecd",
+      "sourceKey": "esri",
       "children": [
         {
-          "id": "jpn-a",
+          "id": "jpn-agriculture-forestry-and-fishing",
           "name": "Agriculture, forestry and fishing",
-          "code": "A",
+          "code": "AGRICULTURE-FORESTRY-AND-FISHING",
           "amountMillions": 40151.6,
           "color": "#5a8f3c",
-          "description": "ISIC section A. OECD GVA current prices (2024).",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-            },
-            {
-              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-            }
-          ],
-          "year": 2024,
-          "periodLabel": "2024"
-        },
-        {
-          "id": "jpn-b",
-          "name": "Mining and quarrying",
-          "code": "B",
-          "amountMillions": 2347.3,
-          "color": "#8a6b3c",
-          "description": "ISIC section B. OECD GVA current prices (2024).",
-          "sources": [
-            {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-            },
-            {
-              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-            }
-          ],
-          "year": 2024,
-          "periodLabel": "2024"
-        },
-        {
-          "id": "jpn-c",
-          "name": "Manufacturing",
-          "code": "C",
-          "amountMillions": 788452.3,
-          "color": "#2a6f97",
-          "description": "ISIC section C. OECD GVA current prices (2024).",
-          "sources": [
-            {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -22763,16 +23104,16 @@
           "periodLabel": "2024",
           "children": [
             {
-              "id": "jpn-c13",
-              "name": "Manufacture of textiles",
-              "code": "C13",
-              "amountMillions": 8865.2,
-              "color": "#1e506d",
-              "description": "ISIC division C13. OECD GVA current prices (2024).",
+              "id": "jpn-agriculture-forestry-and-fishing-agriculture",
+              "name": "Agriculture",
+              "code": "AGRICULTURE",
+              "amountMillions": 32837.6,
+              "color": "#41672b",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
               "sources": [
                 {
-                  "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                  "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
                 },
                 {
                   "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -22783,16 +23124,16 @@
               "periodLabel": "2024"
             },
             {
-              "id": "jpn-c17",
-              "name": "Manufacture of paper and paper products",
-              "code": "C17",
-              "amountMillions": 15763.1,
-              "color": "#215776",
-              "description": "ISIC division C17. OECD GVA current prices (2024).",
+              "id": "jpn-agriculture-forestry-and-fishing-forestry",
+              "name": "Forestry",
+              "code": "FORESTRY",
+              "amountMillions": 2065.8,
+              "color": "#46702f",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
               "sources": [
                 {
-                  "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                  "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
                 },
                 {
                   "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -22803,176 +23144,16 @@
               "periodLabel": "2024"
             },
             {
-              "id": "jpn-c19",
-              "name": "Manufacture of coke and refined petroleum products",
-              "code": "C19",
-              "amountMillions": 28321.4,
-              "color": "#235d7f",
-              "description": "ISIC division C19. OECD GVA current prices (2024).",
+              "id": "jpn-agriculture-forestry-and-fishing-fishing",
+              "name": "Fishing",
+              "code": "FISHING",
+              "amountMillions": 5248.2,
+              "color": "#4c7832",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
               "sources": [
                 {
-                  "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                  "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                },
-                {
-                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                }
-              ],
-              "year": 2024,
-              "periodLabel": "2024"
-            },
-            {
-              "id": "jpn-c20",
-              "name": "Manufacture of chemicals and chemical products",
-              "code": "C20",
-              "amountMillions": 60532.6,
-              "color": "#266488",
-              "description": "ISIC division C20. OECD GVA current prices (2024).",
-              "sources": [
-                {
-                  "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                  "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                },
-                {
-                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                }
-              ],
-              "year": 2024,
-              "periodLabel": "2024"
-            },
-            {
-              "id": "jpn-c23",
-              "name": "Manufacture of other non-metallic mineral products",
-              "code": "C23",
-              "amountMillions": 19386.1,
-              "color": "#286b91",
-              "description": "ISIC division C23. OECD GVA current prices (2024).",
-              "sources": [
-                {
-                  "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                  "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                },
-                {
-                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                }
-              ],
-              "year": 2024,
-              "periodLabel": "2024"
-            },
-            {
-              "id": "jpn-c24",
-              "name": "Manufacture of basic metals",
-              "code": "C24",
-              "amountMillions": 73138.5,
-              "color": "#1e506d",
-              "description": "ISIC division C24. OECD GVA current prices (2024).",
-              "sources": [
-                {
-                  "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                  "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                },
-                {
-                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                }
-              ],
-              "year": 2024,
-              "periodLabel": "2024"
-            },
-            {
-              "id": "jpn-c25",
-              "name": "Manufacture of fabricated metal products, except …",
-              "code": "C25",
-              "amountMillions": 42841.1,
-              "color": "#215776",
-              "description": "ISIC division C25. OECD GVA current prices (2024).",
-              "sources": [
-                {
-                  "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                  "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                },
-                {
-                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                }
-              ],
-              "year": 2024,
-              "periodLabel": "2024"
-            },
-            {
-              "id": "jpn-c26",
-              "name": "Manufacture of computer, electronic and optical p…",
-              "code": "C26",
-              "amountMillions": 67107.4,
-              "color": "#235d7f",
-              "description": "ISIC division C26. OECD GVA current prices (2024).",
-              "sources": [
-                {
-                  "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                  "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                },
-                {
-                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                }
-              ],
-              "year": 2024,
-              "periodLabel": "2024"
-            },
-            {
-              "id": "jpn-c27",
-              "name": "Manufacture of electrical equipment",
-              "code": "C27",
-              "amountMillions": 42544.5,
-              "color": "#266488",
-              "description": "ISIC division C27. OECD GVA current prices (2024).",
-              "sources": [
-                {
-                  "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                  "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                },
-                {
-                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                }
-              ],
-              "year": 2024,
-              "periodLabel": "2024"
-            },
-            {
-              "id": "jpn-c28",
-              "name": "Manufacture of machinery and equipment n.e.c.",
-              "code": "C28",
-              "amountMillions": 119230,
-              "color": "#286b91",
-              "description": "ISIC division C28. OECD GVA current prices (2024).",
-              "sources": [
-                {
-                  "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                  "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
-                },
-                {
-                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
-                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
-                }
-              ],
-              "year": 2024,
-              "periodLabel": "2024"
-            },
-            {
-              "id": "jpn-c-other",
-              "name": "Other / not detailed",
-              "code": "C_RES",
-              "amountMillions": 310722.4,
-              "color": "#173d53",
-              "description": "Residual of section C (2024).",
-              "sources": [
-                {
-                  "label": "OECD National Accounts — Table 6 (via DBnomics)",
-                  "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
                 },
                 {
                   "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -22985,16 +23166,358 @@
           ]
         },
         {
-          "id": "jpn-d",
-          "name": "Electricity, gas, steam and air conditioning supply",
-          "code": "D",
+          "id": "jpn-mining",
+          "name": "Mining",
+          "code": "MINING",
+          "amountMillions": 2347.3,
+          "color": "#8a6b3c",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+          "sources": [
+            {
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2024,
+          "periodLabel": "2024"
+        },
+        {
+          "id": "jpn-manufacturing",
+          "name": "Manufacturing",
+          "code": "MANUFACTURING",
+          "amountMillions": 788452.3,
+          "color": "#2a6f97",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+          "sources": [
+            {
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2024,
+          "periodLabel": "2024",
+          "children": [
+            {
+              "id": "jpn-manufacturing-food-products-and-beverages",
+              "name": "Food products and beverages",
+              "code": "FOOD-PRODUCTS-AND-BEVERAGES",
+              "amountMillions": 96454.8,
+              "color": "#1e506d",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-textile-products",
+              "name": "Textile products",
+              "code": "TEXTILE-PRODUCTS",
+              "amountMillions": 8865.2,
+              "color": "#215776",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-pulp-paper-and-paper-products",
+              "name": "Pulp, paper and paper products",
+              "code": "PULP-PAPER-AND-PAPER-PRODUCTS",
+              "amountMillions": 15763.1,
+              "color": "#235d7f",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-chemicals",
+              "name": "Chemicals",
+              "code": "CHEMICALS",
+              "amountMillions": 60532.6,
+              "color": "#266488",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-petroleum-and-coal-products",
+              "name": "Petroleum and coal products",
+              "code": "PETROLEUM-AND-COAL-PRODUCTS",
+              "amountMillions": 28321.4,
+              "color": "#286b91",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-non-metallic-mineral-products",
+              "name": "Non-metallic mineral products",
+              "code": "NON-METALLIC-MINERAL-PRODUCTS",
+              "amountMillions": 19386.1,
+              "color": "#1e506d",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-basic-metal",
+              "name": "Basic metal",
+              "code": "BASIC-METAL",
+              "amountMillions": 73138.5,
+              "color": "#215776",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-fabricated-metal-products",
+              "name": "Fabricated metal products",
+              "code": "FABRICATED-METAL-PRODUCTS",
+              "amountMillions": 42841.1,
+              "color": "#235d7f",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-general-purpose-production-and-business-oriented-machinery",
+              "name": "General-purpose, production and business oriented machinery",
+              "code": "GENERAL-PURPOSE-PRODUCTION-AND-BUSINESS-ORIENTED-MACHINERY",
+              "amountMillions": 119230,
+              "color": "#266488",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-electronic-components-and-devices",
+              "name": "Electronic components and devices",
+              "code": "ELECTRONIC-COMPONENTS-AND-DEVICES",
+              "amountMillions": 53049.5,
+              "color": "#286b91",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-electrical-machinery-equipment-and-supplies",
+              "name": "Electrical machinery, equipment and supplies",
+              "code": "ELECTRICAL-MACHINERY-EQUIPMENT-AND-SUPPLIES",
+              "amountMillions": 42544.5,
+              "color": "#1e506d",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-information-and-communication-electronics-equipment",
+              "name": "Information and communication electronics equipment",
+              "code": "INFORMATION-AND-COMMUNICATION-ELECTRONICS-EQUIPMENT",
+              "amountMillions": 14058,
+              "color": "#215776",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-transport-equipment",
+              "name": "Transport equipment",
+              "code": "TRANSPORT-EQUIPMENT",
+              "amountMillions": 132401.3,
+              "color": "#235d7f",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-printing",
+              "name": "Printing",
+              "code": "PRINTING",
+              "amountMillions": 15913.1,
+              "color": "#266488",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-manufacturing-others",
+              "name": "Others",
+              "code": "OTHERS",
+              "amountMillions": 65952.6,
+              "color": "#286b91",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            }
+          ]
+        },
+        {
+          "id": "jpn-electricity-gas-and-water-supply-and-waste-management-service",
+          "name": "Electricity, gas and water supply and waste management service",
+          "code": "ELECTRICITY-GAS-AND-WATER-SUPPLY-AND-WASTE-MANAGEMENT-SERVICE",
           "amountMillions": 109793.9,
           "color": "#d4a017",
-          "description": "ISIC section D. OECD GVA current prices (2024).",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23002,19 +23525,61 @@
             }
           ],
           "year": 2024,
-          "periodLabel": "2024"
+          "periodLabel": "2024",
+          "children": [
+            {
+              "id": "jpn-electricity-gas-and-water-supply-and-waste-management-service-electricity-supply",
+              "name": "Electricity supply",
+              "code": "ELECTRICITY-SUPPLY",
+              "amountMillions": 49189.9,
+              "color": "#997311",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-electricity-gas-and-water-supply-and-waste-management-service-gas-and-water-supply-and-waste-management-service",
+              "name": "Gas and water supply, and waste management service",
+              "code": "GAS-AND-WATER-SUPPLY-AND-WASTE-MANAGEMENT-SERVICE",
+              "amountMillions": 60604,
+              "color": "#a57d12",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            }
+          ]
         },
         {
-          "id": "jpn-f",
+          "id": "jpn-construction",
           "name": "Construction",
-          "code": "F",
+          "code": "CONSTRUCTION",
           "amountMillions": 221411.3,
           "color": "#c45c26",
-          "description": "ISIC section F. OECD GVA current prices (2024).",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23025,16 +23590,16 @@
           "periodLabel": "2024"
         },
         {
-          "id": "jpn-g",
-          "name": "Wholesale and retail trade; repair of motor vehic…",
-          "code": "G",
+          "id": "jpn-wholesale-and-retail-trade",
+          "name": "Wholesale and retail trade",
+          "code": "WHOLESALE-AND-RETAIL-TRADE",
           "amountMillions": 519630.2,
           "color": "#2f7d6d",
-          "description": "ISIC section G. OECD GVA current prices (2024).",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23042,19 +23607,61 @@
             }
           ],
           "year": 2024,
-          "periodLabel": "2024"
+          "periodLabel": "2024",
+          "children": [
+            {
+              "id": "jpn-wholesale-and-retail-trade-wholesale-trade",
+              "name": "Wholesale trade",
+              "code": "WHOLESALE-TRADE",
+              "amountMillions": 296146.5,
+              "color": "#225a4e",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-wholesale-and-retail-trade-retail-trade",
+              "name": "Retail trade",
+              "code": "RETAIL-TRADE",
+              "amountMillions": 223483.7,
+              "color": "#256255",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            }
+          ]
         },
         {
-          "id": "jpn-h",
-          "name": "Transportation and storage",
-          "code": "H",
+          "id": "jpn-transport-and-postal-services",
+          "name": "Transport and postal services",
+          "code": "TRANSPORT-AND-POSTAL-SERVICES",
           "amountMillions": 218414.5,
           "color": "#5c6b9a",
-          "description": "ISIC section H. OECD GVA current prices (2024).",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23065,16 +23672,16 @@
           "periodLabel": "2024"
         },
         {
-          "id": "jpn-i",
-          "name": "Accommodation and food service",
-          "code": "I",
+          "id": "jpn-accommodation-and-food-service-activities",
+          "name": "Accommodation and food service activities",
+          "code": "ACCOMMODATION-AND-FOOD-SERVICE-ACTIVITIES",
           "amountMillions": 75528,
-          "color": "#b85c6e",
-          "description": "ISIC section I. OECD GVA current prices (2024).",
+          "color": "#c47a3c",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23085,16 +23692,16 @@
           "periodLabel": "2024"
         },
         {
-          "id": "jpn-j",
-          "name": "Information and communication",
-          "code": "J",
+          "id": "jpn-information-and-communications",
+          "name": "Information and communications",
+          "code": "INFORMATION-AND-COMMUNICATIONS",
           "amountMillions": 259133.7,
           "color": "#3c6ea8",
-          "description": "ISIC section J. OECD GVA current prices (2024).",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23102,19 +23709,61 @@
             }
           ],
           "year": 2024,
-          "periodLabel": "2024"
+          "periodLabel": "2024",
+          "children": [
+            {
+              "id": "jpn-information-and-communications-communications-and-broadcasting",
+              "name": "Communications and broadcasting",
+              "code": "COMMUNICATIONS-AND-BROADCASTING",
+              "amountMillions": 89544.4,
+              "color": "#2b4f79",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-information-and-communications-information-services-and-image-sound-and-character-information-production-and-distribution",
+              "name": "Information services, and Image, sound and character information production and distribution",
+              "code": "INFORMATION-SERVICES-AND-IMAGE-SOUND-AND-CHARACTER-INFORMATION-PRODUCTION-AND-DISTRIBUTION",
+              "amountMillions": 169589.3,
+              "color": "#2f5683",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            }
+          ]
         },
         {
-          "id": "jpn-k",
-          "name": "Financial and insurance",
-          "code": "K",
+          "id": "jpn-finance-and-insurance",
+          "name": "Finance and insurance",
+          "code": "FINANCE-AND-INSURANCE",
           "amountMillions": 183525.7,
           "color": "#6b5c9a",
-          "description": "ISIC section K. OECD GVA current prices (2024).",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23125,16 +23774,16 @@
           "periodLabel": "2024"
         },
         {
-          "id": "jpn-l",
+          "id": "jpn-real-estate",
           "name": "Real estate",
-          "code": "L",
+          "code": "REAL-ESTATE",
           "amountMillions": 531014.5,
           "color": "#8a7358",
-          "description": "ISIC section L. OECD GVA current prices (2024).",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23142,19 +23791,61 @@
             }
           ],
           "year": 2024,
-          "periodLabel": "2024"
+          "periodLabel": "2024",
+          "children": [
+            {
+              "id": "jpn-real-estate-renting-of-dwellings",
+              "name": "Renting of dwellings",
+              "code": "RENTING-OF-DWELLINGS",
+              "amountMillions": 390762.7,
+              "color": "#63533f",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            },
+            {
+              "id": "jpn-real-estate-other-real-estate",
+              "name": "Other real estate",
+              "code": "OTHER-REAL-ESTATE",
+              "amountMillions": 140251.8,
+              "color": "#6c5a45",
+              "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+              "sources": [
+                {
+                  "label": "Cabinet Office ESRI National Accounts",
+                  "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+                },
+                {
+                  "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+                  "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+                }
+              ],
+              "year": 2024,
+              "periodLabel": "2024"
+            }
+          ]
         },
         {
-          "id": "jpn-m",
-          "name": "Professional, scientific and technical",
-          "code": "M",
+          "id": "jpn-professional-scientific-and-technical-activities",
+          "name": "Professional, scientific and technical activities",
+          "code": "PROFESSIONAL-SCIENTIFIC-AND-TECHNICAL-ACTIVITIES",
           "amountMillions": 383630.3,
           "color": "#2a8f97",
-          "description": "ISIC section M. OECD GVA current prices (2024).",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23165,16 +23856,16 @@
           "periodLabel": "2024"
         },
         {
-          "id": "jpn-o",
-          "name": "Public administration and defence; compulsory soc…",
-          "code": "O",
+          "id": "jpn-public-administration",
+          "name": "Public administration",
+          "code": "PUBLIC-ADMINISTRATION",
           "amountMillions": 202875.4,
-          "color": "#5c7a8a",
-          "description": "ISIC section O. OECD GVA current prices (2024).",
+          "color": "#1f3d4d",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23185,16 +23876,16 @@
           "periodLabel": "2024"
         },
         {
-          "id": "jpn-p",
+          "id": "jpn-education",
           "name": "Education",
-          "code": "P",
+          "code": "EDUCATION",
           "amountMillions": 150135.1,
           "color": "#4a7a5c",
-          "description": "ISIC section P. OECD GVA current prices (2024).",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23205,16 +23896,16 @@
           "periodLabel": "2024"
         },
         {
-          "id": "jpn-q",
-          "name": "Human health and social work",
-          "code": "Q",
+          "id": "jpn-human-health-and-social-work-activities",
+          "name": "Human health and social work activities",
+          "code": "HUMAN-HEALTH-AND-SOCIAL-WORK-ACTIVITIES",
           "amountMillions": 284346,
           "color": "#9a5c7a",
-          "description": "ISIC section Q. OECD GVA current prices (2024).",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23225,16 +23916,76 @@
           "periodLabel": "2024"
         },
         {
-          "id": "jpn-r",
-          "name": "Arts, entertainment and recreation",
-          "code": "R",
+          "id": "jpn-other-service-activities",
+          "name": "Other service activities",
+          "code": "OTHER-SERVICE-ACTIVITIES",
           "amountMillions": 184670.6,
-          "color": "#c47a3c",
-          "description": "ISIC section R. OECD GVA current prices (2024).",
+          "color": "#6a7a8a",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
           "sources": [
             {
-              "label": "OECD National Accounts — Table 6 (via DBnomics)",
-              "url": "https://db.nomics.world/OECD/DSD_NAMAIN10@DF_TABLE6"
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2024,
+          "periodLabel": "2024"
+        },
+        {
+          "id": "jpn-taxes-imports",
+          "name": "Taxes and duties on imports",
+          "code": "TAX_M",
+          "amountMillions": 93043.8,
+          "color": "#b08968",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+          "sources": [
+            {
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2024,
+          "periodLabel": "2024"
+        },
+        {
+          "id": "jpn-consumption-tax-gfcf",
+          "name": "Consumption taxes for gross capital formation",
+          "code": "TAX_C",
+          "amountMillions": -68850.9,
+          "color": "#8a7358",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+          "sources": [
+            {
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
+            },
+            {
+              "label": "World Bank PA.NUS.FCRF (LCU per USD)",
+              "url": "https://data.worldbank.org/indicator/PA.NUS.FCRF"
+            }
+          ],
+          "year": 2024,
+          "periodLabel": "2024"
+        },
+        {
+          "id": "jpn-statistical-discrepancy",
+          "name": "Statistical discrepancy",
+          "code": "SD",
+          "amountMillions": 10755.4,
+          "color": "#9a9a9a",
+          "description": "Cabinet Office GDP by economic activity, 2024, current prices.",
+          "sources": [
+            {
+              "label": "Cabinet Office ESRI National Accounts",
+              "url": "https://www.esri.cao.go.jp/en/sna/data/kakuhou/files/2024/2024annual_report_e.html"
             },
             {
               "label": "World Bank PA.NUS.FCRF (LCU per USD)",
@@ -23249,7 +24000,7 @@
       "populationYear": 2025,
       "populationPrior5y": 126261000,
       "populationPrior5yYear": 2020,
-      "gdpPerCapitaUsd": 33681,
+      "gdpPerCapitaUsd": 33964,
       "gdpPerCapitaWbUsd": 35951,
       "gdpPerCapitaWbYear": 2025,
       "gdpPerCapitaWbPrior5yUsd": 41099,

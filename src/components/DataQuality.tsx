@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { ContestedField, SourceQuality } from "@/data/data-quality";
+import { useI18n } from "@/i18n/locale";
 
 /** Accessible contested-data callout with alternate estimates. */
 export function ContestedTooltip({
@@ -11,27 +12,29 @@ export function ContestedTooltip({
   field: ContestedField;
   children?: ReactNode;
 }) {
+  const { t, contested } = useI18n();
+  const copy = contested(field);
   return (
     <details className="group relative inline-block max-w-full">
       <summary className="flex cursor-pointer list-none items-center gap-1.5 marker:content-none [&::-webkit-details-marker]:hidden">
         {children}
         <span
           className="inline-flex h-4 items-center rounded border border-[#c45c26]/40 bg-[#fff4ec] px-1 text-[10px] font-medium uppercase tracking-wide text-[#8a3c18]"
-          title={field.title}
+          title={copy.title}
         >
-          Contested
+          {t("contested")}
         </span>
       </summary>
       <div className="absolute left-0 z-30 mt-2 w-[min(22rem,calc(100vw-2rem))] rounded-md border border-[#e0d6c6] bg-[#fbf8f2] p-3 text-left shadow-md">
-        <p className="text-xs font-medium text-[#1f3d4d]">{field.title}</p>
+        <p className="text-xs font-medium text-[#1f3d4d]">{copy.title}</p>
         <p className="mt-1 text-[11px] leading-relaxed text-[#5c6b73]">
-          {field.why}
+          {copy.why}
         </p>
         <p className="mt-2 text-[10px] uppercase tracking-[0.1em] text-[#8a7358]">
-          {field.officialLabel}
+          {copy.officialLabel}
         </p>
         <ul className="mt-2 flex flex-col gap-2">
-          {field.alternatives.map((alt) => (
+          {copy.alternatives.map((alt) => (
             <li key={`${alt.label}-${alt.value}`} className="text-[11px] leading-snug text-[#5c6b73]">
               <span className="font-medium text-[#1f3d4d]">{alt.label}: </span>
               <span className="tabular-nums text-[#1f3d4d]">{alt.value}</span>
@@ -43,17 +46,17 @@ export function ContestedTooltip({
                 target="_blank"
                 rel="noreferrer"
               >
-                Source
+                {t("source")}
               </a>
             </li>
           ))}
         </ul>
-        {field.counterpoints?.length ? (
+        {copy.counterpoints?.length ? (
           <div className="mt-2 border-t border-[#e0d6c6] pt-2">
             <p className="text-[10px] uppercase tracking-[0.1em] text-[#8a7358]">
-              Counterpoint
+              {t("counterpoint")}
             </p>
-            {field.counterpoints.map((c) => (
+            {copy.counterpoints.map((c) => (
               <p key={c.label} className="mt-1 text-[11px] leading-snug text-[#5c6b73]">
                 <span className="font-medium text-[#1f3d4d]">{c.label}: </span>
                 {c.note}{" "}
@@ -63,7 +66,7 @@ export function ContestedTooltip({
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Source
+                  {t("source")}
                 </a>
               </p>
             ))}
@@ -81,6 +84,7 @@ export function MeasureBadge({
   source: SourceQuality;
   compact?: boolean;
 }) {
+  const { badge, sourceSummary } = useI18n();
   const warn = !source.levelComparableToNominalUsd;
   return (
     <span
@@ -89,9 +93,9 @@ export function MeasureBadge({
           ? "border-[#8a7358]/50 bg-[#fff8ee] text-[#8a7358]"
           : "border-[#2f7d6d]/40 bg-[#eef6f3] text-[#2f7d6d]"
       }`}
-      title={source.summary}
+      title={sourceSummary(source.sourceKey, source.summary)}
     >
-      {compact ? source.badge : source.badge}
+      {badge(compact ? source.badge : source.badge)}
     </span>
   );
 }

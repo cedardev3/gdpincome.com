@@ -1,10 +1,10 @@
 "use client";
 
 import { useId } from "react";
+import { useI18n } from "@/i18n/locale";
 import {
   buildPieChart,
   childWedgeInParentSlice,
-  formatMillions,
   pieSlicePath,
   shareOf,
   type ChartNode,
@@ -40,6 +40,7 @@ export default function ContextPie({
 }: ContextPieProps) {
   const glowId = useId();
   const hatchId = useId();
+  const { t, label, money, ja } = useI18n();
   const rootNet = root.amountMillions;
   const chart = buildPieChart(root);
   const sectionSlice =
@@ -53,9 +54,15 @@ export default function ContextPie({
 
   const focusAmount =
     hovered != null ? hovered.amountMillions : section.amountMillions;
-  const focusName = hovered != null ? hovered.name : section.name;
+  const focusId = hovered != null ? hovered.id : section.id;
+  const focusName = label(
+    hovered != null ? hovered.name : section.name,
+    focusId,
+  );
   const ofCountry = economy != null && (hovered != null || section.id !== economy.id);
-  const percentOf = ofCountry ? economy.name : totalLabel;
+  const percentOfName = ofCountry ? economy.name : totalLabel;
+  const percentOfId = ofCountry ? economy.id : undefined;
+  const percentOf = label(percentOfName, percentOfId);
   const focusPercent = shareOf(
     focusAmount,
     ofCountry ? economy.amountMillions : rootNet,
@@ -67,7 +74,7 @@ export default function ContextPie({
       <svg
         viewBox={`0 0 ${SIZE} ${SIZE}`}
         role="img"
-        aria-label={`Share of ${percentOf}: ${focusName}`}
+        aria-label={ja ? `${percentOf}${t("of")}、${focusName}` : `Share of ${percentOf}: ${focusName}`}
         className="h-auto w-full"
       >
         <defs>
@@ -186,10 +193,12 @@ export default function ContextPie({
       <p className="mt-1 text-center text-[11px] leading-4 text-[#5c6b73]">
         {focusName}
         <span className={`block ${focusIsOffset ? "text-[#8a7358]" : "text-[#1f3d4d]"}`}>
-          {formatMillions(focusAmount)}
-          {focusIsOffset ? " offset" : ""}
+          {money(focusAmount)}
+          {focusIsOffset ? ` ${t("offset")}` : ""}
         </span>
-        <span className="block">of {percentOf}</span>
+        <span className="block">
+          {ja ? `${percentOf}${t("of")}` : `${t("of")} ${percentOf}`}
+        </span>
       </p>
     </div>
   );

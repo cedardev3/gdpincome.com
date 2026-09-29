@@ -80,6 +80,25 @@ export async function cachedFetchJson(url, init) {
 /**
  * @param {string} url
  * @param {RequestInit} [init]
+ * @returns {Promise<Buffer>}
+ */
+export async function cachedFetchBytes(url, init) {
+  const hit = readCache(url, init);
+  if (typeof hit === "string") return Buffer.from(hit, "base64");
+
+  const res = await fetch(url, init);
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`HTTP ${res.status} for ${url}: ${body.slice(0, 200)}`);
+  }
+  const buf = Buffer.from(await res.arrayBuffer());
+  writeCache(url, init, buf.toString("base64"));
+  return buf;
+}
+
+/**
+ * @param {string} url
+ * @param {RequestInit} [init]
  * @returns {Promise<string>}
  */
 export async function cachedFetchText(url, init) {

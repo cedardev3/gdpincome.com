@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import ContextPie from "@/components/ContextPie";
 import { ContestedTooltip, MeasureBadge } from "@/components/DataQuality";
 import DrilldownPie from "@/components/DrilldownPie";
+import { useI18n, YoshinobuButton } from "@/i18n/locale";
 import {
   COUNTRY_GDP,
   COUNTRY_ORDER,
@@ -18,12 +19,9 @@ import {
 import { FlagIcon } from "@/lib/flags";
 import {
   buildPieChart,
-  formatMillions,
   formatPercent,
-  formatPopulation,
   fiveYearDelta,
   fiveYearDeltaClass,
-  formatUsdPerCapita,
   gdpTotalFiveYearDelta,
   inflationFiveYearDrag,
   realGdpFiveYearDelta,
@@ -100,9 +98,12 @@ function buildFilteredWorld(visibleCodes: readonly string[]): ChartNode {
     children,
   };
 }
-function sourceSummary(sources: SourceLink[] | undefined): string {
+function sourceSummary(
+  sources: SourceLink[] | undefined,
+  nameOf: (name: string) => string,
+): string {
   if (!sources?.length) return "";
-  return sources.map((s) => s.label).join(" · ");
+  return sources.map((s) => nameOf(s.label)).join(" · ");
 }
 
 function countryForNode(node: ChartNode): CountryGdpTree | null {
@@ -168,10 +169,15 @@ function MetricBlock({
 }
 
 function DemographicsBanner({ country }: { country: CountryGdpTree }) {
+  const { t, label, people, perCapitaUsd, delta, sourceSummary: summarize, ja, badge } = useI18n();
   if (country.gdpPerCapitaUsd == null || country.population == null) return null;
   const under18 = country.pctUnder18Proxy;
   const over65 = country.pct65Plus;
-  const underLabel = country.under18ProxyLabel ?? "Ages 0–14";
+  const countryName = label(country.name, country.id);
+  const underLabel = label(country.under18ProxyLabel ?? "Ages 0–14");
+  const showDelta = (
+    row: { text: string; tone: "up" | "down" | "flat" } | null,
+  ) => (row ? { ...row, text: delta(row.text) } : null);
   const yieldPct = country.bondYield10y;
   const yieldPeriod = country.bondYield10yPeriod;
   const { source, country: quality } = qualityForCountry(
@@ -198,90 +204,90 @@ function DemographicsBanner({ country }: { country: CountryGdpTree }) {
           className="rounded-md border border-[#e8dcc8] bg-[#fff8ee] px-3 py-2 text-xs leading-relaxed text-[#8a7358]"
           role="note"
         >
-          <span className="font-medium text-[#1f3d4d]">Not apples-to-apples: </span>
-          {source.summary}
+          <span className="font-medium text-[#1f3d4d]">{t("notComparable")}</span>
+          {source ? summarize(source.sourceKey, source.summary) : null}
         </p>
       ) : null}
       <div
         className="grid gap-3 rounded-md border border-[#e0d6c6] bg-[#fbf8f2] px-4 py-3 sm:grid-cols-2 lg:grid-cols-4"
         role="group"
-        aria-label={`${country.name} 5-year GDP vs inflation`}
+        aria-label={`${countryName} ${t("gdp5")}`}
       >
         <MetricBlock
-          label="GDP (5yr)"
+          label={t("gdp5")}
           emphasize
-          value={gdp5yr?.text ?? "—"}
+          value={gdp5yr ? delta(gdp5yr.text) : t("empty")}
           valueTone={gdp5yr?.tone ?? null}
           delta={null}
-          hint="Nominal · World Bank GDP/capita × population"
+          hint={t("nominalHint")}
         />
         <MetricBlock
-          label="Inflation (5yr)"
+          label={t("inflation5")}
           emphasize
-          value={inflationDrag?.text ?? "—"}
+          value={inflationDrag ? delta(inflationDrag.text) : t("empty")}
           valueTone={inflationDrag?.tone ?? null}
           delta={null}
           hint={
             country.cpiPrior5yYear != null && country.cpiYear != null
-              ? `CPI drag · WB FP.CPI.TOTL · ${country.cpiPrior5yYear}→${country.cpiYear}`
-              : "Cumulative CPI shown as a negative drag on growth"
+              ? `${t("cpiPrefix")}${country.cpiPrior5yYear}→${country.cpiYear}`
+              : t("inflationFallback")
           }
         />
         <MetricBlock
-          label="Real GDP (5yr)"
+          label={t("real5")}
           emphasize
-          value={realGdp?.text ?? "—"}
+          value={realGdp ? delta(realGdp.text) : t("empty")}
           valueTone={realGdp?.tone ?? null}
           delta={null}
-          hint="Nominal growth − inflation"
+          hint={t("realHint")}
         />
         <MetricBlock
-          label="GDP per capita"
+          label={t("gdpPerCapita")}
           contested={contestedFor(country.code ?? "", "gdpPerCapita")}
-          value={formatUsdPerCapita(country.gdpPerCapitaUsd)}
-          delta={pcapDelta}
+          value={perCapitaUsd(country.gdpPerCapitaUsd)}
+          delta={showDelta(pcapDelta)}
           hint={
             quality.measureWarning
-              ? `Derived from ${source?.badge ?? "this measure"} ÷ population — not comparable to nominal USD peers`
+              ? `${t("derivedFrom")} ${source ? badge(source.badge) : ""} ${t("notPeer")}`
               : pcapDelta
-                ? `USD · industry ÷ pop (${country.populationYear}) · % change uses World Bank GDP/capita`
-                : `USD · industry GDP ÷ population (${country.populationYear})`
+                ? `${t("pcapIndustry")} (${country.populationYear}) · ${t("pcapWb")}`
+                : `${t("pcapPlain")} (${country.populationYear})`
           }
         />
       </div>
       <div
         className="grid gap-3 rounded-md border border-[#e0d6c6] bg-[#fbf8f2] px-4 py-3 sm:grid-cols-2 lg:grid-cols-4"
         role="group"
-        aria-label={`${country.name} population, yields, and age structure`}
+        aria-label={`${countryName} ${t("population")}`}
       >
         <MetricBlock
-          label="10-year yield"
-          value={yieldPct != null ? `${yieldPct.toFixed(2)}%` : "—"}
-          delta={yieldDelta}
-          hint={`Govt bond · OECD IRLT${yieldPeriod ? ` · ${yieldPeriod}` : ""}`}
+          label={t("yield")}
+          value={yieldPct != null ? `${yieldPct.toFixed(2)}%` : t("empty")}
+          delta={showDelta(yieldDelta)}
+          hint={`${t("govtBond")}${yieldPeriod ? ` · ${yieldPeriod}` : ""}`}
         />
         <MetricBlock
-          label="Population"
+          label={t("population")}
           contested={contestedFor(country.code ?? "", "population")}
-          value={formatPopulation(country.population)}
-          delta={popDelta}
-          hint={`${country.population.toLocaleString("en-US")} · ${country.populationYear}`}
+          value={people(country.population)}
+          delta={showDelta(popDelta)}
+          hint={`${country.population.toLocaleString(ja ? "ja-JP" : "en-US")} · ${country.populationYear}`}
         />
         <MetricBlock
-          label="Under 18"
+          label={t("under18")}
           contested={contestedFor(country.code ?? "", "ageStructure")}
-          value={under18 != null ? `${under18}%` : "—"}
-          delta={underDelta}
-          hint={`${underLabel} share of population${
+          value={under18 != null ? `${under18}%` : t("empty")}
+          delta={showDelta(underDelta)}
+          hint={`${underLabel} ${t("shareOfPop")}${
             country.pctUnder15Year != null ? ` · ${country.pctUnder15Year}` : ""
           }`}
         />
         <MetricBlock
-          label="Ages 65+"
+          label={t("ages65")}
           contested={contestedFor(country.code ?? "", "ageStructure")}
-          value={over65 != null ? `${over65}%` : "—"}
-          delta={overDelta}
-          hint={`Share of population${
+          value={over65 != null ? `${over65}%` : t("empty")}
+          delta={showDelta(overDelta)}
+          hint={`${t("shareOfPop")}${
             country.pct65PlusYear != null ? ` · ${country.pct65PlusYear}` : ""
           }`}
         />
@@ -307,6 +313,7 @@ function SliceRow({
   onOpen: () => void;
   onRemove?: () => void;
 }) {
+  const { t, label: nameOf, money, perCapitaUsd, delta, badge, sourceSummary: summarize } = useI18n();
   const amountClass = slice.isOffset ? "text-[#8a7358]" : "text-[#5c6b73]";
   const nameClass = slice.isOffset
     ? "text-[#5c6b73]"
@@ -331,10 +338,11 @@ function SliceRow({
 
   const period =
     slice.periodLabel ?? (slice.year != null ? String(slice.year) : null);
-  const metrics = `${formatMillions(slice.amountMillions)} · ${formatPercent(slice.percent)}`;
+  const sliceName = nameOf(slice.name, slice.id);
+  const metrics = `${money(slice.amountMillions)} · ${formatPercent(slice.percent)}`;
   const perCapita =
     "gdpPerCapitaUsd" in slice && typeof slice.gdpPerCapitaUsd === "number"
-      ? formatUsdPerCapita(slice.gdpPerCapitaUsd)
+      ? perCapitaUsd(slice.gdpPerCapitaUsd)
       : null;
   const bondYield =
     "bondYield10y" in slice && typeof slice.bondYield10y === "number"
@@ -357,19 +365,19 @@ function SliceRow({
       )
     : null;
   const tip = [
-    slice.name,
+    sliceName,
     metrics,
-    gdp5yr ? `GDP 5yr: ${gdp5yr.text}` : null,
-    inflationDrag ? `Inflation 5yr: ${inflationDrag.text}` : null,
-    realGdp ? `Real GDP 5yr: ${realGdp.text}` : null,
-    perCapita ? `GDP per capita: ${perCapita}` : null,
-    bondYield ? `10y bond yield: ${bondYield}` : null,
-    contestedPop ? `Population: contested official series — see country view` : null,
+    gdp5yr ? `${t("gdp5")}: ${delta(gdp5yr.text)}` : null,
+    inflationDrag ? `${t("inflation5")}: ${delta(inflationDrag.text)}` : null,
+    realGdp ? `${t("real5")}: ${delta(realGdp.text)}` : null,
+    perCapita ? `${t("gdpPerCapita")}: ${perCapita}` : null,
+    bondYield ? `${t("yield")}: ${bondYield}` : null,
+    contestedPop ? t("contestedSeries") : null,
     measureQ?.source && !measureQ.source.levelComparableToNominalUsd
-      ? measureQ.source.summary
+      ? summarize(measureQ.source.sourceKey, measureQ.source.summary)
       : null,
-    period ? `Period: ${period}` : null,
-    sourceSummary(slice.sources),
+    period ? `${t("asOf")} ${period}` : null,
+    sourceSummary(slice.sources, nameOf),
   ]
     .filter(Boolean)
     .join("\n");
@@ -386,14 +394,14 @@ function SliceRow({
             className="mr-1.5 inline-block h-2.5 w-[0.9375rem] align-middle rounded-[1px]"
           />
         ) : null}
-        {slice.name}
+        {sliceName}
         {contestedPop ? (
           <span className="ml-1.5 text-[9px] uppercase tracking-wide text-[#c45c26]">
-            contested
+            {t("contested")}
           </span>
         ) : measureQ?.source && !measureQ.source.levelComparableToNominalUsd ? (
           <span className="ml-1.5 text-[9px] uppercase tracking-wide text-[#8a7358]">
-            {measureQ.source.badge}
+            {badge(measureQ.source.badge)}
           </span>
         ) : null}
         {period ? (
@@ -408,26 +416,26 @@ function SliceRow({
           <span
             className={`block text-[10px] font-medium ${fiveYearDeltaClass(gdp5yr.tone)}`}
           >
-            {gdp5yr.text}
+            {delta(gdp5yr.text)}
           </span>
         ) : null}
         {inflationDrag ? (
           <span
             className={`block text-[10px] font-medium ${fiveYearDeltaClass(inflationDrag.tone)}`}
           >
-            infl {inflationDrag.text}
+            {t("infl")} {delta(inflationDrag.text)}
           </span>
         ) : null}
         {realGdp ? (
           <span
             className={`block text-[10px] font-medium ${fiveYearDeltaClass(realGdp.tone)}`}
           >
-            real {realGdp.text}
+            {t("realWord")} {delta(realGdp.text)}
           </span>
         ) : null}
         {perCapita || bondYield ? (
           <span className="block text-[10px] text-[#8a7358]">
-            {[perCapita ? `${perCapita}/cap` : null, bondYield ? `${bondYield} 10y` : null]
+            {[perCapita ? `${perCapita}${t("cap")}` : null, bondYield ? `${bondYield} ${t("tenY")}` : null]
               .filter(Boolean)
               .join(" · ")}
           </span>
@@ -456,7 +464,7 @@ function SliceRow({
           type="button"
           className="flex min-w-0 flex-1 items-center gap-2 text-left"
           onClick={onOpen}
-          aria-label={`${slice.name}, open details`}
+          aria-label={`${sliceName}, ${t("openDetails")}`}
           title={tip}
         >
           {label}
@@ -472,8 +480,8 @@ function SliceRow({
             e.stopPropagation();
             onRemove();
           }}
-          aria-label={`Remove ${slice.name} from comparison`}
-          title={`Remove ${slice.name}`}
+          aria-label={`${t("remove")} ${sliceName} ${t("fromComparison")}`}
+          title={`${t("remove")} ${sliceName}`}
         >
           ✕
         </button>
@@ -503,6 +511,7 @@ function ScopeTabs({
   onSelectAll: () => void;
   onResetDefault: () => void;
 }) {
+  const { t, label, badge } = useI18n();
   const visible = new Set(visibleCodes);
   const activeCountry =
     path.length > 0
@@ -528,7 +537,7 @@ function ScopeTabs({
           }`}
           aria-pressed={editing}
         >
-          {editing ? "Done" : "Edit list"}
+          {editing ? t("done") : t("editList")}
         </button>
         {editing ? (
           <>
@@ -537,17 +546,17 @@ function ScopeTabs({
               onClick={onSelectAll}
               className="font-medium text-[#2a6f97] hover:underline"
             >
-              Select all
+              {t("selectAll")}
             </button>
             <button
               type="button"
               onClick={onResetDefault}
               className="font-medium text-[#2a6f97] hover:underline"
             >
-              Reset
+              {t("reset")}
             </button>
             <span className="text-[#8a7358]">
-              Tap flags · {visibleCodes.length} on
+              {t("tapFlags")} · {visibleCodes.length} {t("on")}
             </span>
           </>
         ) : visibleCodes.length < COUNTRY_ORDER.length ? (
@@ -559,7 +568,7 @@ function ScopeTabs({
 
       <div
         role="tablist"
-        aria-label="Countries"
+        aria-label={t("countries")}
         className="flex flex-wrap items-end gap-[5px]"
       >
         <button
@@ -567,7 +576,7 @@ function ScopeTabs({
           role="tab"
           aria-selected={path.length === 0 && !editing}
           onClick={onWorld}
-          title="All selected countries"
+          title={t("allSelected")}
           className={`${chip} min-w-[28px] text-[8px] font-bold uppercase tracking-tight ${
             path.length === 0 && !editing
               ? "bg-[#1f3d4d] text-[#f7f3ec]"
@@ -575,7 +584,7 @@ function ScopeTabs({
           }`}
         >
           <span className="flex h-[14px] items-center justify-center leading-none">
-            All
+            {t("all")}
           </span>
           <span className="invisible text-[8px] font-semibold leading-none" aria-hidden>
             XXX
@@ -590,18 +599,19 @@ function ScopeTabs({
             country.sourceKey,
           );
           const contested = Boolean(quality.contested?.length);
+          const countryName = label(country.name, country.id);
           const tipParts = [
-            `${country.name} (${code})`,
+            `${countryName} (${code})`,
             String(country.periodLabel ?? country.year),
             editing
               ? included
-                ? "Included — tap to remove"
-                : "Excluded — tap to add"
+                ? t("included")
+                : t("excluded")
               : null,
             contested
-              ? "Contested official series"
+              ? t("contestedSeries")
               : quality.measureWarning
-                ? source?.badge
+                ? source ? badge(source.badge) : null
                 : null,
           ].filter(Boolean);
           return (
@@ -613,8 +623,8 @@ function ScopeTabs({
               aria-selected={!editing ? active : undefined}
               aria-label={
                 editing
-                  ? `${included ? "Exclude" : "Include"} ${country.name}`
-                  : `${country.name} (${code})`
+                  ? `${included ? t("exclude") : t("include")} ${countryName}`
+                  : `${countryName} (${code})`
               }
               onClick={() => {
                 if (editing) onToggle(code);
@@ -634,7 +644,7 @@ function ScopeTabs({
               <FlagIcon
                 iso3={code}
                 className="h-[14px] w-[21px] overflow-hidden rounded-[2px]"
-                title={country.name}
+                title={countryName}
               />
               <span
                 className={`text-[8px] font-semibold leading-none tracking-wide ${
@@ -658,6 +668,7 @@ function ComparabilityNotice({
   node: ChartNode;
   visibleCodes: readonly string[];
 }) {
+  const { t, label, list, ja, contested: localizeContest } = useI18n();
   if (node.id !== "world") {
     const country = countryForNode(node);
     if (!country?.code) return null;
@@ -670,10 +681,11 @@ function ComparabilityNotice({
       >
         <ContestedTooltip field={gdpContest}>
           <span className="font-medium text-[#1f3d4d]">
-            {country.name} GDP is self-reported official data
+            {label(country.name, country.id)}
+            {t("selfReported")}
           </span>
         </ContestedTooltip>
-        <span className="mt-1 block">{gdpContest.why}</span>
+        <span className="mt-1 block">{localizeContest(gdpContest).why}</span>
       </div>
     );
   }
@@ -683,17 +695,17 @@ function ComparabilityNotice({
     if (!visible.has(code)) return false;
     const q = qualityForCountry(code, COUNTRY_GDP[code].sourceKey);
     return q.source?.measureClass === "chain-volume";
-  }).map((c) => COUNTRY_GDP[c].name);
+  }).map((c) => label(COUNTRY_GDP[c].name, COUNTRY_GDP[c].id));
   const gva = COUNTRY_ORDER.filter((code) => {
     if (!visible.has(code)) return false;
     const q = qualityForCountry(code, COUNTRY_GDP[code].sourceKey);
     return q.source?.measureClass === "nominal-gva";
-  }).map((c) => COUNTRY_GDP[c].name);
-  const contested = COUNTRY_ORDER.filter((code) => {
+  }).map((c) => label(COUNTRY_GDP[c].name, COUNTRY_GDP[c].id));
+  const contestedNames = COUNTRY_ORDER.filter((code) => {
     if (!visible.has(code)) return false;
     const q = qualityForCountry(code, COUNTRY_GDP[code].sourceKey);
     return (q.country.contested?.length ?? 0) > 0;
-  }).map((c) => COUNTRY_GDP[c].name);
+  }).map((c) => label(COUNTRY_GDP[c].name, COUNTRY_GDP[c].id));
 
   return (
     <div
@@ -701,22 +713,18 @@ function ComparabilityNotice({
       role="note"
     >
       <p>
-        <span className="font-medium text-[#1f3d4d]">Comparability check: </span>
-        Country slices are the latest industry totals. They are{" "}
-        <span className="font-medium text-[#1f3d4d]">not</span> a perfect comparison.
-        Nominal current-price GDP/VA: USA, China, India, and other
-        World Bank sector series. Gross value added (below GDP):{" "}
-        {gva.length ? gva.join(", ") : "none in this selection"}. Chain-volume
-        series converted with market FX (levels not nominal USD):{" "}
-        {volume.length ? volume.join(", ") : "none in this selection"}.
+        <span className="font-medium text-[#1f3d4d]">{t("comparability")}</span>
+        {t("comparabilityBody")}
+        {gva.length ? list(gva) : t("noneSelected")}
+        {t("chainVolume")}
+        {volume.length ? list(volume) : t("noneSelected")}
+        {ja ? "。" : "."}
       </p>
-      {contested.length > 0 ? (
+      {contestedNames.length > 0 ? (
         <p className="mt-1.5">
-          <span className="font-medium text-[#c45c26]">Contested official data: </span>
-          {contested.join(", ")} : open the country view and click{" "}
-          <span className="font-medium text-[#1f3d4d]">Contested</span> on a
-          metric for independent estimates (population, growth, implied GDP
-          size). Chart totals still show the official series.
+          <span className="font-medium text-[#c45c26]">{t("contestedLead")}</span>
+          {list(contestedNames)}
+          {t("contestedTail")}
         </p>
       ) : null}
     </div>
@@ -724,21 +732,22 @@ function ComparabilityNotice({
 }
 
 function StaleDataNotice() {
+  const { t, ja } = useI18n();
   if (!isSnapshotStale()) return null;
   const fetchedLabel = new Date(GDP_DATA_META.fetchedAt).toLocaleDateString(
-    "en-CA",
+    ja ? "ja-JP" : "en-CA",
   );
   return (
     <p
       className="rounded-md border border-[#c45c26]/35 bg-[#fff4ec] px-3 py-2 text-xs leading-relaxed text-[#8a3c18]"
       role="status"
     >
-      <span className="font-semibold uppercase tracking-wide">Stale snapshot · </span>
-      Industry data was last pulled on {fetchedLabel} (over 6 months ago). Run{" "}
+      <span className="font-semibold uppercase tracking-wide">{t("stale")}</span>
+      {t("staleBody")} {fetchedLabel} {t("staleTail")}{" "}
       <code className="rounded bg-[#ffe8d8] px-1 py-0.5 text-[11px] text-[#1f3d4d]">
         npm run fetch:gdp
       </code>{" "}
-      to refresh from official sources.
+      {t("staleEnd")}
     </p>
   );
 }
@@ -750,6 +759,7 @@ function YearLagNotice({
   node: ChartNode;
   visibleCodes: readonly string[];
 }) {
+  const { t, label, ja } = useI18n();
   const maxYear = GDP_DATA_META.maxYear;
   const visible = new Set(visibleCodes);
   const staleCountries = COUNTRY_ORDER.map((code) => COUNTRY_GDP[code]).filter(
@@ -763,17 +773,15 @@ function YearLagNotice({
         className="rounded-md border border-[#e0d6c6] bg-[#fbf8f2] px-3 py-2 text-xs leading-relaxed text-[#5c6b73]"
         role="note"
       >
-        Countries use the latest data each source publishes.{" "}
+        {t("latestLead")}{" "}
         {staleCountries.map((c) => (
           <span key={c.code}>
-            <span className="font-medium text-[#1f3d4d]">{c.name}</span> is{" "}
-            {c.periodLabel ?? c.year}
-            {c !== staleCountries[staleCountries.length - 1] ? "; " : ". "}
+            <span className="font-medium text-[#1f3d4d]">{label(c.name, c.id)}</span>{" "}
+            {t("isWord")} {c.periodLabel ?? c.year}
+            {c !== staleCountries[staleCountries.length - 1] ? (ja ? "、" : "; ") : ja ? "。" : ". "}
           </span>
         ))}
-        Newer industry detail for those economies is not in our feeds yet.
-        Figures are still the most recent available, not held back to a common
-        year.
+        {t("newer")}
       </p>
     );
   }
@@ -792,10 +800,8 @@ function YearLagNotice({
         className="rounded-md border border-[#e8dcc8] bg-[#fff8ee] px-3 py-2 text-xs leading-relaxed text-[#8a7358]"
         role="note"
       >
-        Showing the latest available data for {country.name} (
-        {country.periodLabel ?? country.year}). Other countries in this view go
-        up to {maxYear} — this series has not been updated further in the source
-        feed yet.
+        {t("showingLatest")} {label(country.name, country.id)} (
+        {country.periodLabel ?? country.year}). {t("othersUpTo")} {maxYear}. {t("seriesNotUpdated")}
       </p>
     );
   }
@@ -804,6 +810,7 @@ function YearLagNotice({
 }
 
 function LevelSummary({ node }: { node: ChartNode }) {
+  const { t, money, perCapitaUsd, delta } = useI18n();
   const drillable = (node.children ?? []).filter(hasChildren).length;
   const n = node.children?.length ?? 0;
   const period =
@@ -812,16 +819,16 @@ function LevelSummary({ node }: { node: ChartNode }) {
   const country = countryForNode(node);
 
   const measureLabel = isWorld
-    ? "Combined total"
+    ? t("combined")
     : country?.sourceKey === "statcan" || country?.sourceKey === "abs"
-      ? "GDP / value added"
-      : country?.sourceKey === "bea"
-        ? "GDP by industry"
+      ? t("gdpVa")
+      : country?.sourceKey === "bea" || country?.sourceKey === "esri"
+        ? t("gdpByIndustry")
         : country?.sourceKey === "eurostat" || country?.sourceKey === "oecd"
-          ? "Gross value added"
+          ? t("gva")
           : country?.sourceKey === "worldbank"
-            ? "GDP (sector VA)"
-            : "Gross value added";
+            ? t("gdpSector")
+            : t("gva");
 
   const { source } = country
     ? qualityForCountry(country.code ?? "", country.sourceKey)
@@ -838,15 +845,15 @@ function LevelSummary({ node }: { node: ChartNode }) {
       <span className="inline-flex flex-wrap items-center gap-2">
         {measureLabel}{" "}
         <span className="font-semibold tabular-nums text-[#1f3d4d]">
-          {formatMillions(node.amountMillions)}
+          {money(node.amountMillions)}
         </span>
-        <span className="text-[#8a7358]"> USD</span>
+        {t("usd") ? <span className="text-[#8a7358]">{t("usd")}</span> : null}
         {gdpDelta ? (
           <span
             className={`text-[11px] font-medium tabular-nums ${fiveYearDeltaClass(gdpDelta.tone)}`}
-            title="Nominal GDP · 5-year change"
+            title={t("nominalTitle")}
           >
-            {gdpDelta.text}
+            {delta(gdpDelta.text)}
           </span>
         ) : null}
         {inflationDrag ? (
@@ -854,19 +861,19 @@ function LevelSummary({ node }: { node: ChartNode }) {
             className={`text-[11px] font-medium tabular-nums ${fiveYearDeltaClass(inflationDrag.tone)}`}
             title={
               country?.cpiPrior5yYear != null && country?.cpiYear != null
-                ? `CPI inflation drag · ${country.cpiPrior5yYear} → ${country.cpiYear}`
-                : "Cumulative CPI as a negative drag"
+                ? `${t("cpiPrefix")}${country.cpiPrior5yYear}→${country.cpiYear}`
+                : t("cpiDrag")
             }
           >
-            infl {inflationDrag.text}
+            {t("infl")} {delta(inflationDrag.text)}
           </span>
         ) : null}
         {realGdp ? (
           <span
             className={`text-[11px] font-semibold tabular-nums ${fiveYearDeltaClass(realGdp.tone)}`}
-            title="Real GDP · nominal growth − inflation"
+            title={t("realTitle")}
           >
-            real {realGdp.text}
+            {t("realWord")} {delta(realGdp.text)}
           </span>
         ) : null}
         {source ? <MeasureBadge source={source} /> : null}
@@ -874,15 +881,15 @@ function LevelSummary({ node }: { node: ChartNode }) {
       </span>
       {country?.gdpPerCapitaUsd != null ? (
         <span>
-          Per capita{" "}
+          {t("perCapita")}{" "}
           <span className="font-semibold tabular-nums text-[#1f3d4d]">
-            {formatUsdPerCapita(country.gdpPerCapitaUsd)}
+            {perCapitaUsd(country.gdpPerCapitaUsd)}
           </span>
         </span>
       ) : null}
       {country?.bondYield10y != null ? (
         <span>
-          10y yield{" "}
+          {t("yieldShort")}{" "}
           <span className="font-semibold tabular-nums text-[#1f3d4d]">
             {country.bondYield10y.toFixed(2)}%
           </span>
@@ -895,18 +902,19 @@ function LevelSummary({ node }: { node: ChartNode }) {
         </span>
       ) : null}
       {period ? (
-        <span className="text-xs tabular-nums">As of {period}</span>
+        <span className="text-xs tabular-nums">{t("asOf")} {period}</span>
       ) : null}
       <span>
         {isWorld
-          ? `${n} countries`
-          : `${n} categories${drillable > 0 ? ` · ${drillable} with subsectors` : ""}`}
+          ? `${n} ${t("countriesCount")}`
+          : `${n} ${t("categories")}${drillable > 0 ? ` · ${drillable} ${t("withSubsectors")}` : ""}`}
       </span>
     </div>
   );
 }
 
 export default function GdpExplorer() {
+  const { t, label, ja } = useI18n();
   const [visibleCodes, setVisibleCodes] = useState<string[]>(allCountryCodes);
   const [editingList, setEditingList] = useState(false);
   const [path, setPath] = useState<string[]>([]);
@@ -1028,16 +1036,18 @@ export default function GdpExplorer() {
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
       <header className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-semibold tracking-tight text-[#1f3d4d] sm:text-4xl">
-            GDP Income
-          </h1>
-          <p className="max-w-2xl text-sm leading-relaxed text-[#5c6b73]">
-            Large economies in USD. Drill from the global mix into each
-            country’s industries. Use <span className="font-medium text-[#1f3d4d]">Edit list</span>{" "}
-            to drop countries from the pie for side-by-side comparisons. Tap a
-            labeled slice to open it.
-          </p>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-3xl font-semibold tracking-tight text-[#1f3d4d] sm:text-4xl">
+              {t("title")}
+            </h1>
+            <p className="max-w-2xl text-sm leading-relaxed text-[#5c6b73]">
+              {t("introLead")}
+              <span className="font-medium text-[#1f3d4d]">{t("introEdit")}</span>
+              {t("introTail")}
+            </p>
+          </div>
+          <YoshinobuButton />
         </div>
         <ScopeTabs
           path={path}
@@ -1054,29 +1064,30 @@ export default function GdpExplorer() {
         <LevelSummary node={current} />
         {activeCountry ? <DemographicsBanner country={activeCountry} /> : null}
         {path.length > 0 ? (
-          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1 text-sm">
+          <nav aria-label={t("breadcrumb")} className="flex flex-wrap items-center gap-1 text-sm">
             <button
               type="button"
               className="text-[#2a6f97] hover:underline"
               onClick={goWorld}
             >
-              {root.name}
+              {label(root.name, root.id)}
             </button>
             {path.map((id, index) => {
               const node = nodeAtPath(root, path.slice(0, index + 1));
               const isLast = index === path.length - 1;
+              const nodeName = label(node.name, node.id);
               return (
                 <span key={id} className="flex items-center gap-1 text-[#5c6b73]">
                   <span aria-hidden>/</span>
                   {isLast ? (
-                    <span className="text-[#1f3d4d]">{node.name}</span>
+                    <span className="text-[#1f3d4d]">{nodeName}</span>
                   ) : (
                     <button
                       type="button"
                       className="text-[#2a6f97] hover:underline"
                       onClick={() => setPath(path.slice(0, index + 1))}
                     >
-                      {node.name}
+                      {nodeName}
                     </button>
                   )}
                 </span>
@@ -1154,62 +1165,73 @@ export default function GdpExplorer() {
 
       <footer className="border-t border-[#e0d6c6] pt-4 text-xs leading-relaxed text-[#5c6b73]">
         <p>
-          Sources:{" "}
+          {t("sources")}{" "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.bea.url}
             target="_blank"
             rel="noreferrer"
           >
-            BEA
+            {t("srcBea")}
           </a>
-          ,{" "}
+          {ja ? "、" : ", "}
+          <a
+            className="text-[#2a6f97] hover:underline"
+            href={GDP_DATA_META.sources.esri.url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {t("srcEsri")}
+          </a>
+          {ja ? "、" : ", "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.statcan.url}
             target="_blank"
             rel="noreferrer"
           >
-            StatCan
+            {t("srcStatcan")}
           </a>
-          ,{" "}
+          {ja ? "、" : ", "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.abs.url}
             target="_blank"
             rel="noreferrer"
           >
-            ABS
+            {t("srcAbs")}
           </a>
-          ,{" "}
+          {ja ? "、" : ", "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.eurostat.url}
             target="_blank"
             rel="noreferrer"
           >
-            Eurostat
+            {t("srcEurostat")}
           </a>
-          ,{" "}
+          {ja ? "、" : ", "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.worldbank.url}
             target="_blank"
             rel="noreferrer"
           >
-            World Bank
+            {t("srcWorldbank")}
           </a>
-          ,{" "}
+          {ja ? "、" : ", "}
           <a
             className="text-[#2a6f97] hover:underline"
             href={GDP_DATA_META.sources.oecd.url}
             target="_blank"
             rel="noreferrer"
           >
-            OECD
+            {t("srcOecd")}
           </a>
-          . Data as of{" "}
-          {new Date(GDP_DATA_META.fetchedAt).toLocaleDateString("en-CA")}.
+          {ja ? "。" : ". "}
+          {t("dataAsOf")}{" "}
+          {new Date(GDP_DATA_META.fetchedAt).toLocaleDateString(ja ? "ja-JP" : "en-CA")}
+          {ja ? "。" : "."}
         </p>
       </footer>
     </div>

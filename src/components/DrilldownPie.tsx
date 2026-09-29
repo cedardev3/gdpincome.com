@@ -2,10 +2,10 @@
 
 import { useId } from "react";
 import { FlagIcon } from "@/lib/flags";
+import { useI18n } from "@/i18n/locale";
 import {
   buildPieChart,
   charsFitOnArc,
-  formatMillions,
   formatPercent,
   fiveYearDeltaClassOnDark,
   gdpTotalFiveYearDelta,
@@ -54,6 +54,7 @@ export default function DrilldownPie({
 }: DrilldownPieProps) {
   const glowId = useId();
   const hatchId = useId();
+  const { t, label, money, delta } = useI18n();
   const chart = buildPieChart(node);
   const hovered =
     chart.legend.find((slice) => slice.id === hoveredId) ?? null;
@@ -63,7 +64,7 @@ export default function DrilldownPie({
   if (chart.legend.length === 0) {
     return (
       <div className="mx-auto flex min-h-[16rem] w-full max-w-[520px] items-center justify-center text-sm text-[#5c6b73]">
-        No amounts to chart
+        {t("noAmounts")}
       </div>
     );
   }
@@ -75,18 +76,18 @@ export default function DrilldownPie({
           type="button"
           onClick={onBack}
           className="absolute left-0 top-0 z-10 inline-flex items-center gap-1.5 rounded-md border border-[#d4c8b4] bg-[#f7f3ec]/95 px-3 py-1.5 text-sm font-semibold text-[#1f3d4d] shadow-sm backdrop-blur-sm transition hover:border-[#1f3d4d] hover:bg-[#ebe4d8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2a6f97]"
-          aria-label="Go back"
+          aria-label={t("goBack")}
         >
           <span aria-hidden className="text-base leading-none">
             ←
           </span>
-          Back
+          {t("back")}
         </button>
       ) : null}
       <svg
         viewBox={`0 0 ${SIZE} ${SIZE}`}
         role="img"
-        aria-label={node.name}
+        aria-label={label(node.name, node.id)}
         className="h-auto w-full"
       >
         <defs>
@@ -160,7 +161,10 @@ export default function DrilldownPie({
           className="fill-[#1f3d4d]"
           style={{ fontSize: 13, fontWeight: 650 }}
         >
-          {node.name.includes(",") ? node.name.split(",")[0] : node.name}
+          {(() => {
+            const shown = label(node.name, node.id);
+            return shown.includes(",") ? shown.split(",")[0] : shown;
+          })()}
         </text>
         <text
           x={CX}
@@ -169,15 +173,15 @@ export default function DrilldownPie({
           className="fill-[#5c6b73]"
           style={{ fontSize: 12 }}
         >
-          {formatMillions(node.amountMillions)}
+          {money(node.amountMillions)}
         </text>
       </svg>
       {hovered ? (
         <div className="pointer-events-none absolute left-1/2 top-2 z-10 max-w-[min(100%,20rem)] -translate-x-1/2 rounded-lg bg-[#1f3d4d] px-3 py-1.5 text-center text-white shadow-lg">
-          <p className="text-sm font-semibold">{hovered.name}</p>
+          <p className="text-sm font-semibold">{label(hovered.name, hovered.id)}</p>
           <p className="text-xs text-[#e8dcc8]">
-            {formatMillions(hovered.amountMillions)} · {formatPercent(hovered.percent)}
-            {hovered.isOffset ? " · offset" : ""}
+            {money(hovered.amountMillions)} · {formatPercent(hovered.percent)}
+            {hovered.isOffset ? ` · ${t("offset")}` : ""}
             {hovered.periodLabel || hovered.year
               ? ` · ${hovered.periodLabel ?? hovered.year}`
               : ""}
@@ -191,17 +195,17 @@ export default function DrilldownPie({
               <div className="mt-0.5 space-y-0.5 text-xs font-medium tabular-nums">
                 {gdp5yr ? (
                   <p className={fiveYearDeltaClassOnDark(gdp5yr.tone)}>
-                    {gdp5yr.text}
+                    {delta(gdp5yr.text)}
                   </p>
                 ) : null}
                 {inflation ? (
                   <p className={fiveYearDeltaClassOnDark(inflation.tone)}>
-                    inflation {inflation.text}
+                    {t("inflationWord")} {delta(inflation.text)}
                   </p>
                 ) : null}
                 {real ? (
                   <p className={fiveYearDeltaClassOnDark(real.tone)}>
-                    real {real.text}
+                    {t("realWord")} {delta(real.text)}
                   </p>
                 ) : null}
               </div>
@@ -209,18 +213,17 @@ export default function DrilldownPie({
           })()}
           {hovered.sources?.length ? (
             <p className="mt-0.5 text-[10px] leading-snug text-[#c4b59a]">
-              Source: {hovered.sources.map((s) => s.label).join(" · ")}
+              {t("source")}: {hovered.sources.map((s) => label(s.label)).join(" · ")}
             </p>
           ) : null}
           <p className="mt-0.5 text-[10px] text-[#a89880]">
-            {hasChildren(hovered) ? "Tap to open" : "No further detail"}
+            {hasChildren(hovered) ? t("tapOpen") : t("noDetail")}
           </p>
         </div>
       ) : null}
       {hasOverlays && !hatchOnly ? (
         <p className="mt-2 text-center text-[11px] text-[#8a7358]">
-          Hatch overlays mark offsets cutting into the totals above — they reduce the net
-          without adding pie slices.
+          {t("hatch")}
         </p>
       ) : null}
     </div>
@@ -234,6 +237,7 @@ function SliceLabel({
   slice: PieSlice;
   labelMode: "country" | "sector";
 }) {
+  const { label: nameOf } = useI18n();
   const sweep = slice.endAngle - slice.startAngle;
   if (sweep < MIN_SWEEP_LABEL || slice.isOffset) return null;
 
@@ -290,8 +294,8 @@ function SliceLabel({
 
   const maxChars = charsFitOnArc(LABEL_RADIUS, sweep, 6.2);
   if (maxChars < MIN_CHARS_SECTOR) return null;
-  const label = truncateLabel(slice.name, Math.min(maxChars, 18));
-  if (!label) return null;
+  const shown = truncateLabel(nameOf(slice.name, slice.id), Math.min(maxChars, 18));
+  if (!shown) return null;
 
   return (
     <text
@@ -309,7 +313,7 @@ function SliceLabel({
         strokeWidth: 3,
       }}
     >
-      {label}
+      {shown}
     </text>
   );
 }
@@ -331,6 +335,7 @@ function PieWedge({
   onHover: (id: string | null) => void;
   onSelect: (id: string) => void;
 }) {
+  const { t, label, money } = useI18n();
   const drillable = hasChildren(slice);
   const radius = hovered && drillable ? 222 : RADIUS;
   const path = pieSlicePath(CX, CY, radius, slice.startAngle, slice.endAngle);
@@ -347,7 +352,7 @@ function PieWedge({
       }}
       tabIndex={drillable ? 0 : -1}
       role={drillable ? "button" : undefined}
-      aria-label={`${slice.name}, ${formatPercent(slice.percent)}, ${formatMillions(slice.amountMillions)}${slice.isOffset ? ", offset" : ""}${drillable ? ", has more detail" : ", no further detail"}`}
+      aria-label={`${label(slice.name, slice.id)}, ${formatPercent(slice.percent)}, ${money(slice.amountMillions)}${slice.isOffset ? `, ${t("offset")}` : ""}${drillable ? `, ${t("tapOpen")}` : `, ${t("noDetail")}`}`}
       onKeyDown={(event) => {
         if (!drillable) return;
         if (event.key === "Enter" || event.key === " ") {

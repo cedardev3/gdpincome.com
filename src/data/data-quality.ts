@@ -10,7 +10,7 @@ export type MeasureClass =
   | "other";
 
 export type SourceQuality = {
-  sourceKey: "bea" | "statcan" | "abs" | "eurostat" | "worldbank" | "oecd";
+  sourceKey: "bea" | "esri" | "statcan" | "abs" | "eurostat" | "worldbank" | "oecd";
   measureClass: MeasureClass;
   /** Short label shown in UI badges */
   badge: string;
@@ -21,6 +21,14 @@ export type SourceQuality = {
 
 /** Measure semantics by primary industry source. */
 export const SOURCE_QUALITY: Record<string, SourceQuality> = {
+  esri: {
+    sourceKey: "esri",
+    measureClass: "nominal-gdp",
+    badge: "Nominal GDP",
+    levelComparableToNominalUsd: true,
+    summary:
+      "Cabinet Office GDP by economic activity at current prices. Industry rows plus the published tax adjustment and statistical discrepancy equal nominal GDP.",
+  },
   bea: {
     sourceKey: "bea",
     measureClass: "nominal-gdp",
@@ -200,7 +208,7 @@ export const COUNTRY_QUALITY: Record<string, CountryQuality> = {
     ],
   },
   DEU: { code: "DEU", measureWarning: true },
-  JPN: { code: "JPN", measureWarning: true },
+  JPN: { code: "JPN" },
   IND: { code: "IND" },
   GBR: { code: "GBR", measureWarning: true },
   FRA: { code: "FRA", measureWarning: true },

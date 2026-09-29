@@ -23,7 +23,8 @@ body {
     radial-gradient(circle at top right, #e7eef1 0%, transparent 32%),
     var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-geist-sans), "Hiragino Sans", "Yu Gothic UI", "Yu Gothic",
+    Meiryo, ui-sans-serif, system-ui, sans-serif;
 }
 
 button {
