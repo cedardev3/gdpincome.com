@@ -266,6 +266,24 @@ function formatFiveYearPct(pct: number): FiveYearDelta {
   };
 }
 
+/** Change in years, formatted like `+0.1 yr (5yr)`. `pct` holds the year difference. */
+export function yearsFiveYearDelta(
+  current: number | null | undefined,
+  prior: number | null | undefined,
+): FiveYearDelta | null {
+  if (current == null || prior == null) return null;
+  if (!Number.isFinite(current) || !Number.isFinite(prior)) return null;
+  const diff = current - prior;
+  const tone: FiveYearDelta["tone"] =
+    diff > 0.05 ? "up" : diff < -0.05 ? "down" : "flat";
+  const sign = diff > 0.05 ? "+" : diff < -0.05 ? "−" : "";
+  return {
+    text: `${sign}${Math.abs(diff).toFixed(1)} yr (5yr)`,
+    tone,
+    pct: diff,
+  };
+}
+
 /** Relative % change formatted like `+3.27% (5yr)`. */
 export function fiveYearDelta(
   current: number | null | undefined,
@@ -302,14 +320,22 @@ export function gdpTotalFiveYearDelta(
 }
 
 /**
- * Cumulative CPI shown as a drag on growth (always the negative of price rise
- * when inflation is positive). Example: 18% CPI rise → `−18.0% (5yr)`.
+ * Cumulative CPI for display. A price rise is shown as a positive percent in the
+ * down/red tone. Real GDP still subtracts this same cumulative rate.
  */
 export function inflationFiveYearDrag(
   node: WithGdpFiveYearFields,
 ): FiveYearDelta | null {
   const cum = node.inflationCumulative5yPct;
   if (cum == null || !Number.isFinite(cum)) return null;
+  if (cum > 0.005) {
+    const shown = formatFiveYearPct(cum);
+    return {
+      text: shown.text.replace(/^\+/, ""),
+      tone: "down",
+      pct: cum,
+    };
+  }
   return formatFiveYearPct(-cum);
 }
 

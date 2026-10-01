@@ -67,7 +67,7 @@ export const SOURCE_QUALITY: Record<string, SourceQuality> = {
     badge: "Volume ≠ $",
     levelComparableToNominalUsd: false,
     summary:
-      "Statistics Canada GDP at basic prices, chained 2017 dollars (volume). Converting with market FX does not produce nominal USD GDP — levels and GDP/capita are not apples-to-apples with USA/China.",
+      "Statistics Canada GDP at basic prices, chained 2017 dollars (volume). Converting with market FX does not produce nominal USD GDP — levels and GDP/capita are not a perfect comparison with USA/China.",
   },
   abs: {
     sourceKey: "abs",

@@ -5,6 +5,9 @@ import type { ChartNode } from "@/lib/pie";
  * Primary: BEA, Cabinet Office (Japan), StatCan, ABS, Eurostat, World Bank industry; OECD for GB/MX/TR/CH (+ fallback).
  * Demographics: World Bank WDI. Under-18 uses ages 0–14 (closest published cohort).
  * Bond yields: OECD KEI IRLT (long-term / ~10y government bond rates) via DBnomics.
+ * Debt: IMF general government gross debt (GGXWDG_NGDP) × IMF nominal GDP.
+ * Interest: IMF interest paid on public debt, percent of GDP, same-year IMF GDP/capita.
+ * Life expectancy: World Bank SP.DYN.LE00.IN, with the observation five years earlier.
  */
 
 export type CountryGdpTree = ChartNode & {
@@ -43,6 +46,19 @@ export type CountryGdpTree = ChartNode & {
   bondYield10yLabel?: string;
   bondYield10yPrior5y?: number | null;
   bondYield10yPrior5yPeriod?: string | null;
+  publicDebtPctGdp?: number | null;
+  publicDebtYear?: number | null;
+  publicDebtUsdMillions?: number | null;
+  publicDebtPerCapitaUsd?: number | null;
+  debtInterestPctGdp?: number | null;
+  debtInterestYear?: number | null;
+  nominalGdpPerCapitaInterestYearUsd?: number | null;
+  debtInterestPerCapitaUsd?: number | null;
+  gdpPerCapitaAfterInterestUsd?: number | null;
+  lifeExpectancyYears?: number | null;
+  lifeExpectancyYear?: number | null;
+  lifeExpectancyPrior5yYears?: number | null;
+  lifeExpectancyPrior5yYear?: number | null;
 };
 
 export const GDP_DATA_META = {
@@ -243,7 +259,10 @@ export const GDP_DATA_META = {
     "batch2Sources": "Eurostat for ES/NL; OECD Table 6 for MEX/TUR/CHE; World Bank sector VA for RUS/BRA/KOR/IDN/SAU.",
     "batch3Sources": "Eurostat for PL/BE/IE/SE/NO/AT; World Bank sector VA for ARG/THA/ARE/SGP/NGA/ZAF/ISR/EGY/VNM/BGD.",
     "batch4Sources": "Eurostat for DK/RO/CZ; World Bank sector VA for PHL/MYS/COL/IRN/HKG/PAK.",
-    "bondYield10y": "OECD KEI measure IRLT — long-term interest rates on government bonds with residual maturity of about 10 years (% per annum). Omitted when missing or older than 2022."
+    "bondYield10y": "OECD KEI measure IRLT — long-term interest rates on government bonds with residual maturity of about 10 years (% per annum). Omitted when missing or older than 2022.",
+    "publicDebt": "IMF WEO general government gross debt (GGXWDG_NGDP) times IMF nominal GDP (NGDPD) for the same year. Years after 2025 are projections and are omitted. Debt per capita uses IMF GDP per capita (NGDPDPC) for that year.",
+    "debtInterest": "IMF interest paid on public debt, percent of GDP, times IMF GDP per capita of that same year. Omitted when IMF does not publish the interest series. Not the 10-year bond yield.",
+    "lifeExpectancy": "World Bank SP.DYN.LE00.IN, life expectancy at birth. The 5-year change is the latest year minus the observation exactly five years earlier."
   },
   "sources": {
     "bea": {
@@ -443,6 +462,160 @@ export const GDP_DATA_META = {
       ],
       "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI",
       "measure": "Long-term interest rates (~10-year government bonds), % per annum, monthly; omitted if missing/stale"
+    },
+    "publicDebt": {
+      "dataset": "IMF WEO GGXWDG_NGDP × NGDPD",
+      "countries": [
+        "USA",
+        "CHN",
+        "DEU",
+        "JPN",
+        "IND",
+        "GBR",
+        "FRA",
+        "RUS",
+        "BRA",
+        "ITA",
+        "KOR",
+        "MEX",
+        "CAN",
+        "AUS",
+        "ESP",
+        "IDN",
+        "SAU",
+        "TUR",
+        "NLD",
+        "CHE",
+        "POL",
+        "ARG",
+        "BEL",
+        "IRL",
+        "SGP",
+        "SWE",
+        "THA",
+        "ARE",
+        "ISR",
+        "VNM",
+        "AUT",
+        "PHL",
+        "IRN",
+        "MYS",
+        "NOR",
+        "COL",
+        "BGD",
+        "ZAF",
+        "HKG",
+        "PAK",
+        "DNK",
+        "ROU",
+        "EGY",
+        "CZE",
+        "NGA"
+      ],
+      "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP",
+      "measure": "General government gross debt, current USD, latest year through 2025"
+    },
+    "debtInterest": {
+      "dataset": "IMF DataMapper ie × NGDPDPC",
+      "countries": [
+        "USA",
+        "CHN",
+        "DEU",
+        "JPN",
+        "IND",
+        "GBR",
+        "FRA",
+        "RUS",
+        "BRA",
+        "ITA",
+        "KOR",
+        "MEX",
+        "CAN",
+        "AUS",
+        "ESP",
+        "IDN",
+        "SAU",
+        "TUR",
+        "NLD",
+        "CHE",
+        "POL",
+        "ARG",
+        "BEL",
+        "IRL",
+        "SWE",
+        "THA",
+        "ARE",
+        "ISR",
+        "VNM",
+        "AUT",
+        "PHL",
+        "IRN",
+        "MYS",
+        "NOR",
+        "COL",
+        "BGD",
+        "ZAF",
+        "HKG",
+        "PAK",
+        "DNK",
+        "ROU",
+        "CZE",
+        "NGA"
+      ],
+      "url": "https://www.imf.org/external/datamapper/ie",
+      "measure": "Interest paid on public debt, percent of GDP, per person using same-year IMF GDP per capita"
+    },
+    "lifeExpectancy": {
+      "dataset": "World Bank WDI SP.DYN.LE00.IN",
+      "countries": [
+        "USA",
+        "CHN",
+        "DEU",
+        "JPN",
+        "IND",
+        "GBR",
+        "FRA",
+        "RUS",
+        "BRA",
+        "ITA",
+        "KOR",
+        "MEX",
+        "CAN",
+        "AUS",
+        "ESP",
+        "IDN",
+        "SAU",
+        "TUR",
+        "NLD",
+        "CHE",
+        "POL",
+        "ARG",
+        "BEL",
+        "IRL",
+        "SGP",
+        "SWE",
+        "THA",
+        "ARE",
+        "ISR",
+        "VNM",
+        "AUT",
+        "PHL",
+        "IRN",
+        "MYS",
+        "NOR",
+        "COL",
+        "BGD",
+        "ZAF",
+        "HKG",
+        "PAK",
+        "DNK",
+        "ROU",
+        "EGY",
+        "CZE",
+        "NGA"
+      ],
+      "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN",
+      "measure": "Life expectancy at birth, years, plus the observation five years earlier"
     }
   }
 } as const;
@@ -493,6 +666,22 @@ export const WORLD_GDP = {
     {
       "label": "OECD long-term interest rates (IRLT)",
       "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+    },
+    {
+      "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+      "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+    },
+    {
+      "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+      "url": "https://www.imf.org/external/datamapper/NGDPD"
+    },
+    {
+      "label": "IMF interest paid on public debt (% of GDP)",
+      "url": "https://www.imf.org/external/datamapper/ie"
+    },
+    {
+      "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+      "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
     }
   ],
   "year": 2026,
@@ -525,6 +714,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2026,
@@ -2063,7 +2268,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 1.62,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 123.9,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 38120405.9,
+      "publicDebtPerCapitaUsd": 111499,
+      "debtInterestPctGdp": 3.95,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 86173,
+      "debtInterestPerCapitaUsd": 3407,
+      "gdpPerCapitaAfterInterestUsd": 82766,
+      "lifeExpectancyYears": 78.890243902439,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 78.7878048780488,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "chn",
@@ -2092,6 +2310,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -2212,7 +2446,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 3.164,
-      "bondYield10yPrior5yPeriod": "2021-04"
+      "bondYield10yPrior5yPeriod": "2021-04",
+      "publicDebtPctGdp": 99.2,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 19469237,
+      "publicDebtPerCapitaUsd": 13856,
+      "debtInterestPctGdp": 0.95,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 13453,
+      "debtInterestPerCapitaUsd": 128,
+      "gdpPerCapitaAfterInterestUsd": 13325,
+      "lifeExpectancyYears": 78.017,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 77.94,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "deu",
@@ -2245,6 +2492,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -2483,7 +2746,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": -0.2235,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 62.9,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 3175229.1,
+      "publicDebtPerCapitaUsd": 38016,
+      "debtInterestPctGdp": 1.06,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 56087,
+      "debtInterestPerCapitaUsd": 594,
+      "gdpPerCapitaAfterInterestUsd": 55493,
+      "lifeExpectancyYears": 80.7926829268293,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 81.2926829268293,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "jpn",
@@ -2516,6 +2792,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2024,
@@ -3466,7 +3758,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 0.08,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 206.5,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 9158611.6,
+      "publicDebtPerCapitaUsd": 74285,
+      "debtInterestPctGdp": 1.49,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 33820,
+      "debtInterestPerCapitaUsd": 505,
+      "gdpPerCapitaAfterInterestUsd": 33315,
+      "lifeExpectancyYears": 84.0363414634146,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 84.3563414634146,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "ind",
@@ -3495,6 +3800,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -3615,7 +3936,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 6.2254,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 84.1,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 3293618.4,
+      "publicDebtPerCapitaUsd": 2250,
+      "debtInterestPctGdp": 5.11,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 2592,
+      "debtInterestPerCapitaUsd": 133,
+      "gdpPerCapitaAfterInterestUsd": 2459,
+      "lifeExpectancyYears": 72.235,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 70.746,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "gbr",
@@ -3648,6 +3982,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2023,
@@ -5130,7 +5480,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 0.9058,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 102.3,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 4095091.5,
+      "publicDebtPerCapitaUsd": 58933,
+      "debtInterestPctGdp": 2.84,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 53339,
+      "debtInterestPerCapitaUsd": 1513,
+      "gdpPerCapitaAfterInterestUsd": 51826,
+      "lifeExpectancyYears": 81.3868536585366,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 81.3691219512195,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "fra",
@@ -5163,6 +5526,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -5711,7 +6090,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 0.2107,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 116,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 3907953,
+      "publicDebtPerCapitaUsd": 56759,
+      "debtInterestPctGdp": 2.06,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 46054,
+      "debtInterestPerCapitaUsd": 949,
+      "gdpPerCapitaAfterInterestUsd": 45105,
+      "lifeExpectancyYears": 82.9804878048781,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 82.8268292682927,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "rus",
@@ -5736,6 +6128,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -5850,7 +6258,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 15.5,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 17,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 17.2,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 445125.3,
+      "publicDebtPerCapitaUsd": 3091,
+      "debtInterestPctGdp": 1.19,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 15094,
+      "debtInterestPerCapitaUsd": 180,
+      "gdpPerCapitaAfterInterestUsd": 14914,
+      "lifeExpectancyYears": 73.4404878048781,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 73.0839024390244,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "bra",
@@ -5879,6 +6300,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -5999,7 +6436,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 4.61,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 93.3,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 2127163.5,
+      "publicDebtPerCapitaUsd": 9970,
+      "debtInterestPctGdp": 8.28,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 10282,
+      "debtInterestPerCapitaUsd": 851,
+      "gdpPerCapitaAfterInterestUsd": 9431,
+      "lifeExpectancyYears": 76.023,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 75.809,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "ita",
@@ -6032,6 +6482,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -6580,7 +7046,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 0.797,
-      "bondYield10yPrior5yPeriod": "2021-04"
+      "bondYield10yPrior5yPeriod": "2021-04",
+      "publicDebtPctGdp": 137.1,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 3496202.2,
+      "publicDebtPerCapitaUsd": 59324,
+      "debtInterestPctGdp": 3.89,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 40405,
+      "debtInterestPerCapitaUsd": 1570,
+      "gdpPerCapitaAfterInterestUsd": 38835,
+      "lifeExpectancyYears": 83.9512195121951,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 83.4975609756098,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "kor",
@@ -6609,6 +7088,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -6729,7 +7224,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 2.131,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 52.3,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 979252.1,
+      "publicDebtPerCapitaUsd": 18947,
+      "debtInterestPctGdp": 1.03,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 36239,
+      "debtInterestPerCapitaUsd": 373,
+      "gdpPerCapitaAfterInterestUsd": 35866,
+      "lifeExpectancyYears": 83.6292682926829,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 83.2268292682927,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "mex",
@@ -6762,6 +7270,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2024,
@@ -8872,7 +9396,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 6.68,
-      "bondYield10yPrior5yPeriod": "2021-04"
+      "bondYield10yPrior5yPeriod": "2021-04",
+      "publicDebtPctGdp": 61.8,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 1132572.1,
+      "publicDebtPerCapitaUsd": 8492,
+      "debtInterestPctGdp": 6.48,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 13839,
+      "debtInterestPerCapitaUsd": 896,
+      "gdpPerCapitaAfterInterestUsd": 12943,
+      "lifeExpectancyYears": 75.264,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 74.53,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "can",
@@ -8905,6 +9442,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2026,
@@ -11381,7 +11934,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 1.524,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 113.5,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 2633086.5,
+      "publicDebtPerCapitaUsd": 63293,
+      "debtInterestPctGdp": 3.53,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 55209,
+      "debtInterestPerCapitaUsd": 1950,
+      "gdpPerCapitaAfterInterestUsd": 53259,
+      "lifeExpectancyYears": 82.1080487804878,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 82.1585365853659,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "aus",
@@ -11414,6 +11980,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2026,
@@ -12472,7 +13054,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 1.66,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 51,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 938380.1,
+      "publicDebtPerCapitaUsd": 33839,
+      "debtInterestPctGdp": 1.73,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 65701,
+      "debtInterestPerCapitaUsd": 1134,
+      "gdpPerCapitaAfterInterestUsd": 64567,
+      "lifeExpectancyYears": 83.0512195121951,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 82.9,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "esp",
@@ -12505,6 +13100,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -12743,7 +13354,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 0.5166,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 100.4,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 1911441.3,
+      "publicDebtPerCapitaUsd": 38444,
+      "debtInterestPctGdp": 2.45,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 35151,
+      "debtInterestPerCapitaUsd": 860,
+      "gdpPerCapitaAfterInterestUsd": 34291,
+      "lifeExpectancyYears": 83.8878048780488,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 83.8317073170732,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "idn",
@@ -12772,6 +13396,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -12892,7 +13532,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 7.0722,
-      "bondYield10yPrior5yPeriod": "2019-12"
+      "bondYield10yPrior5yPeriod": "2019-12",
+      "publicDebtPctGdp": 41,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 592713.2,
+      "publicDebtPerCapitaUsd": 2084,
+      "debtInterestPctGdp": 2.21,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 4958,
+      "debtInterestPerCapitaUsd": 109,
+      "gdpPerCapitaAfterInterestUsd": 4849,
+      "lifeExpectancyYears": 71.288,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 70.349,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "sau",
@@ -12917,6 +13570,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -13031,7 +13700,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 2.5,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 23.6,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 31.7,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 404790.9,
+      "publicDebtPerCapitaUsd": 11242,
+      "debtInterestPctGdp": 0.96,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 35528,
+      "debtInterestPerCapitaUsd": 341,
+      "gdpPerCapitaAfterInterestUsd": 35187,
+      "lifeExpectancyYears": 78.982,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 78.313,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "tur",
@@ -13060,6 +13742,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2024,
@@ -13492,7 +14190,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 9,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 21,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 23.5,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 375365.7,
+      "publicDebtPerCapitaUsd": 4374,
+      "debtInterestPctGdp": 2.97,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 15883,
+      "debtInterestPerCapitaUsd": 472,
+      "gdpPerCapitaAfterInterestUsd": 15411,
+      "lifeExpectancyYears": 77.421,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 77.737,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "nld",
@@ -13525,6 +14236,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -14073,7 +14800,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": -0.296,
-      "bondYield10yPrior5yPeriod": "2021-04"
+      "bondYield10yPrior5yPeriod": "2021-04",
+      "publicDebtPctGdp": 43.3,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 576859.9,
+      "publicDebtPerCapitaUsd": 31970,
+      "debtInterestPctGdp": 0.71,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 67690,
+      "debtInterestPerCapitaUsd": 478,
+      "gdpPerCapitaAfterInterestUsd": 67212,
+      "lifeExpectancyYears": 81.9658536585366,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 82.1121951219512,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "che",
@@ -14106,6 +14846,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2024,
@@ -15486,7 +16242,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": -0.134,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 39.4,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 411156.3,
+      "publicDebtPerCapitaUsd": 45554,
+      "debtInterestPctGdp": 0.36,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 108256,
+      "debtInterestPerCapitaUsd": 389,
+      "gdpPerCapitaAfterInterestUsd": 107867,
+      "lifeExpectancyYears": 84.4073170731707,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 83.9048780487805,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "pol",
@@ -15519,6 +16288,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -15757,7 +16542,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 1.82,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 58.8,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 608924.6,
+      "publicDebtPerCapitaUsd": 16684,
+      "debtInterestPctGdp": 2.2,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 25057,
+      "debtInterestPerCapitaUsd": 552,
+      "gdpPerCapitaAfterInterestUsd": 24505,
+      "lifeExpectancyYears": 78.409756097561,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 77.9048780487805,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "arg",
@@ -15782,6 +16580,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -15896,7 +16710,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 11.8,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 21,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 80.3,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 547232.5,
+      "publicDebtPerCapitaUsd": 11527,
+      "debtInterestPctGdp": 1.71,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 13539,
+      "debtInterestPerCapitaUsd": 232,
+      "gdpPerCapitaAfterInterestUsd": 13307,
+      "lifeExpectancyYears": 77.543,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 76.847,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "bel",
@@ -15929,6 +16756,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -16167,7 +17010,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 0.179,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 106.3,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 770586.8,
+      "publicDebtPerCapitaUsd": 64845,
+      "debtInterestPctGdp": 2.26,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 56796,
+      "debtInterestPerCapitaUsd": 1284,
+      "gdpPerCapitaAfterInterestUsd": 55512,
+      "lifeExpectancyYears": 82.3,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 81.9951219512195,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "irl",
@@ -16200,6 +17056,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -16438,7 +17310,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 0.082,
-      "bondYield10yPrior5yPeriod": "2021-04"
+      "bondYield10yPrior5yPeriod": "2021-04",
+      "publicDebtPctGdp": 32.9,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 236268.1,
+      "publicDebtPerCapitaUsd": 42985,
+      "debtInterestPctGdp": 0.6,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 112356,
+      "debtInterestPerCapitaUsd": 672,
+      "gdpPerCapitaAfterInterestUsd": 111684,
+      "lifeExpectancyYears": 83.009756097561,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 82.7024390243903,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "sgp",
@@ -16463,6 +17348,18 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -16577,7 +17474,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 11.6,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 11.7,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 171.3,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 1034429.3,
+      "publicDebtPerCapitaUsd": 170213,
+      "debtInterestPctGdp": null,
+      "debtInterestYear": null,
+      "nominalGdpPerCapitaInterestYearUsd": null,
+      "debtInterestPerCapitaUsd": null,
+      "gdpPerCapitaAfterInterestUsd": null,
+      "lifeExpectancyYears": 83.3463414634146,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 83.5951219512195,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "swe",
@@ -16610,6 +17520,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -16848,7 +17774,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 0.4212,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 34.9,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 233480.7,
+      "publicDebtPerCapitaUsd": 21869,
+      "debtInterestPctGdp": 0.67,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 57125,
+      "debtInterestPerCapitaUsd": 381,
+      "gdpPerCapitaAfterInterestUsd": 56744,
+      "lifeExpectancyYears": 84.0634146341463,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 83.109756097561,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "tha",
@@ -16873,6 +17812,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -16987,7 +17942,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 12.9,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 14.4,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 64.7,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 373325.5,
+      "publicDebtPerCapitaUsd": 5213,
+      "debtInterestPctGdp": 1.2,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 7387,
+      "debtInterestPerCapitaUsd": 89,
+      "gdpPerCapitaAfterInterestUsd": 7298,
+      "lifeExpectancyYears": 76.564,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 77.197,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "are",
@@ -17012,6 +17980,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2024,
@@ -17126,7 +18110,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 1.6,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 16,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 34.3,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 196073.5,
+      "publicDebtPerCapitaUsd": 17229,
+      "debtInterestPctGdp": 0.55,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 48906,
+      "debtInterestPerCapitaUsd": 270,
+      "gdpPerCapitaAfterInterestUsd": 48636,
+      "lifeExpectancyYears": 83.069,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 82.596,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "isr",
@@ -17155,6 +18152,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2024,
@@ -17275,7 +18288,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 1.18,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 68.5,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 418382.9,
+      "publicDebtPerCapitaUsd": 41329,
+      "debtInterestPctGdp": 3.44,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 54294,
+      "debtInterestPerCapitaUsd": 1868,
+      "gdpPerCapitaAfterInterestUsd": 52426,
+      "lifeExpectancyYears": 83.1975609756098,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 82.8048780487805,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "vnm",
@@ -17300,6 +18326,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -17414,7 +18456,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 7.6,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 22.9,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 30.3,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 149695.9,
+      "publicDebtPerCapitaUsd": 1463,
+      "debtInterestPctGdp": 0.89,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 4536,
+      "debtInterestPerCapitaUsd": 40,
+      "gdpPerCapitaAfterInterestUsd": 4496,
+      "lifeExpectancyYears": 74.736,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 74.211,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "aut",
@@ -17447,6 +18502,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -17685,7 +18756,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": -0.0409,
-      "bondYield10yPrior5yPeriod": "2021-04"
+      "bondYield10yPrior5yPeriod": "2021-04",
+      "publicDebtPctGdp": 80.5,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 466842,
+      "publicDebtPerCapitaUsd": 50845,
+      "debtInterestPctGdp": 1.51,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 58373,
+      "debtInterestPerCapitaUsd": 880,
+      "gdpPerCapitaAfterInterestUsd": 57493,
+      "lifeExpectancyYears": 81.9951219512195,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 81.8951219512195,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "phl",
@@ -17710,6 +18794,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -17824,7 +18924,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 4.7,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 27.1,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 59.4,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 289373.6,
+      "publicDebtPerCapitaUsd": 2536,
+      "debtInterestPctGdp": 2.58,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 4089,
+      "debtInterestPerCapitaUsd": 106,
+      "gdpPerCapitaAfterInterestUsd": 3983,
+      "lifeExpectancyYears": 69.946,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 69.68,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "irn",
@@ -17849,6 +18962,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2024,
@@ -17963,7 +19092,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 7.2,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 22,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 37.3,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 138456.1,
+      "publicDebtPerCapitaUsd": 1590,
+      "debtInterestPctGdp": 1.7,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 4834,
+      "debtInterestPerCapitaUsd": 82,
+      "gdpPerCapitaAfterInterestUsd": 4752,
+      "lifeExpectancyYears": 77.854,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 76.855,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "mys",
@@ -17988,6 +19130,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -18102,7 +19260,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 6.7,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 21.3,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 70.7,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 333840.5,
+      "publicDebtPerCapitaUsd": 9862,
+      "debtInterestPctGdp": 2.84,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 12619,
+      "debtInterestPerCapitaUsd": 359,
+      "gdpPerCapitaAfterInterestUsd": 12260,
+      "lifeExpectancyYears": 76.821,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 75.9,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "nor",
@@ -18135,6 +19306,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -18683,7 +19870,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 1.47,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 45,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 238840.2,
+      "publicDebtPerCapitaUsd": 42511,
+      "debtInterestPctGdp": 1.14,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 89684,
+      "debtInterestPerCapitaUsd": 1026,
+      "gdpPerCapitaAfterInterestUsd": 88658,
+      "lifeExpectancyYears": 83.1609756097561,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 82.9585365853659,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "col",
@@ -18712,6 +19912,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -18832,7 +20048,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 7.75,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 59.9,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 273988.6,
+      "publicDebtPerCapitaUsd": 5165,
+      "debtInterestPctGdp": 4.39,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 7980,
+      "debtInterestPerCapitaUsd": 350,
+      "gdpPerCapitaAfterInterestUsd": 7630,
+      "lifeExpectancyYears": 77.913,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 76.793,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "bgd",
@@ -18857,6 +20086,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -18971,7 +20216,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 5.8,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 27.6,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 42,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 192319.7,
+      "publicDebtPerCapitaUsd": 1107,
+      "debtInterestPctGdp": 2.29,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 2619,
+      "debtInterestPerCapitaUsd": 60,
+      "gdpPerCapitaAfterInterestUsd": 2559,
+      "lifeExpectancyYears": 74.93,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 72.625,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "zaf",
@@ -19000,6 +20258,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -19120,7 +20394,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 9.8167,
-      "bondYield10yPrior5yPeriod": "2021-05"
+      "bondYield10yPrior5yPeriod": "2021-05",
+      "publicDebtPctGdp": 78.6,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 335732.8,
+      "publicDebtPerCapitaUsd": 5321,
+      "debtInterestPctGdp": 5.26,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 6435,
+      "debtInterestPerCapitaUsd": 338,
+      "gdpPerCapitaAfterInterestUsd": 6097,
+      "lifeExpectancyYears": 66.312,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 66.071,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "hkg",
@@ -19145,6 +20432,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2024,
@@ -19259,7 +20562,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 18.8,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 10.3,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 11.9,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 50849.9,
+      "publicDebtPerCapitaUsd": 6770,
+      "debtInterestPctGdp": 0.19,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 54445,
+      "debtInterestPerCapitaUsd": 105,
+      "gdpPerCapitaAfterInterestUsd": 54340,
+      "lifeExpectancyYears": 85.3926829268293,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 85.1558536585366,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "pak",
@@ -19284,6 +20600,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -19398,7 +20730,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 4,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 36.2,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 72.8,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 296868.2,
+      "publicDebtPerCapitaUsd": 1234,
+      "debtInterestPctGdp": 7.76,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 1578,
+      "debtInterestPerCapitaUsd": 122,
+      "gdpPerCapitaAfterInterestUsd": 1456,
+      "lifeExpectancyYears": 67.799,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 66.729,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "dnk",
@@ -19431,6 +20776,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -19979,7 +21340,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 0.003,
-      "bondYield10yPrior5yPeriod": "2021-04"
+      "bondYield10yPrior5yPeriod": "2021-04",
+      "publicDebtPctGdp": 27.5,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 126972.5,
+      "publicDebtPerCapitaUsd": 21188,
+      "debtInterestPctGdp": 0.78,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 71214,
+      "debtInterestPerCapitaUsd": 557,
+      "gdpPerCapitaAfterInterestUsd": 70657,
+      "lifeExpectancyYears": 82.2536585365854,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 81.4512195121951,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "rou",
@@ -20008,6 +21382,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -20240,7 +21630,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 19,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 15.6,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 60.6,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 259332.2,
+      "publicDebtPerCapitaUsd": 13771,
+      "debtInterestPctGdp": 2.06,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 20199,
+      "debtInterestPerCapitaUsd": 416,
+      "gdpPerCapitaAfterInterestUsd": 19783,
+      "lifeExpectancyYears": 76.4585365853659,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 75.6073170731707,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "egy",
@@ -20265,6 +21668,18 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -20379,7 +21794,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 4.7,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 31.6,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 86.8,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 316507.5,
+      "publicDebtPerCapitaUsd": 2933,
+      "debtInterestPctGdp": null,
+      "debtInterestYear": null,
+      "nominalGdpPerCapitaInterestYearUsd": null,
+      "debtInterestPerCapitaUsd": null,
+      "gdpPerCapitaAfterInterestUsd": null,
+      "lifeExpectancyYears": 71.806,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 71.213,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "cze",
@@ -20412,6 +21840,22 @@ export const WORLD_GDP = {
         {
           "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
           "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -20960,7 +22404,20 @@ export const WORLD_GDP = {
       "bondYield10yUnit": "% p.a.",
       "bondYield10yLabel": "10-year government bond yield",
       "bondYield10yPrior5y": 1.8605,
-      "bondYield10yPrior5yPeriod": "2021-04"
+      "bondYield10yPrior5yPeriod": "2021-04",
+      "publicDebtPctGdp": 44.6,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 173502.9,
+      "publicDebtPerCapitaUsd": 15913,
+      "debtInterestPctGdp": 1.34,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 31740,
+      "debtInterestPerCapitaUsd": 426,
+      "gdpPerCapitaAfterInterestUsd": 31314,
+      "lifeExpectancyYears": 79.9780487804878,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 79.2292682926829,
+      "lifeExpectancyPrior5yYear": 2019
     },
     {
       "id": "nga",
@@ -20985,6 +22442,22 @@ export const WORLD_GDP = {
         {
           "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
           "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+        },
+        {
+          "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+          "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+        },
+        {
+          "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+          "url": "https://www.imf.org/external/datamapper/NGDPD"
+        },
+        {
+          "label": "IMF interest paid on public debt (% of GDP)",
+          "url": "https://www.imf.org/external/datamapper/ie"
+        },
+        {
+          "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+          "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
         }
       ],
       "year": 2025,
@@ -21099,7 +22572,20 @@ export const WORLD_GDP = {
       "pct65PlusPrior5y": 3,
       "pct65PlusPrior5yYear": 2020,
       "pctUnder18Proxy": 40.5,
-      "under18ProxyLabel": "Ages 0–14"
+      "under18ProxyLabel": "Ages 0–14",
+      "publicDebtPctGdp": 35.5,
+      "publicDebtYear": 2025,
+      "publicDebtUsdMillions": 103124.3,
+      "publicDebtPerCapitaUsd": 434,
+      "debtInterestPctGdp": 2.47,
+      "debtInterestYear": 2024,
+      "nominalGdpPerCapitaInterestYearUsd": 1084,
+      "debtInterestPerCapitaUsd": 27,
+      "gdpPerCapitaAfterInterestUsd": 1057,
+      "lifeExpectancyYears": 54.635,
+      "lifeExpectancyYear": 2024,
+      "lifeExpectancyPrior5yYears": 53.009,
+      "lifeExpectancyPrior5yYear": 2019
     }
   ]
 } as unknown as ChartNode;
@@ -21132,6 +22618,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2026,
@@ -22670,7 +24172,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 1.62,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 123.9,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 38120405.9,
+    "publicDebtPerCapitaUsd": 111499,
+    "debtInterestPctGdp": 3.95,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 86173,
+    "debtInterestPerCapitaUsd": 3407,
+    "gdpPerCapitaAfterInterestUsd": 82766,
+    "lifeExpectancyYears": 78.890243902439,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 78.7878048780488,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "CHN": {
     "id": "chn",
@@ -22699,6 +24214,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -22819,7 +24350,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 3.164,
-    "bondYield10yPrior5yPeriod": "2021-04"
+    "bondYield10yPrior5yPeriod": "2021-04",
+    "publicDebtPctGdp": 99.2,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 19469237,
+    "publicDebtPerCapitaUsd": 13856,
+    "debtInterestPctGdp": 0.95,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 13453,
+    "debtInterestPerCapitaUsd": 128,
+    "gdpPerCapitaAfterInterestUsd": 13325,
+    "lifeExpectancyYears": 78.017,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 77.94,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "DEU": {
     "id": "deu",
@@ -22852,6 +24396,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -23090,7 +24650,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": -0.2235,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 62.9,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 3175229.1,
+    "publicDebtPerCapitaUsd": 38016,
+    "debtInterestPctGdp": 1.06,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 56087,
+    "debtInterestPerCapitaUsd": 594,
+    "gdpPerCapitaAfterInterestUsd": 55493,
+    "lifeExpectancyYears": 80.7926829268293,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 81.2926829268293,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "JPN": {
     "id": "jpn",
@@ -23123,6 +24696,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2024,
@@ -24073,7 +25662,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 0.08,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 206.5,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 9158611.6,
+    "publicDebtPerCapitaUsd": 74285,
+    "debtInterestPctGdp": 1.49,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 33820,
+    "debtInterestPerCapitaUsd": 505,
+    "gdpPerCapitaAfterInterestUsd": 33315,
+    "lifeExpectancyYears": 84.0363414634146,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 84.3563414634146,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "IND": {
     "id": "ind",
@@ -24102,6 +25704,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -24222,7 +25840,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 6.2254,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 84.1,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 3293618.4,
+    "publicDebtPerCapitaUsd": 2250,
+    "debtInterestPctGdp": 5.11,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 2592,
+    "debtInterestPerCapitaUsd": 133,
+    "gdpPerCapitaAfterInterestUsd": 2459,
+    "lifeExpectancyYears": 72.235,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 70.746,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "GBR": {
     "id": "gbr",
@@ -24255,6 +25886,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2023,
@@ -25737,7 +27384,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 0.9058,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 102.3,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 4095091.5,
+    "publicDebtPerCapitaUsd": 58933,
+    "debtInterestPctGdp": 2.84,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 53339,
+    "debtInterestPerCapitaUsd": 1513,
+    "gdpPerCapitaAfterInterestUsd": 51826,
+    "lifeExpectancyYears": 81.3868536585366,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 81.3691219512195,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "FRA": {
     "id": "fra",
@@ -25770,6 +27430,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -26318,7 +27994,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 0.2107,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 116,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 3907953,
+    "publicDebtPerCapitaUsd": 56759,
+    "debtInterestPctGdp": 2.06,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 46054,
+    "debtInterestPerCapitaUsd": 949,
+    "gdpPerCapitaAfterInterestUsd": 45105,
+    "lifeExpectancyYears": 82.9804878048781,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 82.8268292682927,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "RUS": {
     "id": "rus",
@@ -26343,6 +28032,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -26457,7 +28162,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 15.5,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 17,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 17.2,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 445125.3,
+    "publicDebtPerCapitaUsd": 3091,
+    "debtInterestPctGdp": 1.19,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 15094,
+    "debtInterestPerCapitaUsd": 180,
+    "gdpPerCapitaAfterInterestUsd": 14914,
+    "lifeExpectancyYears": 73.4404878048781,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 73.0839024390244,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "BRA": {
     "id": "bra",
@@ -26486,6 +28204,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -26606,7 +28340,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 4.61,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 93.3,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 2127163.5,
+    "publicDebtPerCapitaUsd": 9970,
+    "debtInterestPctGdp": 8.28,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 10282,
+    "debtInterestPerCapitaUsd": 851,
+    "gdpPerCapitaAfterInterestUsd": 9431,
+    "lifeExpectancyYears": 76.023,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 75.809,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "ITA": {
     "id": "ita",
@@ -26639,6 +28386,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -27187,7 +28950,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 0.797,
-    "bondYield10yPrior5yPeriod": "2021-04"
+    "bondYield10yPrior5yPeriod": "2021-04",
+    "publicDebtPctGdp": 137.1,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 3496202.2,
+    "publicDebtPerCapitaUsd": 59324,
+    "debtInterestPctGdp": 3.89,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 40405,
+    "debtInterestPerCapitaUsd": 1570,
+    "gdpPerCapitaAfterInterestUsd": 38835,
+    "lifeExpectancyYears": 83.9512195121951,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 83.4975609756098,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "KOR": {
     "id": "kor",
@@ -27216,6 +28992,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -27336,7 +29128,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 2.131,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 52.3,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 979252.1,
+    "publicDebtPerCapitaUsd": 18947,
+    "debtInterestPctGdp": 1.03,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 36239,
+    "debtInterestPerCapitaUsd": 373,
+    "gdpPerCapitaAfterInterestUsd": 35866,
+    "lifeExpectancyYears": 83.6292682926829,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 83.2268292682927,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "MEX": {
     "id": "mex",
@@ -27369,6 +29174,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2024,
@@ -29479,7 +31300,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 6.68,
-    "bondYield10yPrior5yPeriod": "2021-04"
+    "bondYield10yPrior5yPeriod": "2021-04",
+    "publicDebtPctGdp": 61.8,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 1132572.1,
+    "publicDebtPerCapitaUsd": 8492,
+    "debtInterestPctGdp": 6.48,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 13839,
+    "debtInterestPerCapitaUsd": 896,
+    "gdpPerCapitaAfterInterestUsd": 12943,
+    "lifeExpectancyYears": 75.264,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 74.53,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "CAN": {
     "id": "can",
@@ -29512,6 +31346,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2026,
@@ -31988,7 +33838,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 1.524,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 113.5,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 2633086.5,
+    "publicDebtPerCapitaUsd": 63293,
+    "debtInterestPctGdp": 3.53,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 55209,
+    "debtInterestPerCapitaUsd": 1950,
+    "gdpPerCapitaAfterInterestUsd": 53259,
+    "lifeExpectancyYears": 82.1080487804878,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 82.1585365853659,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "AUS": {
     "id": "aus",
@@ -32021,6 +33884,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2026,
@@ -33079,7 +34958,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 1.66,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 51,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 938380.1,
+    "publicDebtPerCapitaUsd": 33839,
+    "debtInterestPctGdp": 1.73,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 65701,
+    "debtInterestPerCapitaUsd": 1134,
+    "gdpPerCapitaAfterInterestUsd": 64567,
+    "lifeExpectancyYears": 83.0512195121951,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 82.9,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "ESP": {
     "id": "esp",
@@ -33112,6 +35004,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -33350,7 +35258,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 0.5166,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 100.4,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 1911441.3,
+    "publicDebtPerCapitaUsd": 38444,
+    "debtInterestPctGdp": 2.45,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 35151,
+    "debtInterestPerCapitaUsd": 860,
+    "gdpPerCapitaAfterInterestUsd": 34291,
+    "lifeExpectancyYears": 83.8878048780488,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 83.8317073170732,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "IDN": {
     "id": "idn",
@@ -33379,6 +35300,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -33499,7 +35436,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 7.0722,
-    "bondYield10yPrior5yPeriod": "2019-12"
+    "bondYield10yPrior5yPeriod": "2019-12",
+    "publicDebtPctGdp": 41,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 592713.2,
+    "publicDebtPerCapitaUsd": 2084,
+    "debtInterestPctGdp": 2.21,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 4958,
+    "debtInterestPerCapitaUsd": 109,
+    "gdpPerCapitaAfterInterestUsd": 4849,
+    "lifeExpectancyYears": 71.288,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 70.349,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "SAU": {
     "id": "sau",
@@ -33524,6 +35474,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -33638,7 +35604,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 2.5,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 23.6,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 31.7,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 404790.9,
+    "publicDebtPerCapitaUsd": 11242,
+    "debtInterestPctGdp": 0.96,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 35528,
+    "debtInterestPerCapitaUsd": 341,
+    "gdpPerCapitaAfterInterestUsd": 35187,
+    "lifeExpectancyYears": 78.982,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 78.313,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "TUR": {
     "id": "tur",
@@ -33667,6 +35646,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2024,
@@ -34099,7 +36094,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 9,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 21,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 23.5,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 375365.7,
+    "publicDebtPerCapitaUsd": 4374,
+    "debtInterestPctGdp": 2.97,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 15883,
+    "debtInterestPerCapitaUsd": 472,
+    "gdpPerCapitaAfterInterestUsd": 15411,
+    "lifeExpectancyYears": 77.421,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 77.737,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "NLD": {
     "id": "nld",
@@ -34132,6 +36140,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -34680,7 +36704,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": -0.296,
-    "bondYield10yPrior5yPeriod": "2021-04"
+    "bondYield10yPrior5yPeriod": "2021-04",
+    "publicDebtPctGdp": 43.3,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 576859.9,
+    "publicDebtPerCapitaUsd": 31970,
+    "debtInterestPctGdp": 0.71,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 67690,
+    "debtInterestPerCapitaUsd": 478,
+    "gdpPerCapitaAfterInterestUsd": 67212,
+    "lifeExpectancyYears": 81.9658536585366,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 82.1121951219512,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "CHE": {
     "id": "che",
@@ -34713,6 +36750,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2024,
@@ -36093,7 +38146,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": -0.134,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 39.4,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 411156.3,
+    "publicDebtPerCapitaUsd": 45554,
+    "debtInterestPctGdp": 0.36,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 108256,
+    "debtInterestPerCapitaUsd": 389,
+    "gdpPerCapitaAfterInterestUsd": 107867,
+    "lifeExpectancyYears": 84.4073170731707,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 83.9048780487805,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "POL": {
     "id": "pol",
@@ -36126,6 +38192,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -36364,7 +38446,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 1.82,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 58.8,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 608924.6,
+    "publicDebtPerCapitaUsd": 16684,
+    "debtInterestPctGdp": 2.2,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 25057,
+    "debtInterestPerCapitaUsd": 552,
+    "gdpPerCapitaAfterInterestUsd": 24505,
+    "lifeExpectancyYears": 78.409756097561,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 77.9048780487805,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "ARG": {
     "id": "arg",
@@ -36389,6 +38484,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -36503,7 +38614,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 11.8,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 21,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 80.3,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 547232.5,
+    "publicDebtPerCapitaUsd": 11527,
+    "debtInterestPctGdp": 1.71,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 13539,
+    "debtInterestPerCapitaUsd": 232,
+    "gdpPerCapitaAfterInterestUsd": 13307,
+    "lifeExpectancyYears": 77.543,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 76.847,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "BEL": {
     "id": "bel",
@@ -36536,6 +38660,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -36774,7 +38914,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 0.179,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 106.3,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 770586.8,
+    "publicDebtPerCapitaUsd": 64845,
+    "debtInterestPctGdp": 2.26,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 56796,
+    "debtInterestPerCapitaUsd": 1284,
+    "gdpPerCapitaAfterInterestUsd": 55512,
+    "lifeExpectancyYears": 82.3,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 81.9951219512195,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "IRL": {
     "id": "irl",
@@ -36807,6 +38960,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -37045,7 +39214,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 0.082,
-    "bondYield10yPrior5yPeriod": "2021-04"
+    "bondYield10yPrior5yPeriod": "2021-04",
+    "publicDebtPctGdp": 32.9,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 236268.1,
+    "publicDebtPerCapitaUsd": 42985,
+    "debtInterestPctGdp": 0.6,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 112356,
+    "debtInterestPerCapitaUsd": 672,
+    "gdpPerCapitaAfterInterestUsd": 111684,
+    "lifeExpectancyYears": 83.009756097561,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 82.7024390243903,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "SGP": {
     "id": "sgp",
@@ -37070,6 +39252,18 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -37184,7 +39378,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 11.6,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 11.7,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 171.3,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 1034429.3,
+    "publicDebtPerCapitaUsd": 170213,
+    "debtInterestPctGdp": null,
+    "debtInterestYear": null,
+    "nominalGdpPerCapitaInterestYearUsd": null,
+    "debtInterestPerCapitaUsd": null,
+    "gdpPerCapitaAfterInterestUsd": null,
+    "lifeExpectancyYears": 83.3463414634146,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 83.5951219512195,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "SWE": {
     "id": "swe",
@@ -37217,6 +39424,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -37455,7 +39678,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 0.4212,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 34.9,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 233480.7,
+    "publicDebtPerCapitaUsd": 21869,
+    "debtInterestPctGdp": 0.67,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 57125,
+    "debtInterestPerCapitaUsd": 381,
+    "gdpPerCapitaAfterInterestUsd": 56744,
+    "lifeExpectancyYears": 84.0634146341463,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 83.109756097561,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "THA": {
     "id": "tha",
@@ -37480,6 +39716,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -37594,7 +39846,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 12.9,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 14.4,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 64.7,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 373325.5,
+    "publicDebtPerCapitaUsd": 5213,
+    "debtInterestPctGdp": 1.2,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 7387,
+    "debtInterestPerCapitaUsd": 89,
+    "gdpPerCapitaAfterInterestUsd": 7298,
+    "lifeExpectancyYears": 76.564,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 77.197,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "ARE": {
     "id": "are",
@@ -37619,6 +39884,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2024,
@@ -37733,7 +40014,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 1.6,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 16,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 34.3,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 196073.5,
+    "publicDebtPerCapitaUsd": 17229,
+    "debtInterestPctGdp": 0.55,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 48906,
+    "debtInterestPerCapitaUsd": 270,
+    "gdpPerCapitaAfterInterestUsd": 48636,
+    "lifeExpectancyYears": 83.069,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 82.596,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "ISR": {
     "id": "isr",
@@ -37762,6 +40056,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2024,
@@ -37882,7 +40192,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 1.18,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 68.5,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 418382.9,
+    "publicDebtPerCapitaUsd": 41329,
+    "debtInterestPctGdp": 3.44,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 54294,
+    "debtInterestPerCapitaUsd": 1868,
+    "gdpPerCapitaAfterInterestUsd": 52426,
+    "lifeExpectancyYears": 83.1975609756098,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 82.8048780487805,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "VNM": {
     "id": "vnm",
@@ -37907,6 +40230,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -38021,7 +40360,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 7.6,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 22.9,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 30.3,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 149695.9,
+    "publicDebtPerCapitaUsd": 1463,
+    "debtInterestPctGdp": 0.89,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 4536,
+    "debtInterestPerCapitaUsd": 40,
+    "gdpPerCapitaAfterInterestUsd": 4496,
+    "lifeExpectancyYears": 74.736,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 74.211,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "AUT": {
     "id": "aut",
@@ -38054,6 +40406,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -38292,7 +40660,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": -0.0409,
-    "bondYield10yPrior5yPeriod": "2021-04"
+    "bondYield10yPrior5yPeriod": "2021-04",
+    "publicDebtPctGdp": 80.5,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 466842,
+    "publicDebtPerCapitaUsd": 50845,
+    "debtInterestPctGdp": 1.51,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 58373,
+    "debtInterestPerCapitaUsd": 880,
+    "gdpPerCapitaAfterInterestUsd": 57493,
+    "lifeExpectancyYears": 81.9951219512195,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 81.8951219512195,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "PHL": {
     "id": "phl",
@@ -38317,6 +40698,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -38431,7 +40828,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 4.7,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 27.1,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 59.4,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 289373.6,
+    "publicDebtPerCapitaUsd": 2536,
+    "debtInterestPctGdp": 2.58,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 4089,
+    "debtInterestPerCapitaUsd": 106,
+    "gdpPerCapitaAfterInterestUsd": 3983,
+    "lifeExpectancyYears": 69.946,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 69.68,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "IRN": {
     "id": "irn",
@@ -38456,6 +40866,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2024,
@@ -38570,7 +40996,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 7.2,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 22,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 37.3,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 138456.1,
+    "publicDebtPerCapitaUsd": 1590,
+    "debtInterestPctGdp": 1.7,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 4834,
+    "debtInterestPerCapitaUsd": 82,
+    "gdpPerCapitaAfterInterestUsd": 4752,
+    "lifeExpectancyYears": 77.854,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 76.855,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "MYS": {
     "id": "mys",
@@ -38595,6 +41034,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -38709,7 +41164,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 6.7,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 21.3,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 70.7,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 333840.5,
+    "publicDebtPerCapitaUsd": 9862,
+    "debtInterestPctGdp": 2.84,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 12619,
+    "debtInterestPerCapitaUsd": 359,
+    "gdpPerCapitaAfterInterestUsd": 12260,
+    "lifeExpectancyYears": 76.821,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 75.9,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "NOR": {
     "id": "nor",
@@ -38742,6 +41210,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -39290,7 +41774,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 1.47,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 45,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 238840.2,
+    "publicDebtPerCapitaUsd": 42511,
+    "debtInterestPctGdp": 1.14,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 89684,
+    "debtInterestPerCapitaUsd": 1026,
+    "gdpPerCapitaAfterInterestUsd": 88658,
+    "lifeExpectancyYears": 83.1609756097561,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 82.9585365853659,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "COL": {
     "id": "col",
@@ -39319,6 +41816,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -39439,7 +41952,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 7.75,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 59.9,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 273988.6,
+    "publicDebtPerCapitaUsd": 5165,
+    "debtInterestPctGdp": 4.39,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 7980,
+    "debtInterestPerCapitaUsd": 350,
+    "gdpPerCapitaAfterInterestUsd": 7630,
+    "lifeExpectancyYears": 77.913,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 76.793,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "BGD": {
     "id": "bgd",
@@ -39464,6 +41990,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -39578,7 +42120,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 5.8,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 27.6,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 42,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 192319.7,
+    "publicDebtPerCapitaUsd": 1107,
+    "debtInterestPctGdp": 2.29,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 2619,
+    "debtInterestPerCapitaUsd": 60,
+    "gdpPerCapitaAfterInterestUsd": 2559,
+    "lifeExpectancyYears": 74.93,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 72.625,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "ZAF": {
     "id": "zaf",
@@ -39607,6 +42162,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -39727,7 +42298,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 9.8167,
-    "bondYield10yPrior5yPeriod": "2021-05"
+    "bondYield10yPrior5yPeriod": "2021-05",
+    "publicDebtPctGdp": 78.6,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 335732.8,
+    "publicDebtPerCapitaUsd": 5321,
+    "debtInterestPctGdp": 5.26,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 6435,
+    "debtInterestPerCapitaUsd": 338,
+    "gdpPerCapitaAfterInterestUsd": 6097,
+    "lifeExpectancyYears": 66.312,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 66.071,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "HKG": {
     "id": "hkg",
@@ -39752,6 +42336,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2024,
@@ -39866,7 +42466,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 18.8,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 10.3,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 11.9,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 50849.9,
+    "publicDebtPerCapitaUsd": 6770,
+    "debtInterestPctGdp": 0.19,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 54445,
+    "debtInterestPerCapitaUsd": 105,
+    "gdpPerCapitaAfterInterestUsd": 54340,
+    "lifeExpectancyYears": 85.3926829268293,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 85.1558536585366,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "PAK": {
     "id": "pak",
@@ -39891,6 +42504,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -40005,7 +42634,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 4,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 36.2,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 72.8,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 296868.2,
+    "publicDebtPerCapitaUsd": 1234,
+    "debtInterestPctGdp": 7.76,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 1578,
+    "debtInterestPerCapitaUsd": 122,
+    "gdpPerCapitaAfterInterestUsd": 1456,
+    "lifeExpectancyYears": 67.799,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 66.729,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "DNK": {
     "id": "dnk",
@@ -40038,6 +42680,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -40586,7 +43244,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 0.003,
-    "bondYield10yPrior5yPeriod": "2021-04"
+    "bondYield10yPrior5yPeriod": "2021-04",
+    "publicDebtPctGdp": 27.5,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 126972.5,
+    "publicDebtPerCapitaUsd": 21188,
+    "debtInterestPctGdp": 0.78,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 71214,
+    "debtInterestPerCapitaUsd": 557,
+    "gdpPerCapitaAfterInterestUsd": 70657,
+    "lifeExpectancyYears": 82.2536585365854,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 81.4512195121951,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "ROU": {
     "id": "rou",
@@ -40615,6 +43286,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -40847,7 +43534,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 19,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 15.6,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 60.6,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 259332.2,
+    "publicDebtPerCapitaUsd": 13771,
+    "debtInterestPctGdp": 2.06,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 20199,
+    "debtInterestPerCapitaUsd": 416,
+    "gdpPerCapitaAfterInterestUsd": 19783,
+    "lifeExpectancyYears": 76.4585365853659,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 75.6073170731707,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "EGY": {
     "id": "egy",
@@ -40872,6 +43572,18 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -40986,7 +43698,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 4.7,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 31.6,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 86.8,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 316507.5,
+    "publicDebtPerCapitaUsd": 2933,
+    "debtInterestPctGdp": null,
+    "debtInterestYear": null,
+    "nominalGdpPerCapitaInterestYearUsd": null,
+    "debtInterestPerCapitaUsd": null,
+    "gdpPerCapitaAfterInterestUsd": null,
+    "lifeExpectancyYears": 71.806,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 71.213,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "CZE": {
     "id": "cze",
@@ -41019,6 +43744,22 @@ export const COUNTRY_GDP = {
       {
         "label": "OECD long-term interest rates (IRLT / ~10y govt bonds)",
         "url": "https://db.nomics.world/OECD/DSD_KEI@DF_KEI"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -41567,7 +44308,20 @@ export const COUNTRY_GDP = {
     "bondYield10yUnit": "% p.a.",
     "bondYield10yLabel": "10-year government bond yield",
     "bondYield10yPrior5y": 1.8605,
-    "bondYield10yPrior5yPeriod": "2021-04"
+    "bondYield10yPrior5yPeriod": "2021-04",
+    "publicDebtPctGdp": 44.6,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 173502.9,
+    "publicDebtPerCapitaUsd": 15913,
+    "debtInterestPctGdp": 1.34,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 31740,
+    "debtInterestPerCapitaUsd": 426,
+    "gdpPerCapitaAfterInterestUsd": 31314,
+    "lifeExpectancyYears": 79.9780487804878,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 79.2292682926829,
+    "lifeExpectancyPrior5yYear": 2019
   },
   "NGA": {
     "id": "nga",
@@ -41592,6 +44346,22 @@ export const COUNTRY_GDP = {
       {
         "label": "World Bank WDI consumer price index (FP.CPI.TOTL)",
         "url": "https://data.worldbank.org/indicator/FP.CPI.TOTL"
+      },
+      {
+        "label": "IMF WEO general government gross debt (GGXWDG_NGDP)",
+        "url": "https://www.imf.org/external/datamapper/GGXWDG_NGDP"
+      },
+      {
+        "label": "IMF WEO nominal GDP (NGDPD / NGDPDPC)",
+        "url": "https://www.imf.org/external/datamapper/NGDPD"
+      },
+      {
+        "label": "IMF interest paid on public debt (% of GDP)",
+        "url": "https://www.imf.org/external/datamapper/ie"
+      },
+      {
+        "label": "World Bank life expectancy at birth (SP.DYN.LE00.IN)",
+        "url": "https://data.worldbank.org/indicator/SP.DYN.LE00.IN"
       }
     ],
     "year": 2025,
@@ -41706,7 +44476,20 @@ export const COUNTRY_GDP = {
     "pct65PlusPrior5y": 3,
     "pct65PlusPrior5yYear": 2020,
     "pctUnder18Proxy": 40.5,
-    "under18ProxyLabel": "Ages 0–14"
+    "under18ProxyLabel": "Ages 0–14",
+    "publicDebtPctGdp": 35.5,
+    "publicDebtYear": 2025,
+    "publicDebtUsdMillions": 103124.3,
+    "publicDebtPerCapitaUsd": 434,
+    "debtInterestPctGdp": 2.47,
+    "debtInterestYear": 2024,
+    "nominalGdpPerCapitaInterestYearUsd": 1084,
+    "debtInterestPerCapitaUsd": 27,
+    "gdpPerCapitaAfterInterestUsd": 1057,
+    "lifeExpectancyYears": 54.635,
+    "lifeExpectancyYear": 2024,
+    "lifeExpectancyPrior5yYears": 53.009,
+    "lifeExpectancyPrior5yYear": 2019
   }
 } as unknown as Record<
   string,

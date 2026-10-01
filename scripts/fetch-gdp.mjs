@@ -12,12 +12,13 @@
  *
  * Fallback: OECD Table 6 via DBnomics when a primary fetch fails.
  * Demographics: World Bank WDI. Bond yields: OECD IRLT (optional if missing).
+ * Debt and interest: IMF DataMapper. Life expectancy: World Bank SP.DYN.LE00.IN.
  *
  * Run: node scripts/fetch-gdp.mjs
  */
 
 import { writeFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join } from "node:path";
 import { fetchUsaFromFred } from "./lib/fetch-usa-fred.mjs";
 import { fetchJapanFromEsri } from "./lib/fetch-japan-esri.mjs";
@@ -26,6 +27,7 @@ import { fetchEurostatCountries } from "./lib/fetch-eurostat.mjs";
 import { fetchWorldBankIndustry } from "./lib/fetch-worldbank-industry.mjs";
 import { fetchPopulationBundle } from "./lib/fetch-population.mjs";
 import { fetchBondYieldsBundle } from "./lib/fetch-bond-yields.mjs";
+import { attachFiscalLife, fetchFiscalLifeBundle } from "./lib/fetch-fiscal-life.mjs";
 import { cachedFetchJson } from "./lib/http-cache.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -534,7 +536,7 @@ async function fetchOecdFallback(refArea, fx) {
   return buildOecdTree(refArea, payload.series.docs, labels, fx, year);
 }
 
-function toTsModule(world, trees, meta) {
+export function toTsModule(world, trees, meta) {
   const byCode = Object.fromEntries(trees.map((t) => [t.code, t]));
   return `import type { ChartNode } from "@/lib/pie";
 
@@ -543,6 +545,9 @@ function toTsModule(world, trees, meta) {
  * Primary: BEA, Cabinet Office (Japan), StatCan, ABS, Eurostat, World Bank industry; OECD for GB/MX/TR/CH (+ fallback).
  * Demographics: World Bank WDI. Under-18 uses ages 0–14 (closest published cohort).
  * Bond yields: OECD KEI IRLT (long-term / ~10y government bond rates) via DBnomics.
+ * Debt: IMF general government gross debt (GGXWDG_NGDP) × IMF nominal GDP.
+ * Interest: IMF interest paid on public debt, percent of GDP, same-year IMF GDP/capita.
+ * Life expectancy: World Bank SP.DYN.LE00.IN, with the observation five years earlier.
  */
 
 export type CountryGdpTree = ChartNode & {
@@ -581,6 +586,19 @@ export type CountryGdpTree = ChartNode & {
   bondYield10yLabel?: string;
   bondYield10yPrior5y?: number | null;
   bondYield10yPrior5yPeriod?: string | null;
+  publicDebtPctGdp?: number | null;
+  publicDebtYear?: number | null;
+  publicDebtUsdMillions?: number | null;
+  publicDebtPerCapitaUsd?: number | null;
+  debtInterestPctGdp?: number | null;
+  debtInterestYear?: number | null;
+  nominalGdpPerCapitaInterestYearUsd?: number | null;
+  debtInterestPerCapitaUsd?: number | null;
+  gdpPerCapitaAfterInterestUsd?: number | null;
+  lifeExpectancyYears?: number | null;
+  lifeExpectancyYear?: number | null;
+  lifeExpectancyPrior5yYears?: number | null;
+  lifeExpectancyPrior5yYear?: number | null;
 };
 
 export const GDP_DATA_META = ${JSON.stringify(meta, null, 2)} as const;
@@ -805,11 +823,14 @@ async function main() {
   console.log("Fetching 10-year bond yields (OECD IRLT)…");
   const yieldByCode = await fetchBondYieldsBundle(ALL_ISO3);
 
+  console.log("Fetching public debt, interest, and life expectancy…");
+  const { byCode: fiscalByCode } = await fetchFiscalLifeBundle(ALL_ISO3);
+
   const withDemo = trees.map((t) => {
     const pop = popByCode[t.code];
     const yld = yieldByCode[t.code];
     if (!pop) throw new Error(`Missing population for ${t.code}`);
-    const out = attachDemographics(t, pop, yld);
+    const out = attachFiscalLife(attachDemographics(t, pop, yld), fiscalByCode[t.code]);
     const yStr = yld
       ? ` · 10y ${yld.bondYield10y}% (${yld.bondYield10yPeriod})`
       : " · 10y n/a";
@@ -840,6 +861,10 @@ async function main() {
       { label: "World Bank PA.NUS.FCRF", url: "https://data.worldbank.org/indicator/PA.NUS.FCRF" },
       { label: "World Bank population & age structure", url: "https://data.worldbank.org/indicator/SP.POP.TOTL" },
       { label: "OECD long-term interest rates (IRLT)", url: "https://db.nomics.world/OECD/DSD_KEI@DF_KEI" },
+      { label: "IMF WEO general government gross debt (GGXWDG_NGDP)", url: "https://www.imf.org/external/datamapper/GGXWDG_NGDP" },
+      { label: "IMF WEO nominal GDP (NGDPD / NGDPDPC)", url: "https://www.imf.org/external/datamapper/NGDPD" },
+      { label: "IMF interest paid on public debt (% of GDP)", url: "https://www.imf.org/external/datamapper/ie" },
+      { label: "World Bank life expectancy at birth (SP.DYN.LE00.IN)", url: "https://data.worldbank.org/indicator/SP.DYN.LE00.IN" },
     ],
     year: maxYear,
     periodLabel: String(maxYear),
@@ -871,6 +896,12 @@ async function main() {
         "Eurostat for DK/RO/CZ; World Bank sector VA for PHL/MYS/COL/IRN/HKG/PAK.",
       bondYield10y:
         "OECD KEI measure IRLT — long-term interest rates on government bonds with residual maturity of about 10 years (% per annum). Omitted when missing or older than 2022.",
+      publicDebt:
+        "IMF WEO general government gross debt (GGXWDG_NGDP) times IMF nominal GDP (NGDPD) for the same year. Years after 2025 are projections and are omitted. Debt per capita uses IMF GDP per capita (NGDPDPC) for that year.",
+      debtInterest:
+        "IMF interest paid on public debt, percent of GDP, times IMF GDP per capita of that same year. Omitted when IMF does not publish the interest series. Not the 10-year bond yield.",
+      lifeExpectancy:
+        "World Bank SP.DYN.LE00.IN, life expectancy at birth. The 5-year change is the latest year minus the observation exactly five years earlier.",
     },
     sources: {
       bea: {
@@ -927,6 +958,24 @@ async function main() {
         url: "https://db.nomics.world/OECD/DSD_KEI@DF_KEI",
         measure: "Long-term interest rates (~10-year government bonds), % per annum, monthly; omitted if missing/stale",
       },
+      publicDebt: {
+        dataset: "IMF WEO GGXWDG_NGDP × NGDPD",
+        countries: ALL_ISO3,
+        url: "https://www.imf.org/external/datamapper/GGXWDG_NGDP",
+        measure: "General government gross debt, current USD, latest year through 2025",
+      },
+      debtInterest: {
+        dataset: "IMF DataMapper ie × NGDPDPC",
+        countries: ALL_ISO3,
+        url: "https://www.imf.org/external/datamapper/ie",
+        measure: "Interest paid on public debt, percent of GDP, per person using same-year IMF GDP per capita",
+      },
+      lifeExpectancy: {
+        dataset: "World Bank WDI SP.DYN.LE00.IN",
+        countries: ALL_ISO3,
+        url: "https://data.worldbank.org/indicator/SP.DYN.LE00.IN",
+        measure: "Life expectancy at birth, years, plus the observation five years earlier",
+      },
     },
   };
 
@@ -942,7 +991,15 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+function isDirectRun() {
+  const entry = process.argv[1];
+  if (!entry) return false;
+  return import.meta.url === pathToFileURL(entry).href;
+}
+
+if (isDirectRun()) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

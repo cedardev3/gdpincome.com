@@ -428,5 +428,9 @@
   "World Bank WDI consumer price index (FP.CPI.TOTL)": "世界銀行WDI 消費者物価指数",
   "World Bank WDI population & age structure": "世界銀行WDI 人口・年齢構成",
   "World Bank WDI sector value added": "世界銀行WDI 部門別付加価値",
-  "World Bank population & age structure": "世界銀行 人口・年齢構成"
+  "World Bank population & age structure": "世界銀行 人口・年齢構成",
+  "IMF WEO general government gross debt (GGXWDG_NGDP)": "IMF WEO 一般政府総債務（GGXWDG_NGDP）",
+  "IMF WEO nominal GDP (NGDPD / NGDPDPC)": "IMF WEO 名目GDP（NGDPD / NGDPDPC）",
+  "IMF interest paid on public debt (% of GDP)": "IMF 公的債務利払い（対GDP比）",
+  "World Bank life expectancy at birth (SP.DYN.LE00.IN)": "世界銀行 出生時平均寿命（SP.DYN.LE00.IN）"
 }

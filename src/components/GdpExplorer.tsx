@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import ContextPie from "@/components/ContextPie";
 import { ContestedTooltip, MeasureBadge } from "@/components/DataQuality";
 import DrilldownPie from "@/components/DrilldownPie";
-import { useI18n, YoshinobuButton } from "@/i18n/locale";
+import { useI18n, YoshinobuButton, type MessageKey } from "@/i18n/locale";
 import {
   COUNTRY_GDP,
   COUNTRY_ORDER,
@@ -22,6 +22,7 @@ import {
   formatPercent,
   fiveYearDelta,
   fiveYearDeltaClass,
+  yearsFiveYearDelta,
   gdpTotalFiveYearDelta,
   inflationFiveYearDrag,
   realGdpFiveYearDelta,
@@ -34,6 +35,8 @@ import {
 
 const VISIBLE_STORAGE_KEY = "gdpincome.visibleCountries.v3";
 const PATH_STORAGE_KEY = "gdpincome.path.v1";
+const COMPARE_STORAGE_KEY = "gdpincome.comparePath.v1";
+const COMPARE_MODE_KEY = "gdpincome.compareMode.v1";
 /** Match scripts/lib/http-cache.mjs — ~6 months */
 const SNAPSHOT_STALE_MS = 182 * 24 * 60 * 60 * 1000;
 
@@ -58,16 +61,33 @@ function loadVisibleCodes(): string[] {
   }
 }
 
-function loadPath(): string[] {
+function loadStoredPath(key: string): string[] {
   if (typeof window === "undefined") return [];
   try {
-    const raw = window.localStorage.getItem(PATH_STORAGE_KEY);
+    const raw = window.localStorage.getItem(key);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];
     return parsed.filter((id): id is string => typeof id === "string");
   } catch {
     return [];
+  }
+}
+
+function loadPath(): string[] {
+  return loadStoredPath(PATH_STORAGE_KEY);
+}
+
+function loadComparePath(): string[] {
+  return loadStoredPath(COMPARE_STORAGE_KEY);
+}
+
+function loadCompareMode(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(COMPARE_MODE_KEY) === "1";
+  } catch {
+    return false;
   }
 }
 
@@ -119,6 +139,7 @@ function MetricBlock({
   label,
   value,
   hint,
+  note,
   delta,
   contested,
   emphasize,
@@ -127,6 +148,8 @@ function MetricBlock({
   label: string;
   value: ReactNode;
   hint: ReactNode;
+  /** Small line under the value, such as debt per person or interest offset */
+  note?: ReactNode;
   /** Optional 5-year change line under the value */
   delta?: { text: string; tone: "up" | "down" | "flat" } | null;
   contested?: ReturnType<typeof contestedFor>;
@@ -163,13 +186,90 @@ function MetricBlock({
           {delta.text}
         </p>
       ) : null}
+      {note ? (
+        <p className="mt-0.5 text-[11px] leading-snug tabular-nums text-[#5c6b73]">{note}</p>
+      ) : null}
       <p className="mt-0.5 text-[11px] text-[#5c6b73]">{hint}</p>
     </div>
   );
 }
 
-function DemographicsBanner({ country }: { country: CountryGdpTree }) {
-  const { t, label, people, perCapitaUsd, delta, sourceSummary: summarize, ja, badge } = useI18n();
+function afterInterestText(
+  country: CountryGdpTree,
+  t: (key: MessageKey) => string,
+  perCapitaUsd: (usd: number) => string,
+): string | null {
+  if (
+    country.gdpPerCapitaAfterInterestUsd == null ||
+    country.nominalGdpPerCapitaInterestYearUsd == null ||
+    country.debtInterestPerCapitaUsd == null ||
+    country.debtInterestYear == null
+  ) {
+    return country.publicDebtYear != null ? t("afterInterestMissing") : null;
+  }
+  return `${perCapitaUsd(country.gdpPerCapitaAfterInterestUsd)} ${t("afterInterest")} (${perCapitaUsd(country.nominalGdpPerCapitaInterestYearUsd)} − ${perCapitaUsd(country.debtInterestPerCapitaUsd)} ${t("interestWord")}, ${country.debtInterestYear})`;
+}
+
+function debtHintText(country: CountryGdpTree, t: (key: MessageKey) => string): string {
+  if (country.publicDebtYear == null || country.publicDebtPctGdp == null) return t("empty");
+  return `${t("debtHint")} · ${country.publicDebtYear} · ${country.publicDebtPctGdp.toFixed(1)}% ${t("ofGdp")}`;
+}
+
+function largerTimes(
+  a: number | null | undefined,
+  b: number | null | undefined,
+  ja: boolean,
+  timesOther: string,
+): { side: "a" | "b"; text: string; title: string } | null {
+  if (a == null || b == null || !Number.isFinite(a) || !Number.isFinite(b)) return null;
+  const absA = Math.abs(a);
+  const absB = Math.abs(b);
+  if (absA === 0 || absB === 0) return null;
+  const ratio = Math.max(absA, absB) / Math.min(absA, absB);
+  if (ratio < 1.05) return null;
+  const text = `${ratio.toFixed(1).replace(/\.0$/, "")}${ja ? "倍" : "×"}`;
+  return {
+    side: absA > absB ? "a" : "b",
+    text,
+    title: ja ? `${timesOther}${text}` : `${text} ${timesOther}`,
+  };
+}
+
+function MeasureWarning({
+  country,
+  showName = false,
+}: {
+  country: CountryGdpTree;
+  showName?: boolean;
+}) {
+  const { t, label, sourceSummary: summarize } = useI18n();
+  const { source, country: quality } = qualityForCountry(
+    country.code ?? "",
+    country.sourceKey,
+  );
+  if (!source || !quality.measureWarning) return null;
+  return (
+    <p
+      className="rounded-md border border-[#e8dcc8] bg-[#fff8ee] px-3 py-2 text-xs leading-relaxed text-[#8a7358]"
+      role="note"
+    >
+      {showName ? (
+        <span className="font-medium text-[#1f3d4d]">{label(country.name, country.id)}. </span>
+      ) : null}
+      <span className="font-medium text-[#1f3d4d]">{t("notComparable")}</span>
+      {summarize(source.sourceKey, source.summary)}
+    </p>
+  );
+}
+
+function DemographicsBanner({
+  country,
+  dense = false,
+}: {
+  country: CountryGdpTree;
+  dense?: boolean;
+}) {
+  const { t, label, money, people, perCapitaUsd, delta, ja, badge } = useI18n();
   if (country.gdpPerCapitaUsd == null || country.population == null) return null;
   const under18 = country.pctUnder18Proxy;
   const over65 = country.pct65Plus;
@@ -196,20 +296,17 @@ function DemographicsBanner({ country }: { country: CountryGdpTree }) {
   const gdp5yr = gdpTotalFiveYearDelta(country);
   const inflationDrag = inflationFiveYearDrag(country);
   const realGdp = realGdpFiveYearDelta(country);
+  const lifeDelta = showDelta(
+    yearsFiveYearDelta(country.lifeExpectancyYears, country.lifeExpectancyPrior5yYears),
+  );
+  const interestNote = afterInterestText(country, t, perCapitaUsd);
 
   return (
     <div className="flex flex-col gap-2">
-      {source && quality.measureWarning ? (
-        <p
-          className="rounded-md border border-[#e8dcc8] bg-[#fff8ee] px-3 py-2 text-xs leading-relaxed text-[#8a7358]"
-          role="note"
-        >
-          <span className="font-medium text-[#1f3d4d]">{t("notComparable")}</span>
-          {source ? summarize(source.sourceKey, source.summary) : null}
-        </p>
-      ) : null}
       <div
-        className="grid gap-3 rounded-md border border-[#e0d6c6] bg-[#fbf8f2] px-4 py-3 sm:grid-cols-2 lg:grid-cols-4"
+        className={`grid gap-3 rounded-md border border-[#e0d6c6] bg-[#fbf8f2] px-4 py-3 ${
+          dense ? "grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-4"
+        }`}
         role="group"
         aria-label={`${countryName} ${t("gdp5")}`}
       >
@@ -220,6 +317,41 @@ function DemographicsBanner({ country }: { country: CountryGdpTree }) {
           valueTone={gdp5yr?.tone ?? null}
           delta={null}
           hint={t("nominalHint")}
+        />
+        <MetricBlock
+          label={t("population")}
+          contested={contestedFor(country.code ?? "", "population")}
+          value={people(country.population)}
+          delta={showDelta(popDelta)}
+          hint={`${country.population.toLocaleString(ja ? "ja-JP" : "en-US")} · ${country.populationYear}`}
+        />
+        <MetricBlock
+          label={t("gdpPerCapita")}
+          contested={contestedFor(country.code ?? "", "gdpPerCapita")}
+          value={perCapitaUsd(country.gdpPerCapitaUsd)}
+          delta={showDelta(pcapDelta)}
+          note={interestNote}
+          hint={
+            quality.measureWarning
+              ? `${t("derivedFrom")} ${source ? badge(source.badge) : ""} ${t("notPeer")}`
+              : pcapDelta
+                ? `${t("pcapIndustry")} (${country.populationYear}) · ${t("pcapWb")}`
+                : `${t("pcapPlain")} (${country.populationYear})`
+          }
+        />
+        <MetricBlock
+          label={t("nationalDebt")}
+          value={
+            country.publicDebtUsdMillions != null
+              ? money(country.publicDebtUsdMillions)
+              : t("empty")
+          }
+          note={
+            country.publicDebtPerCapitaUsd != null
+              ? `${perCapitaUsd(country.publicDebtPerCapitaUsd)} ${t("debtPerPerson")}`
+              : null
+          }
+          hint={debtHintText(country, t)}
         />
         <MetricBlock
           label={t("inflation5")}
@@ -242,36 +374,10 @@ function DemographicsBanner({ country }: { country: CountryGdpTree }) {
           hint={t("realHint")}
         />
         <MetricBlock
-          label={t("gdpPerCapita")}
-          contested={contestedFor(country.code ?? "", "gdpPerCapita")}
-          value={perCapitaUsd(country.gdpPerCapitaUsd)}
-          delta={showDelta(pcapDelta)}
-          hint={
-            quality.measureWarning
-              ? `${t("derivedFrom")} ${source ? badge(source.badge) : ""} ${t("notPeer")}`
-              : pcapDelta
-                ? `${t("pcapIndustry")} (${country.populationYear}) · ${t("pcapWb")}`
-                : `${t("pcapPlain")} (${country.populationYear})`
-          }
-        />
-      </div>
-      <div
-        className="grid gap-3 rounded-md border border-[#e0d6c6] bg-[#fbf8f2] px-4 py-3 sm:grid-cols-2 lg:grid-cols-4"
-        role="group"
-        aria-label={`${countryName} ${t("population")}`}
-      >
-        <MetricBlock
           label={t("yield")}
           value={yieldPct != null ? `${yieldPct.toFixed(2)}%` : t("empty")}
           delta={showDelta(yieldDelta)}
           hint={`${t("govtBond")}${yieldPeriod ? ` · ${yieldPeriod}` : ""}`}
-        />
-        <MetricBlock
-          label={t("population")}
-          contested={contestedFor(country.code ?? "", "population")}
-          value={people(country.population)}
-          delta={showDelta(popDelta)}
-          hint={`${country.population.toLocaleString(ja ? "ja-JP" : "en-US")} · ${country.populationYear}`}
         />
         <MetricBlock
           label={t("under18")}
@@ -291,7 +397,456 @@ function DemographicsBanner({ country }: { country: CountryGdpTree }) {
             country.pct65PlusYear != null ? ` · ${country.pct65PlusYear}` : ""
           }`}
         />
+        <MetricBlock
+          label={t("lifeExpectancy")}
+          value={
+            country.lifeExpectancyYears != null
+              ? `${country.lifeExpectancyYears.toFixed(1)}${t("yearsSuffix")}`
+              : t("empty")
+          }
+          delta={lifeDelta}
+          hint={
+            country.lifeExpectancyYear != null
+              ? `${t("lifeHint")} · ${country.lifeExpectancyYear}`
+              : t("empty")
+          }
+        />
       </div>
+      <MeasureWarning country={country} />
+    </div>
+  );
+}
+
+function CompareMetrics({
+  left,
+  right,
+}: {
+  left: CountryGdpTree;
+  right: CountryGdpTree;
+}) {
+  const { t, label, money, people, perCapitaUsd, delta, ja, badge } = useI18n();
+  const showDelta = (
+    row: { text: string; tone: "up" | "down" | "flat" } | null,
+  ) => (row ? { ...row, text: delta(row.text) } : null);
+
+  function stats(country: CountryGdpTree) {
+    const { source, country: quality } = qualityForCountry(
+      country.code ?? "",
+      country.sourceKey,
+    );
+    const underLabel = label(country.under18ProxyLabel ?? "Ages 0–14");
+    const pcapChange = fiveYearDelta(
+      country.gdpPerCapitaWbUsd,
+      country.gdpPerCapitaWbPrior5yUsd,
+    );
+    return {
+      country,
+      source,
+      quality,
+      name: label(country.name, country.id),
+      gdp5: showDelta(gdpTotalFiveYearDelta(country)),
+      inflation: showDelta(inflationFiveYearDrag(country)),
+      real: showDelta(realGdpFiveYearDelta(country)),
+      pcapDelta: showDelta(pcapChange),
+      yieldDelta: showDelta(fiveYearDelta(country.bondYield10y, country.bondYield10yPrior5y)),
+      popDelta: showDelta(fiveYearDelta(country.population, country.populationPrior5y)),
+      underDelta: showDelta(fiveYearDelta(country.pctUnder18Proxy, country.pctUnder15Prior5y)),
+      overDelta: showDelta(fiveYearDelta(country.pct65Plus, country.pct65PlusPrior5y)),
+      lifeDelta: showDelta(
+        yearsFiveYearDelta(country.lifeExpectancyYears, country.lifeExpectancyPrior5yYears),
+      ),
+      interestNote: afterInterestText(country, t, perCapitaUsd),
+      debtNote:
+        country.publicDebtPerCapitaUsd != null
+          ? `${perCapitaUsd(country.publicDebtPerCapitaUsd)} ${t("debtPerPerson")}`
+          : undefined,
+      debtTitle: debtHintText(country, t),
+      lifeTitle:
+        country.lifeExpectancyYear != null
+          ? `${t("lifeHint")} · ${country.lifeExpectancyYear}`
+          : undefined,
+      inflationTitle:
+        country.cpiPrior5yYear != null && country.cpiYear != null
+          ? `${t("cpiPrefix")}${country.cpiPrior5yYear}→${country.cpiYear}`
+          : t("inflationFallback"),
+      pcapTitle: quality.measureWarning
+        ? `${t("derivedFrom")} ${source ? badge(source.badge) : ""} ${t("notPeer")}`
+        : pcapChange
+          ? `${t("pcapIndustry")} (${country.populationYear}) · ${t("pcapWb")}`
+          : `${t("pcapPlain")} (${country.populationYear})`,
+      yieldTitle: `${t("govtBond")}${country.bondYield10yPeriod ? ` · ${country.bondYield10yPeriod}` : ""}`,
+      popTitle:
+        country.population != null
+          ? `${country.population.toLocaleString(ja ? "ja-JP" : "en-US")} · ${country.populationYear ?? ""}`
+          : undefined,
+      underTitle: `${underLabel} ${t("shareOfPop")}${
+        country.pctUnder15Year != null ? ` · ${country.pctUnder15Year}` : ""
+      }`,
+      overTitle: `${t("shareOfPop")}${
+        country.pct65PlusYear != null ? ` · ${country.pct65PlusYear}` : ""
+      }`,
+    };
+  }
+
+  const a = stats(left);
+  const b = stats(right);
+  const timesOther = t("timesOther");
+  const gdp5Left = gdpTotalFiveYearDelta(left);
+  const gdp5Right = gdpTotalFiveYearDelta(right);
+  const inflationLeft = inflationFiveYearDrag(left);
+  const inflationRight = inflationFiveYearDrag(right);
+  const realLeft = realGdpFiveYearDelta(left);
+  const realRight = realGdpFiveYearDelta(right);
+  const pcap5Left = fiveYearDelta(left.gdpPerCapitaWbUsd, left.gdpPerCapitaWbPrior5yUsd);
+  const pcap5Right = fiveYearDelta(right.gdpPerCapitaWbUsd, right.gdpPerCapitaWbPrior5yUsd);
+  const yield5Left = fiveYearDelta(left.bondYield10y, left.bondYield10yPrior5y);
+  const yield5Right = fiveYearDelta(right.bondYield10y, right.bondYield10yPrior5y);
+  const pop5Left = fiveYearDelta(left.population, left.populationPrior5y);
+  const pop5Right = fiveYearDelta(right.population, right.populationPrior5y);
+  const under5Left = fiveYearDelta(left.pctUnder18Proxy, left.pctUnder15Prior5y);
+  const under5Right = fiveYearDelta(right.pctUnder18Proxy, right.pctUnder15Prior5y);
+  const over5Left = fiveYearDelta(left.pct65Plus, left.pct65PlusPrior5y);
+  const over5Right = fiveYearDelta(right.pct65Plus, right.pct65PlusPrior5y);
+  const life5Left = yearsFiveYearDelta(left.lifeExpectancyYears, left.lifeExpectancyPrior5yYears);
+  const life5Right = yearsFiveYearDelta(right.lifeExpectancyYears, right.lifeExpectancyPrior5yYears);
+  const gdpTimes = largerTimes(left.amountMillions, right.amountMillions, ja, timesOther);
+  const gdp5Times = largerTimes(gdp5Left?.pct, gdp5Right?.pct, ja, timesOther);
+  const inflationTimes = largerTimes(inflationLeft?.pct, inflationRight?.pct, ja, timesOther);
+  const realTimes = largerTimes(realLeft?.pct, realRight?.pct, ja, timesOther);
+  const pcapTimes = largerTimes(left.gdpPerCapitaUsd, right.gdpPerCapitaUsd, ja, timesOther);
+  const pcap5Times = largerTimes(pcap5Left?.pct, pcap5Right?.pct, ja, timesOther);
+  const yieldTimes = largerTimes(left.bondYield10y, right.bondYield10y, ja, timesOther);
+  const yield5Times = largerTimes(yield5Left?.pct, yield5Right?.pct, ja, timesOther);
+  const popTimes = largerTimes(left.population, right.population, ja, timesOther);
+  const pop5Times = largerTimes(pop5Left?.pct, pop5Right?.pct, ja, timesOther);
+  const underTimes = largerTimes(left.pctUnder18Proxy, right.pctUnder18Proxy, ja, timesOther);
+  const under5Times = largerTimes(under5Left?.pct, under5Right?.pct, ja, timesOther);
+  const overTimes = largerTimes(left.pct65Plus, right.pct65Plus, ja, timesOther);
+  const over5Times = largerTimes(over5Left?.pct, over5Right?.pct, ja, timesOther);
+  const debtTimes = largerTimes(left.publicDebtUsdMillions, right.publicDebtUsdMillions, ja, timesOther);
+  const debtCapTimes = largerTimes(left.publicDebtPerCapitaUsd, right.publicDebtPerCapitaUsd, ja, timesOther);
+  const afterTimes = largerTimes(
+    left.gdpPerCapitaAfterInterestUsd,
+    right.gdpPerCapitaAfterInterestUsd,
+    ja,
+    timesOther,
+  );
+  const lifeTimes = largerTimes(left.lifeExpectancyYears, right.lifeExpectancyYears, ja, timesOther);
+  const life5Times = largerTimes(life5Left?.pct, life5Right?.pct, ja, timesOther);
+
+  type Side = "a" | "b";
+  type Tone = "up" | "down" | "flat";
+  type Change = { text: string; tone: Tone } | null;
+  type Cell = {
+    value: ReactNode;
+    tone?: Tone | null;
+    change?: Change;
+    changeTimes?: { text: string; title: string } | null;
+    title?: string;
+    times?: { text: string; title: string } | null;
+    note?: string;
+    noteTimes?: { text: string; title: string } | null;
+    contested?: ReturnType<typeof contestedFor>;
+  };
+
+  function timesFor(mark: ReturnType<typeof largerTimes>, side: Side) {
+    if (!mark || mark.side !== side) return null;
+    return { text: mark.text, title: mark.title };
+  }
+
+  function rateCell(
+    row: { text: string; tone: Tone } | null,
+    title: string | undefined,
+    times: Cell["times"],
+    contested?: ReturnType<typeof contestedFor>,
+  ): Cell {
+    return {
+      value: row ? row.text : t("empty"),
+      tone: row?.tone ?? null,
+      title,
+      times,
+      contested,
+    };
+  }
+
+  const rows: { key: string; label: string; left: Cell; right: Cell }[] = [
+    {
+      key: "gdp",
+      label: t("gdpByIndustry"),
+      left: {
+        value: money(left.amountMillions),
+        change: a.gdp5,
+        changeTimes: timesFor(gdp5Times, "a"),
+        title: t("nominalHint"),
+        times: timesFor(gdpTimes, "a"),
+        contested: contestedFor(left.code ?? "", "gdp"),
+      },
+      right: {
+        value: money(right.amountMillions),
+        change: b.gdp5,
+        changeTimes: timesFor(gdp5Times, "b"),
+        title: t("nominalHint"),
+        times: timesFor(gdpTimes, "b"),
+        contested: contestedFor(right.code ?? "", "gdp"),
+      },
+    },
+    {
+      key: "pop",
+      label: t("population"),
+      left: {
+        value: left.population != null ? people(left.population) : t("empty"),
+        change: a.popDelta,
+        changeTimes: timesFor(pop5Times, "a"),
+        title: a.popTitle,
+        times: timesFor(popTimes, "a"),
+        contested: contestedFor(left.code ?? "", "population"),
+      },
+      right: {
+        value: right.population != null ? people(right.population) : t("empty"),
+        change: b.popDelta,
+        changeTimes: timesFor(pop5Times, "b"),
+        title: b.popTitle,
+        times: timesFor(popTimes, "b"),
+        contested: contestedFor(right.code ?? "", "population"),
+      },
+    },
+    {
+      key: "pcap",
+      label: t("gdpPerCapita"),
+      left: {
+        value: left.gdpPerCapitaUsd != null ? perCapitaUsd(left.gdpPerCapitaUsd) : t("empty"),
+        change: a.pcapDelta,
+        changeTimes: timesFor(pcap5Times, "a"),
+        title: a.pcapTitle,
+        times: timesFor(pcapTimes, "a"),
+        note: a.interestNote ?? undefined,
+        noteTimes: timesFor(afterTimes, "a"),
+        contested: contestedFor(left.code ?? "", "gdpPerCapita"),
+      },
+      right: {
+        value: right.gdpPerCapitaUsd != null ? perCapitaUsd(right.gdpPerCapitaUsd) : t("empty"),
+        change: b.pcapDelta,
+        changeTimes: timesFor(pcap5Times, "b"),
+        title: b.pcapTitle,
+        times: timesFor(pcapTimes, "b"),
+        note: b.interestNote ?? undefined,
+        noteTimes: timesFor(afterTimes, "b"),
+        contested: contestedFor(right.code ?? "", "gdpPerCapita"),
+      },
+    },
+    {
+      key: "debt",
+      label: t("nationalDebt"),
+      left: {
+        value: left.publicDebtUsdMillions != null ? money(left.publicDebtUsdMillions) : t("empty"),
+        title: a.debtTitle,
+        times: timesFor(debtTimes, "a"),
+        note: a.debtNote,
+        noteTimes: timesFor(debtCapTimes, "a"),
+      },
+      right: {
+        value: right.publicDebtUsdMillions != null ? money(right.publicDebtUsdMillions) : t("empty"),
+        title: b.debtTitle,
+        times: timesFor(debtTimes, "b"),
+        note: b.debtNote,
+        noteTimes: timesFor(debtCapTimes, "b"),
+      },
+    },
+    {
+      key: "inflation",
+      label: t("inflation5"),
+      left: rateCell(a.inflation, a.inflationTitle, timesFor(inflationTimes, "a")),
+      right: rateCell(b.inflation, b.inflationTitle, timesFor(inflationTimes, "b")),
+    },
+    {
+      key: "real",
+      label: t("real5"),
+      left: rateCell(a.real, t("realHint"), timesFor(realTimes, "a")),
+      right: rateCell(b.real, t("realHint"), timesFor(realTimes, "b")),
+    },
+    {
+      key: "yield",
+      label: t("yield"),
+      left: {
+        value: left.bondYield10y != null ? `${left.bondYield10y.toFixed(2)}%` : t("empty"),
+        change: a.yieldDelta,
+        changeTimes: timesFor(yield5Times, "a"),
+        title: a.yieldTitle,
+        times: timesFor(yieldTimes, "a"),
+      },
+      right: {
+        value: right.bondYield10y != null ? `${right.bondYield10y.toFixed(2)}%` : t("empty"),
+        change: b.yieldDelta,
+        changeTimes: timesFor(yield5Times, "b"),
+        title: b.yieldTitle,
+        times: timesFor(yieldTimes, "b"),
+      },
+    },
+    {
+      key: "under",
+      label: t("under18"),
+      left: {
+        value: left.pctUnder18Proxy != null ? `${left.pctUnder18Proxy}%` : t("empty"),
+        change: a.underDelta,
+        changeTimes: timesFor(under5Times, "a"),
+        title: a.underTitle,
+        times: timesFor(underTimes, "a"),
+        contested: contestedFor(left.code ?? "", "ageStructure"),
+      },
+      right: {
+        value: right.pctUnder18Proxy != null ? `${right.pctUnder18Proxy}%` : t("empty"),
+        change: b.underDelta,
+        changeTimes: timesFor(under5Times, "b"),
+        title: b.underTitle,
+        times: timesFor(underTimes, "b"),
+        contested: contestedFor(right.code ?? "", "ageStructure"),
+      },
+    },
+    {
+      key: "over",
+      label: t("ages65"),
+      left: {
+        value: left.pct65Plus != null ? `${left.pct65Plus}%` : t("empty"),
+        change: a.overDelta,
+        changeTimes: timesFor(over5Times, "a"),
+        title: a.overTitle,
+        times: timesFor(overTimes, "a"),
+        contested: contestedFor(left.code ?? "", "ageStructure"),
+      },
+      right: {
+        value: right.pct65Plus != null ? `${right.pct65Plus}%` : t("empty"),
+        change: b.overDelta,
+        changeTimes: timesFor(over5Times, "b"),
+        title: b.overTitle,
+        times: timesFor(overTimes, "b"),
+        contested: contestedFor(right.code ?? "", "ageStructure"),
+      },
+    },
+    {
+      key: "life",
+      label: t("lifeExpectancy"),
+      left: {
+        value:
+          left.lifeExpectancyYears != null
+            ? `${left.lifeExpectancyYears.toFixed(1)}${t("yearsSuffix")}`
+            : t("empty"),
+        change: a.lifeDelta,
+        changeTimes: timesFor(life5Times, "a"),
+        title: a.lifeTitle,
+        times: timesFor(lifeTimes, "a"),
+      },
+      right: {
+        value:
+          right.lifeExpectancyYears != null
+            ? `${right.lifeExpectancyYears.toFixed(1)}${t("yearsSuffix")}`
+            : t("empty"),
+        change: b.lifeDelta,
+        changeTimes: timesFor(life5Times, "b"),
+        title: b.lifeTitle,
+        times: timesFor(lifeTimes, "b"),
+      },
+    },
+  ];
+
+  function CellView({ cell, shade }: { cell: Cell; shade: "left" | "right" }) {
+    const valueColor = cell.tone ? fiveYearDeltaClass(cell.tone) : "text-[#1f3d4d]";
+    const body = (
+      <div title={cell.title}>
+        <p className={`flex flex-wrap items-baseline gap-1.5 text-base font-semibold tabular-nums sm:text-lg ${valueColor}`}>
+          <span>{cell.value}</span>
+          {cell.times ? (
+            <span
+              className="rounded bg-[#1f3d4d] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-[#f7f3ec]"
+              title={cell.times.title}
+            >
+              {cell.times.text}
+            </span>
+          ) : null}
+        </p>
+        {cell.change ? (
+          <p className={`flex flex-wrap items-baseline gap-1.5 text-[11px] font-medium tabular-nums ${fiveYearDeltaClass(cell.change.tone)}`}>
+            <span>{cell.change.text}</span>
+            {cell.changeTimes ? (
+              <span
+                className="rounded bg-[#1f3d4d] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-[#f7f3ec]"
+                title={cell.changeTimes.title}
+              >
+                {cell.changeTimes.text}
+              </span>
+            ) : null}
+          </p>
+        ) : null}
+        {cell.note ? (
+          <p className="mt-0.5 flex flex-wrap items-baseline gap-1.5 text-[11px] leading-snug tabular-nums text-[#5c6b73]">
+            <span>{cell.note}</span>
+            {cell.noteTimes ? (
+              <span
+                className="rounded bg-[#1f3d4d] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-[#f7f3ec]"
+                title={cell.noteTimes.title}
+              >
+                {cell.noteTimes.text}
+              </span>
+            ) : null}
+          </p>
+        ) : null}
+        {cell.title ? (
+          <p className="mt-0.5 text-[11px] leading-snug text-[#5c6b73]">{cell.title}</p>
+        ) : null}
+      </div>
+    );
+    return (
+      <div
+        className={`min-w-0 px-3 py-2 ${
+          shade === "left" ? "bg-[#fbf8f2]" : "border-l border-[#e0d6c6] bg-[#e7eef1]"
+        }`}
+      >
+        {cell.contested ? <ContestedTooltip field={cell.contested}>{body}</ContestedTooltip> : body}
+      </div>
+    );
+  }
+
+  function Head({ country, shade }: { country: CountryGdpTree; shade: "left" | "right" }) {
+    const name = label(country.name, country.id);
+    return (
+      <div
+        className={`flex min-w-0 items-center gap-2 px-3 py-2 ${
+          shade === "left" ? "bg-[#f4efe6]" : "border-l border-[#e0d6c6] bg-[#dce7ee]"
+        }`}
+      >
+        {country.code ? (
+          <FlagIcon
+            iso3={country.code}
+            className="h-[14px] w-[21px] shrink-0 overflow-hidden rounded-[2px]"
+            title={name}
+          />
+        ) : null}
+        <span className="truncate text-sm font-semibold text-[#1f3d4d]">{name}</span>
+        {country.code ? (
+          <span className="text-[10px] font-semibold tracking-wide text-[#5c6b73]">{country.code}</span>
+        ) : null}
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="overflow-hidden rounded-md border border-[#e0d6c6]">
+        <div className="grid grid-cols-2">
+          <Head country={left} shade="left" />
+          <Head country={right} shade="right" />
+          {rows.map((row) => (
+            <div key={row.key} className="col-span-2 grid grid-cols-2 border-t border-[#e0d6c6]">
+              <div className="col-span-2 bg-[#f7f3ec] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8a7358]">
+                {row.label}
+              </div>
+              <CellView cell={row.left} shade="left" />
+              <CellView cell={row.right} shade="right" />
+            </div>
+          ))}
+        </div>
+      </div>
+      <MeasureWarning country={left} showName />
+      <MeasureWarning country={right} showName />
     </div>
   );
 }
@@ -364,6 +919,25 @@ function SliceRow({
           : undefined,
       )
     : null;
+  const countryRow =
+    countryCode && countryCode in COUNTRY_GDP
+      ? COUNTRY_GDP[countryCode as keyof typeof COUNTRY_GDP]
+      : null;
+  const countrySlice = countryRow != null && slice.id === countryRow.id ? countryRow : null;
+  const interestLine = countrySlice ? afterInterestText(countrySlice, t, perCapitaUsd) : null;
+  const debtLine =
+    countrySlice?.publicDebtUsdMillions != null && countrySlice.publicDebtPerCapitaUsd != null
+      ? `${t("nationalDebt")}: ${money(countrySlice.publicDebtUsdMillions)} · ${perCapitaUsd(countrySlice.publicDebtPerCapitaUsd)} ${t("debtPerPerson")}`
+      : null;
+  const lifeChange = countrySlice
+    ? yearsFiveYearDelta(countrySlice.lifeExpectancyYears, countrySlice.lifeExpectancyPrior5yYears)
+    : null;
+  const lifeLine =
+    countrySlice?.lifeExpectancyYears != null
+      ? `${t("lifeExpectancy")}: ${countrySlice.lifeExpectancyYears.toFixed(1)}${t("yearsSuffix")}${
+          lifeChange ? ` ${delta(lifeChange.text)}` : ""
+        }`
+      : null;
   const tip = [
     sliceName,
     metrics,
@@ -371,6 +945,9 @@ function SliceRow({
     inflationDrag ? `${t("inflation5")}: ${delta(inflationDrag.text)}` : null,
     realGdp ? `${t("real5")}: ${delta(realGdp.text)}` : null,
     perCapita ? `${t("gdpPerCapita")}: ${perCapita}` : null,
+    interestLine,
+    debtLine,
+    lifeLine,
     bondYield ? `${t("yield")}: ${bondYield}` : null,
     contestedPop ? t("contestedSeries") : null,
     measureQ?.source && !measureQ.source.levelComparableToNominalUsd
@@ -492,6 +1069,8 @@ function SliceRow({
 
 function ScopeTabs({
   path,
+  compareCode,
+  selectingCompare,
   visibleCodes,
   editing,
   onWorld,
@@ -502,6 +1081,8 @@ function ScopeTabs({
   onResetDefault,
 }: {
   path: string[];
+  compareCode: string | null;
+  selectingCompare: boolean;
   visibleCodes: readonly string[];
   editing: boolean;
   onWorld: () => void;
@@ -594,6 +1175,7 @@ function ScopeTabs({
           const country = COUNTRY_GDP[code];
           const included = visible.has(code);
           const active = !editing && activeCountry === code;
+          const compared = !editing && compareCode === code;
           const { source, country: quality } = qualityForCountry(
             code,
             country.sourceKey,
@@ -613,6 +1195,13 @@ function ScopeTabs({
               : quality.measureWarning
                 ? source ? badge(source.badge) : null
                 : null,
+            !editing && compared
+              ? t("clearCompare")
+              : !editing && selectingCompare && activeCountry && !active
+                ? t("comparePick")
+                : !editing && compareCode && activeCountry && !active
+                  ? t("compareSwitch")
+                  : null,
           ].filter(Boolean);
           return (
             <button
@@ -620,7 +1209,7 @@ function ScopeTabs({
               type="button"
               role={editing ? "checkbox" : "tab"}
               aria-checked={editing ? included : undefined}
-              aria-selected={!editing ? active : undefined}
+              aria-selected={!editing ? active || compared : undefined}
               aria-label={
                 editing
                   ? `${included ? t("exclude") : t("include")} ${countryName}`
@@ -638,7 +1227,9 @@ function ScopeTabs({
                     : "bg-transparent opacity-40 grayscale"
                   : active
                     ? "bg-[#ebe4d8] ring-1 ring-[#1f3d4d]"
-                    : "hover:bg-[#f0ebe3]"
+                    : compared
+                      ? "bg-[#e7eef1] ring-1 ring-[#2a6f97]"
+                      : "hover:bg-[#f0ebe3]"
               }`}
             >
               <FlagIcon
@@ -648,7 +1239,7 @@ function ScopeTabs({
               />
               <span
                 className={`text-[8px] font-semibold leading-none tracking-wide ${
-                  active && !editing ? "text-[#1f3d4d]" : "text-[#5c6b73]"
+                  (active || compared) && !editing ? "text-[#1f3d4d]" : "text-[#5c6b73]"
                 }`}
               >
                 {code}
@@ -817,6 +1408,7 @@ function LevelSummary({ node }: { node: ChartNode }) {
     node.periodLabel ?? (node.year != null ? String(node.year) : null);
   const isWorld = node.id === "world";
   const country = countryForNode(node);
+  const interestLine = country ? afterInterestText(country, t, perCapitaUsd) : null;
 
   const measureLabel = isWorld
     ? t("combined")
@@ -885,6 +1477,9 @@ function LevelSummary({ node }: { node: ChartNode }) {
           <span className="font-semibold tabular-nums text-[#1f3d4d]">
             {perCapitaUsd(country.gdpPerCapitaUsd)}
           </span>
+          {interestLine ? (
+            <span className="ml-1.5 text-[11px] tabular-nums text-[#5c6b73]">{interestLine}</span>
+          ) : null}
         </span>
       ) : null}
       {country?.bondYield10y != null ? (
@@ -913,26 +1508,259 @@ function LevelSummary({ node }: { node: ChartNode }) {
   );
 }
 
+function PathCrumb({
+  root,
+  path,
+  onWorld,
+  onNavigate,
+}: {
+  root: ChartNode;
+  path: string[];
+  onWorld: () => void;
+  onNavigate: (path: string[]) => void;
+}) {
+  const { t, label } = useI18n();
+  if (path.length === 0) return null;
+  return (
+    <nav aria-label={t("breadcrumb")} className="flex min-h-7 flex-wrap items-center gap-1 text-sm">
+      <button
+        type="button"
+        className="text-[#2a6f97] hover:underline"
+        onClick={onWorld}
+      >
+        {label(root.name, root.id)}
+      </button>
+      {path.map((id, index) => {
+        let node: ChartNode;
+        try {
+          node = nodeAtPath(root, path.slice(0, index + 1));
+        } catch {
+          return null;
+        }
+        const isLast = index === path.length - 1;
+        const nodeName = label(node.name, node.id);
+        return (
+          <span key={id} className="flex items-center gap-1 text-[#5c6b73]">
+            <span aria-hidden>/</span>
+            {isLast ? (
+              <span className="text-[#1f3d4d]">{nodeName}</span>
+            ) : (
+              <button
+                type="button"
+                className="text-[#2a6f97] hover:underline"
+                onClick={() => onNavigate(path.slice(0, index + 1))}
+              >
+                {nodeName}
+              </button>
+            )}
+          </span>
+        );
+      })}
+    </nav>
+  );
+}
+
+function IndustryChart({
+  root,
+  node,
+  path,
+  hoveredId,
+  onHover,
+  onOpenPath,
+  canGoBack,
+  onBack,
+  onRemoveCountry,
+  comparing,
+}: {
+  root: ChartNode;
+  node: ChartNode;
+  path: string[];
+  hoveredId: string | null;
+  onHover: (id: string | null) => void;
+  onOpenPath: (path: string[]) => void;
+  canGoBack: boolean;
+  onBack: () => void;
+  onRemoveCountry?: (code: string) => void;
+  comparing: boolean;
+}) {
+  const chart = useMemo(() => buildPieChart(node), [node]);
+  const contextParent: ChartNode | null = (() => {
+    if (path.length === 0) return null;
+    if (path.length === 1) return root;
+    try {
+      return nodeAtPath(root, path.slice(0, -1));
+    } catch {
+      return null;
+    }
+  })();
+  const economy = countryForNode(node);
+
+  return (
+    <div
+      className={
+        comparing
+          ? "grid min-w-0 items-start gap-4 @min-[40rem]:grid-cols-[minmax(0,1fr)_minmax(12rem,15rem)]"
+          : "grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)]"
+      }
+    >
+      <DrilldownPie
+        node={node}
+        labelMode={path.length === 0 ? "country" : "sector"}
+        hoveredId={hoveredId}
+        onHover={onHover}
+        onSelect={(id) => onOpenPath([...path, id])}
+        canGoBack={canGoBack}
+        onBack={onBack}
+      />
+      <div className="flex flex-col gap-4">
+        {contextParent ? (
+          <ContextPie
+            root={contextParent}
+            section={node}
+            hoveredId={hoveredId}
+            totalLabel={contextParent.name}
+            economy={economy}
+          />
+        ) : null}
+        <ul
+          className={`flex flex-col gap-0.5 overflow-y-auto overscroll-contain pr-1 [scrollbar-gutter:stable] ${
+            comparing ? "max-h-[420px]" : "max-h-[520px]"
+          }`}
+        >
+          {chart.legend.map((slice) => (
+            <SliceRow
+              key={slice.id}
+              slice={slice}
+              active={hoveredId === slice.id}
+              drillable={hasChildren(slice)}
+              showRemove={path.length === 0 && Boolean(slice.code)}
+              onHover={onHover}
+              onOpen={() => onOpenPath([...path, slice.id])}
+              onRemove={
+                slice.code && onRemoveCountry
+                  ? () => onRemoveCountry(slice.code as string)
+                  : undefined
+              }
+            />
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function CompareColumn({
+  root,
+  path,
+  hoveredId,
+  onHover,
+  onOpenPath,
+  onBack,
+  onWorld,
+  onRemove,
+  divided,
+}: {
+  root: ChartNode;
+  path: string[];
+  hoveredId: string | null;
+  onHover: (id: string | null) => void;
+  onOpenPath: (path: string[]) => void;
+  onBack: () => void;
+  onWorld: () => void;
+  onRemove: () => void;
+  divided: boolean;
+}) {
+  const { t, label } = useI18n();
+  const node = useMemo(() => {
+    try {
+      return nodeAtPath(root, path);
+    } catch {
+      return root;
+    }
+  }, [root, path]);
+  const country = countryForNode(node);
+  const countryName = country ? label(country.name, country.id) : label(node.name, node.id);
+
+  return (
+    <section
+      className={`@container flex min-w-0 flex-col gap-3 ${
+        divided ? "lg:border-l lg:border-[#e0d6c6] lg:pl-6" : ""
+      }`}
+      aria-label={countryName}
+    >
+      <div className="flex min-h-8 items-center justify-between gap-2">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-[#1f3d4d]">
+          {country?.code ? (
+            <FlagIcon
+              iso3={country.code}
+              className="h-[14px] w-[21px] overflow-hidden rounded-[2px]"
+              title={countryName}
+            />
+          ) : null}
+          {countryName}
+        </h2>
+        <button
+          type="button"
+          onClick={onRemove}
+          className="shrink-0 text-xs font-medium text-[#2a6f97] hover:underline"
+        >
+          {t("clearCompare")}
+        </button>
+      </div>
+      <PathCrumb root={root} path={path} onWorld={onWorld} onNavigate={onOpenPath} />
+      <LevelSummary node={node} />
+      <IndustryChart
+        root={root}
+        node={node}
+        path={path}
+        hoveredId={hoveredId}
+        onHover={onHover}
+        onOpenPath={onOpenPath}
+        canGoBack={path.length > 1}
+        onBack={onBack}
+        comparing
+      />
+    </section>
+  );
+}
+
 export default function GdpExplorer() {
-  const { t, label, ja } = useI18n();
+  const { t, ja } = useI18n();
   const [visibleCodes, setVisibleCodes] = useState<string[]>(allCountryCodes);
   const [editingList, setEditingList] = useState(false);
   const [path, setPath] = useState<string[]>([]);
+  const [comparePath, setComparePath] = useState<string[]>([]);
+  const [compareMode, setCompareMode] = useState(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [compareHoveredId, setCompareHoveredId] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     const codes = loadVisibleCodes();
     setVisibleCodes(codes);
     const savedPath = loadPath();
+    let restoredPrimary: string | null = null;
     if (savedPath.length > 0) {
       const open = COUNTRY_ORDER.find(
         (code) => COUNTRY_GDP[code].id === savedPath[0],
       );
       if (open && codes.includes(open)) {
         setPath(savedPath);
+        restoredPrimary = savedPath[0];
       }
     }
+    const savedCompare = loadComparePath();
+    let restoredPair = false;
+    if (restoredPrimary && savedCompare.length > 0 && savedCompare[0] !== restoredPrimary) {
+      const other = COUNTRY_ORDER.find(
+        (code) => COUNTRY_GDP[code].id === savedCompare[0],
+      );
+      if (other && codes.includes(other)) {
+        setComparePath(savedCompare);
+        restoredPair = true;
+      }
+    }
+    if (loadCompareMode() || restoredPair) setCompareMode(true);
     setHydrated(true);
   }, []);
 
@@ -957,6 +1785,16 @@ export default function GdpExplorer() {
     }
   }, [path, hydrated]);
 
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      window.localStorage.setItem(COMPARE_STORAGE_KEY, JSON.stringify(comparePath));
+      window.localStorage.setItem(COMPARE_MODE_KEY, compareMode ? "1" : "0");
+    } catch {
+      /* ignore quota / private mode */
+    }
+  }, [comparePath, compareMode, hydrated]);
+
   const root = useMemo(
     () => buildFilteredWorld(visibleCodes),
     [visibleCodes],
@@ -977,15 +1815,52 @@ export default function GdpExplorer() {
     }
   }, [root, path, hydrated]);
 
-  // If the open country was excluded, return to the world pie
+  // If the open country was excluded, keep the comparison country or return to the world pie
   useEffect(() => {
-    if (path.length === 0) return;
+    if (!hydrated || path.length === 0) return;
     const open = COUNTRY_ORDER.find((code) => COUNTRY_GDP[code].id === path[0]);
-    if (open && !visibleCodes.includes(open)) {
-      setPath([]);
+    if (open && visibleCodes.includes(open)) return;
+    const second =
+      comparePath.length > 0
+        ? COUNTRY_ORDER.find((code) => COUNTRY_GDP[code].id === comparePath[0])
+        : null;
+    if (second && visibleCodes.includes(second)) {
+      setPath(comparePath);
+      setComparePath([]);
       setHoveredId(null);
+      setCompareHoveredId(null);
+      return;
     }
-  }, [visibleCodes, path]);
+    setPath([]);
+    setComparePath([]);
+    setHoveredId(null);
+    setCompareHoveredId(null);
+  }, [visibleCodes, path, comparePath, hydrated]);
+
+  useEffect(() => {
+    if (!hydrated || comparePath.length === 0) return;
+    if (path.length === 0 || path[0] === comparePath[0]) {
+      setComparePath([]);
+      setCompareHoveredId(null);
+      return;
+    }
+    const open = COUNTRY_ORDER.find((code) => COUNTRY_GDP[code].id === comparePath[0]);
+    if (!open || !visibleCodes.includes(open)) {
+      setComparePath([]);
+      setCompareHoveredId(null);
+      return;
+    }
+    let node: ChartNode = root;
+    for (let i = 0; i < comparePath.length; i++) {
+      const next = node.children?.find((c) => c.id === comparePath[i]);
+      if (!next) {
+        setComparePath(comparePath.slice(0, i));
+        setCompareHoveredId(null);
+        return;
+      }
+      node = next;
+    }
+  }, [root, comparePath, path, visibleCodes, hydrated]);
 
   const current = useMemo(() => {
     try {
@@ -994,28 +1869,73 @@ export default function GdpExplorer() {
       return root;
     }
   }, [root, path]);
-  const chart = useMemo(() => buildPieChart(current), [current]);
-  const contextParent: ChartNode | null = (() => {
-    if (path.length === 0) return null;
-    if (path.length === 1) return root;
+  const compareCurrent = useMemo(() => {
+    if (comparePath.length === 0) return null;
     try {
-      return nodeAtPath(root, path.slice(0, -1));
+      return nodeAtPath(root, comparePath);
     } catch {
       return null;
     }
-  })();
+  }, [root, comparePath]);
   const activeCountry = countryForNode(current);
+  const compareCountry = compareCurrent ? countryForNode(compareCurrent) : null;
+  const comparing = comparePath.length > 0;
+  const splitView = compareMode && path.length > 0;
+  const compareCode =
+    comparePath.length > 0
+      ? (COUNTRY_ORDER.find((code) => COUNTRY_GDP[code].id === comparePath[0]) ?? null)
+      : null;
+
+  function clearCompare() {
+    setComparePath([]);
+    setCompareHoveredId(null);
+  }
+
+  function removePrimary() {
+    setPath(comparePath);
+    setHoveredId(compareHoveredId);
+    setComparePath([]);
+    setCompareHoveredId(null);
+  }
+
+  function exitCompare() {
+    setCompareMode(false);
+    setComparePath([]);
+    setCompareHoveredId(null);
+  }
 
   function goWorld() {
     setPath([]);
+    setComparePath([]);
     setHoveredId(null);
+    setCompareHoveredId(null);
   }
 
   function goCountry(code: string) {
     if (!visibleCodes.includes(code)) return;
     const country = COUNTRY_GDP[code] as CountryGdpTree;
-    setPath([country.id]);
-    setHoveredId(null);
+    const primary =
+      path.length > 0
+        ? COUNTRY_ORDER.find((c) => COUNTRY_GDP[c].id === path[0])
+        : null;
+    if (!compareMode || !primary) {
+      setPath([country.id]);
+      setHoveredId(null);
+      setComparePath([]);
+      setCompareHoveredId(null);
+      return;
+    }
+    if (primary === code) {
+      setPath([country.id]);
+      setHoveredId(null);
+      return;
+    }
+    if (compareCode === code) {
+      clearCompare();
+      return;
+    }
+    setComparePath([country.id]);
+    setCompareHoveredId(null);
   }
 
   function toggleCountry(code: string) {
@@ -1034,7 +1954,7 @@ export default function GdpExplorer() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
+    <div className={`mx-auto flex w-full flex-col gap-6 ${splitView ? "max-w-[96rem]" : "max-w-5xl"}`}>
       <header className="flex flex-col gap-3">
         <div className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-1">
@@ -1051,6 +1971,8 @@ export default function GdpExplorer() {
         </div>
         <ScopeTabs
           path={path}
+          compareCode={compareCode}
+          selectingCompare={compareMode}
           visibleCodes={visibleCodes}
           editing={editingList}
           onWorld={goWorld}
@@ -1060,106 +1982,148 @@ export default function GdpExplorer() {
           onSelectAll={() => setVisibleCodes(allCountryCodes())}
           onResetDefault={() => setVisibleCodes(allCountryCodes())}
         />
-        <StaleDataNotice />
-        <LevelSummary node={current} />
-        {activeCountry ? <DemographicsBanner country={activeCountry} /> : null}
-        {path.length > 0 ? (
-          <nav aria-label={t("breadcrumb")} className="flex flex-wrap items-center gap-1 text-sm">
+        {!editingList && (path.length > 0 || compareMode) ? (
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              className="text-[#2a6f97] hover:underline"
-              onClick={goWorld}
+              aria-pressed={compareMode}
+              onClick={() => (compareMode ? exitCompare() : setCompareMode(true))}
+              className={`inline-flex items-center rounded-md border px-3 py-1.5 text-sm font-semibold transition ${
+                compareMode
+                  ? "border-[#1f3d4d] bg-[#1f3d4d] text-[#f7f3ec]"
+                  : "border-[#1f3d4d] bg-[#fbf8f2] text-[#1f3d4d] hover:bg-[#ebe4d8]"
+              }`}
             >
-              {label(root.name, root.id)}
+              {compareMode ? t("exitCompare") : t("compare")}
             </button>
-            {path.map((id, index) => {
-              const node = nodeAtPath(root, path.slice(0, index + 1));
-              const isLast = index === path.length - 1;
-              const nodeName = label(node.name, node.id);
-              return (
-                <span key={id} className="flex items-center gap-1 text-[#5c6b73]">
-                  <span aria-hidden>/</span>
-                  {isLast ? (
-                    <span className="text-[#1f3d4d]">{nodeName}</span>
-                  ) : (
-                    <button
-                      type="button"
-                      className="text-[#2a6f97] hover:underline"
-                      onClick={() => setPath(path.slice(0, index + 1))}
-                    >
-                      {nodeName}
-                    </button>
-                  )}
-                </span>
-              );
-            })}
-          </nav>
+            {compareMode && path.length > 0 ? (
+              <span className="text-[11px] leading-relaxed text-[#8a7358]">
+                {comparing ? t("comparingHint") : t("comparePick")}
+              </span>
+            ) : null}
+          </div>
         ) : null}
-      </header>
-
-      <div className="flex flex-col gap-4">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)] lg:items-start">
-          <div className="flex flex-col gap-3">
-            <DrilldownPie
-              node={current}
-              labelMode={path.length === 0 ? "country" : "sector"}
-              hoveredId={hoveredId}
-              onHover={setHoveredId}
-              onSelect={(id) => {
-                setPath((prev) => [...prev, id]);
-                setHoveredId(null);
-              }}
-              canGoBack={path.length > 0}
-              onBack={() => {
-                setPath((prev) => prev.slice(0, -1));
+        <StaleDataNotice />
+        {splitView ? null : (
+          <>
+            <LevelSummary node={current} />
+            {activeCountry ? <DemographicsBanner country={activeCountry} /> : null}
+            <PathCrumb
+              root={root}
+              path={path}
+              onWorld={goWorld}
+              onNavigate={(next) => {
+                setPath(next);
                 setHoveredId(null);
               }}
             />
-          </div>
+          </>
+        )}
+      </header>
 
-          <div className="flex flex-col gap-4">
-            {contextParent ? (
-              <ContextPie
-                root={contextParent}
-                section={current}
+      <div className="flex flex-col gap-4">
+        {splitView ? (
+          <div className="grid items-start gap-8 lg:grid-cols-2">
+            <div className="flex min-w-0 flex-col gap-4">
+              <CompareColumn
+                root={root}
+                path={path}
                 hoveredId={hoveredId}
-                totalLabel={contextParent.name}
-                economy={activeCountry}
+                onHover={setHoveredId}
+                onOpenPath={(next) => {
+                  setPath(next);
+                  setHoveredId(null);
+                }}
+                onBack={() => {
+                  setPath((prev) => prev.slice(0, -1));
+                  setHoveredId(null);
+                }}
+                onWorld={goWorld}
+                onRemove={removePrimary}
+                divided={false}
               />
-            ) : null}
-            <ul className="flex max-h-[520px] flex-col gap-0.5 overflow-y-auto overscroll-contain pr-1 [scrollbar-gutter:stable]">
-              {chart.legend.map((slice) => (
-                <SliceRow
-                  key={slice.id}
-                  slice={slice}
-                  active={hoveredId === slice.id}
-                  drillable={hasChildren(slice)}
-                  showRemove={path.length === 0 && Boolean(slice.code)}
-                  onHover={setHoveredId}
-                  onOpen={() => {
-                    setPath((prev) => [...prev, slice.id]);
-                    setHoveredId(null);
-                  }}
-                  onRemove={
-                    slice.code
-                      ? () => toggleCountry(slice.code as string)
-                      : undefined
-                  }
-                />
-              ))}
-            </ul>
+              {!comparing && activeCountry ? (
+                <DemographicsBanner country={activeCountry} />
+              ) : null}
+            </div>
+            {comparing ? (
+              <CompareColumn
+                root={root}
+                path={comparePath}
+                hoveredId={compareHoveredId}
+                onHover={setCompareHoveredId}
+                onOpenPath={(next) => {
+                  setComparePath(next);
+                  setCompareHoveredId(null);
+                }}
+                onBack={() => {
+                  setComparePath((prev) => prev.slice(0, -1));
+                  setCompareHoveredId(null);
+                }}
+                onWorld={goWorld}
+                onRemove={clearCompare}
+                divided
+              />
+            ) : (
+              <section
+                className="flex min-h-64 items-center justify-center rounded-md border border-dashed border-[#d4c8b4] bg-[#f7f3ec] px-6 py-16 text-center lg:min-h-[28rem]"
+                aria-live="polite"
+              >
+                <p className="max-w-xs text-sm leading-relaxed text-[#5c6b73]">
+                  <span className="block text-base font-semibold text-[#1f3d4d]">
+                    {t("selectToCompare")}
+                  </span>
+                  <span className="mt-1 block">{t("comparePick")}</span>
+                </p>
+              </section>
+            )}
           </div>
-        </div>
+        ) : (
+          <IndustryChart
+            root={root}
+            node={current}
+            path={path}
+            hoveredId={hoveredId}
+            onHover={setHoveredId}
+            onOpenPath={(next) => {
+              setPath(next);
+              setHoveredId(null);
+            }}
+            canGoBack={path.length > 0}
+            onBack={() => {
+              setHoveredId(null);
+              if (path.length <= 1) goWorld();
+              else setPath(path.slice(0, -1));
+            }}
+            onRemoveCountry={toggleCountry}
+            comparing={false}
+          />
+        )}
+
+        {comparing && activeCountry && compareCountry ? (
+          <CompareMetrics left={activeCountry} right={compareCountry} />
+        ) : null}
 
         <div className="flex w-full flex-col gap-3">
-          <YearLagNotice
-            node={current.id === "world" ? root : current}
-            visibleCodes={visibleCodes}
-          />
-          <ComparabilityNotice
-            node={current.id === "world" ? root : current}
-            visibleCodes={visibleCodes}
-          />
+          {comparing && compareCurrent ? (
+            <>
+              <YearLagNotice node={current} visibleCodes={visibleCodes} />
+              <YearLagNotice node={compareCurrent} visibleCodes={visibleCodes} />
+              <ComparabilityNotice node={current} visibleCodes={visibleCodes} />
+              <ComparabilityNotice node={compareCurrent} visibleCodes={visibleCodes} />
+            </>
+          ) : (
+            <>
+              <YearLagNotice
+                node={current.id === "world" ? root : current}
+                visibleCodes={visibleCodes}
+              />
+              <ComparabilityNotice
+                node={current.id === "world" ? root : current}
+                visibleCodes={visibleCodes}
+              />
+            </>
+          )}
         </div>
       </div>
 
