@@ -2023,8 +2023,13 @@ export default function GdpExplorer() {
 
       <div className="flex flex-col gap-4">
         {splitView ? (
-          <div className="grid items-start gap-8 lg:grid-cols-2">
-            <div className="flex min-w-0 flex-col gap-4">
+          <>
+            {comparing && activeCountry && compareCountry ? (
+              <CompareMetrics left={activeCountry} right={compareCountry} />
+            ) : !comparing && activeCountry ? (
+              <DemographicsBanner country={activeCountry} />
+            ) : null}
+            <div className="grid items-start gap-8 lg:grid-cols-2">
               <CompareColumn
                 root={root}
                 path={path}
@@ -2042,42 +2047,39 @@ export default function GdpExplorer() {
                 onRemove={removePrimary}
                 divided={false}
               />
-              {!comparing && activeCountry ? (
-                <DemographicsBanner country={activeCountry} />
-              ) : null}
+              {comparing ? (
+                <CompareColumn
+                  root={root}
+                  path={comparePath}
+                  hoveredId={compareHoveredId}
+                  onHover={setCompareHoveredId}
+                  onOpenPath={(next) => {
+                    setComparePath(next);
+                    setCompareHoveredId(null);
+                  }}
+                  onBack={() => {
+                    setComparePath((prev) => prev.slice(0, -1));
+                    setCompareHoveredId(null);
+                  }}
+                  onWorld={goWorld}
+                  onRemove={clearCompare}
+                  divided
+                />
+              ) : (
+                <section
+                  className="flex min-h-64 items-center justify-center rounded-md border border-dashed border-[#d4c8b4] bg-[#f7f3ec] px-6 py-16 text-center lg:min-h-[28rem]"
+                  aria-live="polite"
+                >
+                  <p className="max-w-xs text-sm leading-relaxed text-[#5c6b73]">
+                    <span className="block text-base font-semibold text-[#1f3d4d]">
+                      {t("selectToCompare")}
+                    </span>
+                    <span className="mt-1 block">{t("comparePick")}</span>
+                  </p>
+                </section>
+              )}
             </div>
-            {comparing ? (
-              <CompareColumn
-                root={root}
-                path={comparePath}
-                hoveredId={compareHoveredId}
-                onHover={setCompareHoveredId}
-                onOpenPath={(next) => {
-                  setComparePath(next);
-                  setCompareHoveredId(null);
-                }}
-                onBack={() => {
-                  setComparePath((prev) => prev.slice(0, -1));
-                  setCompareHoveredId(null);
-                }}
-                onWorld={goWorld}
-                onRemove={clearCompare}
-                divided
-              />
-            ) : (
-              <section
-                className="flex min-h-64 items-center justify-center rounded-md border border-dashed border-[#d4c8b4] bg-[#f7f3ec] px-6 py-16 text-center lg:min-h-[28rem]"
-                aria-live="polite"
-              >
-                <p className="max-w-xs text-sm leading-relaxed text-[#5c6b73]">
-                  <span className="block text-base font-semibold text-[#1f3d4d]">
-                    {t("selectToCompare")}
-                  </span>
-                  <span className="mt-1 block">{t("comparePick")}</span>
-                </p>
-              </section>
-            )}
-          </div>
+          </>
         ) : (
           <IndustryChart
             root={root}
@@ -2099,10 +2101,6 @@ export default function GdpExplorer() {
             comparing={false}
           />
         )}
-
-        {comparing && activeCountry && compareCountry ? (
-          <CompareMetrics left={activeCountry} right={compareCountry} />
-        ) : null}
 
         <div className="flex w-full flex-col gap-3">
           {comparing && compareCurrent ? (
