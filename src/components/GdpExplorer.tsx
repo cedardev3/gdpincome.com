@@ -198,7 +198,7 @@ function afterInterestParts(
   country: CountryGdpTree,
   t: (key: MessageKey) => string,
   perCapitaUsd: (usd: number) => string,
-): { lead: string; detail?: string } | null {
+): { amount?: string; lead: string; detail?: string } | null {
   if (
     country.gdpPerCapitaAfterInterestUsd == null ||
     country.nominalGdpPerCapitaInterestYearUsd == null ||
@@ -207,9 +207,12 @@ function afterInterestParts(
   ) {
     return country.publicDebtYear != null ? { lead: t("afterInterestMissing") } : null;
   }
+  const amount = perCapitaUsd(country.gdpPerCapitaAfterInterestUsd);
+  const detail = `(${perCapitaUsd(country.nominalGdpPerCapitaInterestYearUsd)} − ${perCapitaUsd(country.debtInterestPerCapitaUsd)} ${t("interestWord")}, ${country.debtInterestYear})`;
   return {
-    lead: `${perCapitaUsd(country.gdpPerCapitaAfterInterestUsd)} ${t("afterInterest")}`,
-    detail: `(${perCapitaUsd(country.nominalGdpPerCapitaInterestYearUsd)} − ${perCapitaUsd(country.debtInterestPerCapitaUsd)} ${t("interestWord")}, ${country.debtInterestYear})`,
+    amount,
+    lead: `${amount} ${t("afterInterest")}`,
+    detail,
   };
 }
 
@@ -477,9 +480,9 @@ function CompareMetrics({
         yearsFiveYearDelta(country.lifeExpectancyYears, country.lifeExpectancyPrior5yYears),
       ),
       interest: afterInterestParts(country, t, perCapitaUsd),
-      debtNote:
+      debtAmount:
         country.publicDebtPerCapitaUsd != null
-          ? `${perCapitaUsd(country.publicDebtPerCapitaUsd)} ${t("debtPerPerson")}`
+          ? perCapitaUsd(country.publicDebtPerCapitaUsd)
           : undefined,
       debtTitle: debtHintText(country, t),
       lifeTitle:
@@ -634,9 +637,11 @@ function CompareMetrics({
         changeTimes: timesFor(pcap5Times, "a"),
         title: a.pcapTitle,
         times: timesFor(pcapTimes, "a"),
-        note: a.interest?.lead,
-        noteDetail: a.interest?.detail,
-        noteTimes: a.interest?.detail ? timesFor(afterTimes, "a") : null,
+        note: a.interest?.amount ?? a.interest?.lead,
+        noteDetail: a.interest?.amount
+          ? `${t("afterInterest")} ${a.interest.detail ?? ""}`.trim()
+          : a.interest?.detail,
+        noteTimes: a.interest?.amount ? timesFor(afterTimes, "a") : null,
       },
       right: {
         value: right.gdpPerCapitaUsd != null ? perCapitaUsd(right.gdpPerCapitaUsd) : t("empty"),
@@ -644,9 +649,11 @@ function CompareMetrics({
         changeTimes: timesFor(pcap5Times, "b"),
         title: b.pcapTitle,
         times: timesFor(pcapTimes, "b"),
-        note: b.interest?.lead,
-        noteDetail: b.interest?.detail,
-        noteTimes: b.interest?.detail ? timesFor(afterTimes, "b") : null,
+        note: b.interest?.amount ?? b.interest?.lead,
+        noteDetail: b.interest?.amount
+          ? `${t("afterInterest")} ${b.interest.detail ?? ""}`.trim()
+          : b.interest?.detail,
+        noteTimes: b.interest?.amount ? timesFor(afterTimes, "b") : null,
       },
     },
     {
@@ -656,14 +663,16 @@ function CompareMetrics({
         value: left.publicDebtUsdMillions != null ? money(left.publicDebtUsdMillions, true) : t("empty"),
         title: a.debtTitle,
         times: timesFor(debtTimes, "a"),
-        note: a.debtNote,
+        note: a.debtAmount,
+        noteDetail: a.debtAmount ? t("debtPerPerson") : undefined,
         noteTimes: timesFor(debtCapTimes, "a"),
       },
       right: {
         value: right.publicDebtUsdMillions != null ? money(right.publicDebtUsdMillions, true) : t("empty"),
         title: b.debtTitle,
         times: timesFor(debtTimes, "b"),
-        note: b.debtNote,
+        note: b.debtAmount,
+        noteDetail: b.debtAmount ? t("debtPerPerson") : undefined,
         noteTimes: timesFor(debtCapTimes, "b"),
       },
     },
@@ -774,34 +783,34 @@ function CompareMetrics({
     const valueColor = cell.tone ? fiveYearDeltaClass(cell.tone) : "text-[#1f3d4d]";
     return (
       <div
-        className={`min-w-0 px-2 py-2 sm:px-3 ${
+        className={`min-w-0 overflow-hidden px-2 py-2 sm:px-3 ${
           shade === "left" ? "bg-[#fbf8f2]" : "border-l border-[#e0d6c6] bg-[#e7eef1]"
         }`}
       >
-        <div title={cell.title}>
-          <p className={`flex flex-nowrap items-baseline gap-1 text-[13px] font-semibold tabular-nums sm:text-sm ${valueColor}`}>
-            <span className="whitespace-nowrap">{cell.value}</span>
+        <div title={cell.title} className="min-w-0">
+          <p className={`flex max-w-full flex-nowrap items-baseline gap-1 text-[11px] font-semibold leading-tight tabular-nums sm:text-[13px] ${valueColor}`}>
+            <span className="min-w-0">{cell.value}</span>
             {cell.times ? <TimesMark mark={cell.times} /> : null}
           </p>
           {cell.change ? (
-            <p className={`mt-0.5 flex flex-nowrap items-baseline gap-1 text-[10px] font-medium tabular-nums sm:text-[11px] ${fiveYearDeltaClass(cell.change.tone)}`}>
-              <span className="whitespace-nowrap">{cell.change.text}</span>
+            <p className={`mt-0.5 flex max-w-full flex-nowrap items-baseline gap-1 text-[10px] font-medium leading-tight tabular-nums ${fiveYearDeltaClass(cell.change.tone)}`}>
+              <span className="min-w-0">{cell.change.text}</span>
               {cell.changeTimes ? <TimesMark mark={cell.changeTimes} /> : null}
             </p>
           ) : null}
           {cell.note ? (
-            <p className="mt-0.5 text-[10px] leading-snug text-[#5c6b73] sm:text-[11px]">
-              <span className="inline-flex flex-nowrap items-baseline gap-1">
-                <span className="whitespace-nowrap tabular-nums">{cell.note}</span>
+            <p className="mt-0.5 max-w-full text-[10px] leading-snug text-[#5c6b73]">
+              <span className="inline-flex max-w-full flex-nowrap items-baseline gap-1">
+                <span className="min-w-0 tabular-nums">{cell.note}</span>
                 {cell.noteTimes ? <TimesMark mark={cell.noteTimes} /> : null}
               </span>
               {cell.noteDetail ? (
-                <span className="mt-0.5 block tabular-nums">{cell.noteDetail}</span>
+                <span className="mt-0.5 block break-words tabular-nums">{cell.noteDetail}</span>
               ) : null}
             </p>
           ) : null}
           {cell.title ? (
-            <p className="mt-0.5 text-[10px] leading-snug text-[#5c6b73] sm:text-[11px]">{cell.title}</p>
+            <p className="mt-0.5 break-words text-[10px] leading-snug text-[#5c6b73]">{cell.title}</p>
           ) : null}
         </div>
       </div>
@@ -812,7 +821,7 @@ function CompareMetrics({
     const name = label(country.name, country.id);
     return (
       <div
-        className={`flex min-w-0 items-center gap-2 px-3 py-2 ${
+        className={`flex min-w-0 items-center gap-2 overflow-hidden px-2 py-2 sm:px-3 ${
           shade === "left" ? "bg-[#f4efe6]" : "border-l border-[#e0d6c6] bg-[#dce7ee]"
         }`}
       >
@@ -832,14 +841,14 @@ function CompareMetrics({
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="overflow-hidden rounded-md border border-[#e0d6c6]">
-        <div className="grid grid-cols-2">
+    <div className="flex w-full min-w-0 max-w-full flex-col gap-2">
+      <div className="w-full min-w-0 max-w-full overflow-hidden rounded-md border border-[#e0d6c6]">
+        <div className="grid w-full min-w-0 grid-cols-2">
           <Head country={left} shade="left" />
           <Head country={right} shade="right" />
           {rows.map((row) => (
-            <div key={row.key} className="col-span-2 grid grid-cols-2 border-t border-[#e0d6c6]">
-              <div className="col-span-2 bg-[#f7f3ec] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8a7358]">
+            <div key={row.key} className="col-span-2 grid min-w-0 grid-cols-2 border-t border-[#e0d6c6]">
+              <div className="col-span-2 break-words bg-[#f7f3ec] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8a7358] sm:px-3">
                 {row.label}
               </div>
               <CellView cell={row.left} shade="left" />
@@ -1436,7 +1445,7 @@ function LevelSummary({ node }: { node: ChartNode }) {
   const realGdp = country ? realGdpFiveYearDelta(country) : null;
 
   return (
-    <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm text-[#5c6b73]">
+    <div className="flex min-w-0 max-w-full flex-wrap items-baseline gap-x-4 gap-y-1 text-sm text-[#5c6b73]">
       <span className="inline-flex flex-wrap items-center gap-2">
         {measureLabel}{" "}
         <span className="font-semibold tabular-nums text-[#1f3d4d]">
@@ -1602,8 +1611,8 @@ function IndustryChart({
     <div
       className={
         comparing
-          ? "grid min-w-0 items-start gap-4 @min-[40rem]:grid-cols-[minmax(0,1fr)_minmax(12rem,15rem)]"
-          : "grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)]"
+          ? "grid w-full min-w-0 grid-cols-1 items-start gap-4 @min-[40rem]:grid-cols-[minmax(0,1fr)_minmax(0,15rem)]"
+          : "grid w-full min-w-0 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)]"
       }
     >
       <DrilldownPie
@@ -1615,7 +1624,7 @@ function IndustryChart({
         canGoBack={canGoBack}
         onBack={onBack}
       />
-      <div className="flex flex-col gap-4">
+      <div className="flex min-w-0 flex-col gap-4">
         {contextParent ? (
           <ContextPie
             root={contextParent}
@@ -1626,7 +1635,7 @@ function IndustryChart({
           />
         ) : null}
         <ul
-          className={`flex flex-col gap-0.5 overflow-y-auto overscroll-contain pr-1 [scrollbar-gutter:stable] ${
+          className={`flex min-w-0 flex-col gap-0.5 overflow-y-auto overscroll-contain pr-1 [scrollbar-gutter:stable] ${
             comparing ? "max-h-[420px]" : "max-h-[520px]"
           }`}
         >
@@ -1686,7 +1695,7 @@ function CompareColumn({
 
   return (
     <section
-      className={`@container flex min-w-0 flex-col gap-3 ${
+      className={`@container flex w-full min-w-0 max-w-full flex-col gap-3 overflow-hidden ${
         divided ? "lg:border-l lg:border-[#e0d6c6] lg:pl-6" : ""
       }`}
       aria-label={countryName}
@@ -1957,7 +1966,7 @@ export default function GdpExplorer() {
   }
 
   return (
-    <div className={`mx-auto flex w-full flex-col gap-6 ${splitView ? "max-w-[96rem]" : "max-w-5xl"}`}>
+    <div className={`mx-auto flex w-full min-w-0 max-w-full flex-col gap-6 ${splitView ? "max-w-[96rem]" : "max-w-5xl"}`}>
       <header className="flex flex-col gap-3">
         <div className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-1">
@@ -2024,7 +2033,7 @@ export default function GdpExplorer() {
         )}
       </header>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex w-full min-w-0 flex-col gap-4">
         {splitView ? (
           <>
             {comparing && activeCountry && compareCountry ? (
@@ -2032,7 +2041,7 @@ export default function GdpExplorer() {
             ) : !comparing && activeCountry ? (
               <DemographicsBanner country={activeCountry} />
             ) : null}
-            <div className="grid items-start gap-8 lg:grid-cols-2">
+            <div className="grid w-full min-w-0 grid-cols-1 items-start gap-8 lg:grid-cols-2">
               <CompareColumn
                 root={root}
                 path={path}

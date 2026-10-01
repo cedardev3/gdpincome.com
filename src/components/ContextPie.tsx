@@ -70,12 +70,13 @@ export default function ContextPie({
   const focusIsOffset = focusAmount < 0;
 
   return (
-    <div className="w-[10.5rem]">
+    <div className="w-full min-w-0 max-w-[10.5rem]">
       <svg
         viewBox={`0 0 ${SIZE} ${SIZE}`}
         role="img"
         aria-label={ja ? `${percentOf}${t("of")}、${focusName}` : `Share of ${percentOf}: ${focusName}`}
-        className="h-auto w-full"
+        overflow="hidden"
+        className="block h-auto w-full max-w-full"
       >
         <defs>
           <filter id={glowId} x="-40%" y="-40%" width="180%" height="180%">

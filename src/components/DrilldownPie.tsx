@@ -70,7 +70,7 @@ export default function DrilldownPie({
   }
 
   return (
-    <div className="relative mx-auto w-full max-w-[520px]">
+    <div className="relative mx-auto w-full min-w-0 max-w-[520px]">
       {canGoBack && onBack ? (
         <button
           type="button"
@@ -88,7 +88,8 @@ export default function DrilldownPie({
         viewBox={`0 0 ${SIZE} ${SIZE}`}
         role="img"
         aria-label={label(node.name, node.id)}
-        className="h-auto w-full"
+        overflow="hidden"
+        className="block h-auto w-full max-w-full"
       >
         <defs>
           <filter id={glowId} x="-30%" y="-30%" width="160%" height="160%">
