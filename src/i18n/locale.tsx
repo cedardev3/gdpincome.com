@@ -44,7 +44,7 @@ const messages = {
     allSelected: "All selected countries",
     included: "Included — tap to remove",
     excluded: "Excluded — tap to add",
-    contestedSeries: "Contested official series",
+    contestedSeries: "Warning: official series",
     exclude: "Exclude",
     include: "Include",
     notComparable: "Not a perfect comparison: ",
@@ -79,9 +79,9 @@ const messages = {
     chainVolume:
       ". Chain-volume series converted with market FX (levels not nominal USD): ",
     noneSelected: "none in this selection",
-    contestedLead: "Contested official data: ",
+    contestedLead: "Warning: ",
     contestedTail:
-      " : open the country view and click Contested on a metric for independent estimates (population, growth, implied GDP size). Chart totals still show the official series.",
+      " : open the country view and click Warning on a metric for independent estimates (population, growth, implied GDP size). Chart totals still show the official series.",
     selfReported: " GDP is self-reported official data",
     stale: "Stale snapshot · ",
     staleBody: "Industry data was last pulled on",
@@ -110,7 +110,7 @@ const messages = {
     hatch:
       "Hatch overlays mark offsets cutting into the totals above — they reduce the net without adding pie slices.",
     of: "of",
-    contested: "Contested",
+    contested: "Warning",
     counterpoint: "Counterpoint",
     remove: "Remove",
     fromComparison: "from comparison",
@@ -172,7 +172,7 @@ const messages = {
     allSelected: "選択中のすべての国",
     included: "表示中。タップで外す",
     excluded: "非表示。タップで加える",
-    contestedSeries: "公式値に異論があります",
+    contestedSeries: "警告：公式系列",
     exclude: "外す",
     include: "加える",
     notComparable: "完全な比較ではありません。",
@@ -207,9 +207,9 @@ const messages = {
     chainVolume:
       "。市場為替で換算した連鎖数量（名目米ドルではない）：",
     noneSelected: "この選択にはありません",
-    contestedLead: "公式値に異論がある国：",
+    contestedLead: "警告：",
     contestedTail:
-      "。国の画面を開き、指標の「異論」から独立推計（人口、成長率、示唆されるGDP規模）を見られます。グラフの合計は公式系列のままです。",
+      "。国の画面を開き、指標の「警告」から独立推計（人口、成長率、示唆されるGDP規模）を見られます。グラフの合計は公式系列のままです。",
     selfReported: "のGDPは当局が公表した公式値です",
     stale: "古いデータ · ",
     staleBody: "産業データの最終取得日",
@@ -238,7 +238,7 @@ const messages = {
     hatch:
       "斜線は上の合計から差し引かれる控除です。円グラフの区分には加えず、純額を減らします。",
     of: "に占める割合",
-    contested: "異論",
+    contested: "警告",
     counterpoint: "反論",
     remove: "外す",
     fromComparison: "比較から外す",
@@ -403,15 +403,15 @@ function trimZeros(value: string): string {
   return value.replace(/\.?0+$/, "");
 }
 
-function formatJaMoney(amountMillions: number): string {
+function formatJaMoney(amountMillions: number, compact = false): string {
   const sign = amountMillions < 0 ? "-" : "";
   const dollars = Math.abs(amountMillions) * 1_000_000;
   if (dollars >= 1e12) {
-    return `${sign}${trimZeros((dollars / 1e12).toFixed(3))}兆ドル`;
+    return `${sign}${trimZeros((dollars / 1e12).toFixed(compact ? 2 : 3))}兆ドル`;
   }
   if (dollars >= 1e8) {
     const oku = dollars / 1e8;
-    const decimals = oku >= 100 ? 1 : 2;
+    const decimals = oku >= 100 ? (compact ? 0 : 1) : compact ? 1 : 2;
     return `${sign}${trimZeros(oku.toFixed(decimals))}億ドル`;
   }
   if (dollars >= 1e4) {
@@ -432,7 +432,7 @@ type I18n = {
   toggleJa: () => void;
   t: (key: MessageKey) => string;
   label: (name: string, id?: string) => string;
-  money: (amountMillions: number) => string;
+  money: (amountMillions: number, compact?: boolean) => string;
   people: (n: number) => string;
   perCapitaUsd: (usd: number) => string;
   delta: (text: string) => string;
@@ -475,7 +475,8 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
         if (selected) return `主な経済（${selected[1]}）`;
         return (jaNames as Record<string, string>)[name] ?? name;
       },
-      money: (amount) => (ja ? formatJaMoney(amount) : formatMillions(amount)),
+      money: (amount, compact = false) =>
+        ja ? formatJaMoney(amount, compact) : formatMillions(amount, compact),
       people: (n) => (ja ? formatJaPeople(n) : formatPopulation(n)),
       perCapitaUsd: (usd) =>
         ja

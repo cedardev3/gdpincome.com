@@ -215,14 +215,14 @@ export function childWedgeInParentSlice(
   return { startAngle, endAngle };
 }
 
-export function formatMillions(amountMillions: number): string {
+export function formatMillions(amountMillions: number, compact = false): string {
   const sign = amountMillions < 0 ? "-" : "";
   const abs = Math.abs(amountMillions);
   if (abs >= 1_000_000) {
-    return `${sign}$${trimZeros((abs / 1_000_000).toFixed(3))} trillion`;
+    return `${sign}$${trimZeros((abs / 1_000_000).toFixed(compact ? 2 : 3))} trillion`;
   }
   if (abs >= 1_000) {
-    const decimals = abs >= 100_000 ? 1 : 2;
+    const decimals = abs >= 100_000 ? (compact ? 0 : 1) : compact ? 1 : 2;
     return `${sign}$${trimZeros((abs / 1_000).toFixed(decimals))} billion`;
   }
   return `${sign}$${abs.toLocaleString("en-US")} million`;

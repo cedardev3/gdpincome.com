@@ -194,20 +194,41 @@ function MetricBlock({
   );
 }
 
-function afterInterestText(
+function afterInterestParts(
   country: CountryGdpTree,
   t: (key: MessageKey) => string,
   perCapitaUsd: (usd: number) => string,
-): string | null {
+): { lead: string; detail?: string } | null {
   if (
     country.gdpPerCapitaAfterInterestUsd == null ||
     country.nominalGdpPerCapitaInterestYearUsd == null ||
     country.debtInterestPerCapitaUsd == null ||
     country.debtInterestYear == null
   ) {
-    return country.publicDebtYear != null ? t("afterInterestMissing") : null;
+    return country.publicDebtYear != null ? { lead: t("afterInterestMissing") } : null;
   }
-  return `${perCapitaUsd(country.gdpPerCapitaAfterInterestUsd)} ${t("afterInterest")} (${perCapitaUsd(country.nominalGdpPerCapitaInterestYearUsd)} − ${perCapitaUsd(country.debtInterestPerCapitaUsd)} ${t("interestWord")}, ${country.debtInterestYear})`;
+  return {
+    lead: `${perCapitaUsd(country.gdpPerCapitaAfterInterestUsd)} ${t("afterInterest")}`,
+    detail: `(${perCapitaUsd(country.nominalGdpPerCapitaInterestYearUsd)} − ${perCapitaUsd(country.debtInterestPerCapitaUsd)} ${t("interestWord")}, ${country.debtInterestYear})`,
+  };
+}
+
+function afterInterestText(
+  country: CountryGdpTree,
+  t: (key: MessageKey) => string,
+  perCapitaUsd: (usd: number) => string,
+): string | null {
+  const parts = afterInterestParts(country, t, perCapitaUsd);
+  if (!parts) return null;
+  return parts.detail ? `${parts.lead} ${parts.detail}` : parts.lead;
+}
+
+/** Drop one decimal from a formatted figure so a multiplier can sit beside it. */
+function tightenFigure(text: string): string {
+  return text.replace(/(\d+)\.(\d)(\d+)/g, (_, whole: string, tenth: string, rest: string) => {
+    const rounded = Math.round(Number(`${whole}.${tenth}${rest}`) * 10) / 10;
+    return String(rounded);
+  });
 }
 
 function debtHintText(country: CountryGdpTree, t: (key: MessageKey) => string): string {
@@ -427,7 +448,7 @@ function CompareMetrics({
   const { t, label, money, people, perCapitaUsd, delta, ja, badge } = useI18n();
   const showDelta = (
     row: { text: string; tone: "up" | "down" | "flat" } | null,
-  ) => (row ? { ...row, text: delta(row.text) } : null);
+  ) => (row ? { ...row, text: tightenFigure(delta(row.text)) } : null);
 
   function stats(country: CountryGdpTree) {
     const { source, country: quality } = qualityForCountry(
@@ -455,7 +476,7 @@ function CompareMetrics({
       lifeDelta: showDelta(
         yearsFiveYearDelta(country.lifeExpectancyYears, country.lifeExpectancyPrior5yYears),
       ),
-      interestNote: afterInterestText(country, t, perCapitaUsd),
+      interest: afterInterestParts(country, t, perCapitaUsd),
       debtNote:
         country.publicDebtPerCapitaUsd != null
           ? `${perCapitaUsd(country.publicDebtPerCapitaUsd)} ${t("debtPerPerson")}`
@@ -545,8 +566,8 @@ function CompareMetrics({
     title?: string;
     times?: { text: string; title: string } | null;
     note?: string;
+    noteDetail?: string;
     noteTimes?: { text: string; title: string } | null;
-    contested?: ReturnType<typeof contestedFor>;
   };
 
   function timesFor(mark: ReturnType<typeof largerTimes>, side: Side) {
@@ -558,14 +579,12 @@ function CompareMetrics({
     row: { text: string; tone: Tone } | null,
     title: string | undefined,
     times: Cell["times"],
-    contested?: ReturnType<typeof contestedFor>,
   ): Cell {
     return {
       value: row ? row.text : t("empty"),
       tone: row?.tone ?? null,
       title,
       times,
-      contested,
     };
   }
 
@@ -574,20 +593,18 @@ function CompareMetrics({
       key: "gdp",
       label: t("gdpByIndustry"),
       left: {
-        value: money(left.amountMillions),
+        value: money(left.amountMillions, true),
         change: a.gdp5,
         changeTimes: timesFor(gdp5Times, "a"),
         title: t("nominalHint"),
         times: timesFor(gdpTimes, "a"),
-        contested: contestedFor(left.code ?? "", "gdp"),
       },
       right: {
-        value: money(right.amountMillions),
+        value: money(right.amountMillions, true),
         change: b.gdp5,
         changeTimes: timesFor(gdp5Times, "b"),
         title: t("nominalHint"),
         times: timesFor(gdpTimes, "b"),
-        contested: contestedFor(right.code ?? "", "gdp"),
       },
     },
     {
@@ -599,7 +616,6 @@ function CompareMetrics({
         changeTimes: timesFor(pop5Times, "a"),
         title: a.popTitle,
         times: timesFor(popTimes, "a"),
-        contested: contestedFor(left.code ?? "", "population"),
       },
       right: {
         value: right.population != null ? people(right.population) : t("empty"),
@@ -607,7 +623,6 @@ function CompareMetrics({
         changeTimes: timesFor(pop5Times, "b"),
         title: b.popTitle,
         times: timesFor(popTimes, "b"),
-        contested: contestedFor(right.code ?? "", "population"),
       },
     },
     {
@@ -619,9 +634,9 @@ function CompareMetrics({
         changeTimes: timesFor(pcap5Times, "a"),
         title: a.pcapTitle,
         times: timesFor(pcapTimes, "a"),
-        note: a.interestNote ?? undefined,
-        noteTimes: timesFor(afterTimes, "a"),
-        contested: contestedFor(left.code ?? "", "gdpPerCapita"),
+        note: a.interest?.lead,
+        noteDetail: a.interest?.detail,
+        noteTimes: a.interest?.detail ? timesFor(afterTimes, "a") : null,
       },
       right: {
         value: right.gdpPerCapitaUsd != null ? perCapitaUsd(right.gdpPerCapitaUsd) : t("empty"),
@@ -629,23 +644,23 @@ function CompareMetrics({
         changeTimes: timesFor(pcap5Times, "b"),
         title: b.pcapTitle,
         times: timesFor(pcapTimes, "b"),
-        note: b.interestNote ?? undefined,
-        noteTimes: timesFor(afterTimes, "b"),
-        contested: contestedFor(right.code ?? "", "gdpPerCapita"),
+        note: b.interest?.lead,
+        noteDetail: b.interest?.detail,
+        noteTimes: b.interest?.detail ? timesFor(afterTimes, "b") : null,
       },
     },
     {
       key: "debt",
       label: t("nationalDebt"),
       left: {
-        value: left.publicDebtUsdMillions != null ? money(left.publicDebtUsdMillions) : t("empty"),
+        value: left.publicDebtUsdMillions != null ? money(left.publicDebtUsdMillions, true) : t("empty"),
         title: a.debtTitle,
         times: timesFor(debtTimes, "a"),
         note: a.debtNote,
         noteTimes: timesFor(debtCapTimes, "a"),
       },
       right: {
-        value: right.publicDebtUsdMillions != null ? money(right.publicDebtUsdMillions) : t("empty"),
+        value: right.publicDebtUsdMillions != null ? money(right.publicDebtUsdMillions, true) : t("empty"),
         title: b.debtTitle,
         times: timesFor(debtTimes, "b"),
         note: b.debtNote,
@@ -691,7 +706,6 @@ function CompareMetrics({
         changeTimes: timesFor(under5Times, "a"),
         title: a.underTitle,
         times: timesFor(underTimes, "a"),
-        contested: contestedFor(left.code ?? "", "ageStructure"),
       },
       right: {
         value: right.pctUnder18Proxy != null ? `${right.pctUnder18Proxy}%` : t("empty"),
@@ -699,7 +713,6 @@ function CompareMetrics({
         changeTimes: timesFor(under5Times, "b"),
         title: b.underTitle,
         times: timesFor(underTimes, "b"),
-        contested: contestedFor(right.code ?? "", "ageStructure"),
       },
     },
     {
@@ -711,7 +724,6 @@ function CompareMetrics({
         changeTimes: timesFor(over5Times, "a"),
         title: a.overTitle,
         times: timesFor(overTimes, "a"),
-        contested: contestedFor(left.code ?? "", "ageStructure"),
       },
       right: {
         value: right.pct65Plus != null ? `${right.pct65Plus}%` : t("empty"),
@@ -719,7 +731,6 @@ function CompareMetrics({
         changeTimes: timesFor(over5Times, "b"),
         title: b.overTitle,
         times: timesFor(overTimes, "b"),
-        contested: contestedFor(right.code ?? "", "ageStructure"),
       },
     },
     {
@@ -748,59 +759,51 @@ function CompareMetrics({
     },
   ];
 
+  function TimesMark({ mark }: { mark: { text: string; title: string } }) {
+    return (
+      <span
+        className="shrink-0 rounded bg-[#1f3d4d] px-1 py-0.5 text-[9px] font-semibold leading-none text-[#f7f3ec]"
+        title={mark.title}
+      >
+        {mark.text}
+      </span>
+    );
+  }
+
   function CellView({ cell, shade }: { cell: Cell; shade: "left" | "right" }) {
     const valueColor = cell.tone ? fiveYearDeltaClass(cell.tone) : "text-[#1f3d4d]";
-    const body = (
-      <div title={cell.title}>
-        <p className={`flex flex-wrap items-baseline gap-1.5 text-base font-semibold tabular-nums sm:text-lg ${valueColor}`}>
-          <span>{cell.value}</span>
-          {cell.times ? (
-            <span
-              className="rounded bg-[#1f3d4d] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-[#f7f3ec]"
-              title={cell.times.title}
-            >
-              {cell.times.text}
-            </span>
-          ) : null}
-        </p>
-        {cell.change ? (
-          <p className={`flex flex-wrap items-baseline gap-1.5 text-[11px] font-medium tabular-nums ${fiveYearDeltaClass(cell.change.tone)}`}>
-            <span>{cell.change.text}</span>
-            {cell.changeTimes ? (
-              <span
-                className="rounded bg-[#1f3d4d] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-[#f7f3ec]"
-                title={cell.changeTimes.title}
-              >
-                {cell.changeTimes.text}
-              </span>
-            ) : null}
-          </p>
-        ) : null}
-        {cell.note ? (
-          <p className="mt-0.5 flex flex-wrap items-baseline gap-1.5 text-[11px] leading-snug tabular-nums text-[#5c6b73]">
-            <span>{cell.note}</span>
-            {cell.noteTimes ? (
-              <span
-                className="rounded bg-[#1f3d4d] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-[#f7f3ec]"
-                title={cell.noteTimes.title}
-              >
-                {cell.noteTimes.text}
-              </span>
-            ) : null}
-          </p>
-        ) : null}
-        {cell.title ? (
-          <p className="mt-0.5 text-[11px] leading-snug text-[#5c6b73]">{cell.title}</p>
-        ) : null}
-      </div>
-    );
     return (
       <div
-        className={`min-w-0 px-3 py-2 ${
+        className={`min-w-0 px-2 py-2 sm:px-3 ${
           shade === "left" ? "bg-[#fbf8f2]" : "border-l border-[#e0d6c6] bg-[#e7eef1]"
         }`}
       >
-        {cell.contested ? <ContestedTooltip field={cell.contested}>{body}</ContestedTooltip> : body}
+        <div title={cell.title}>
+          <p className={`flex flex-nowrap items-baseline gap-1 text-[13px] font-semibold tabular-nums sm:text-sm ${valueColor}`}>
+            <span className="whitespace-nowrap">{cell.value}</span>
+            {cell.times ? <TimesMark mark={cell.times} /> : null}
+          </p>
+          {cell.change ? (
+            <p className={`mt-0.5 flex flex-nowrap items-baseline gap-1 text-[10px] font-medium tabular-nums sm:text-[11px] ${fiveYearDeltaClass(cell.change.tone)}`}>
+              <span className="whitespace-nowrap">{cell.change.text}</span>
+              {cell.changeTimes ? <TimesMark mark={cell.changeTimes} /> : null}
+            </p>
+          ) : null}
+          {cell.note ? (
+            <p className="mt-0.5 text-[10px] leading-snug text-[#5c6b73] sm:text-[11px]">
+              <span className="inline-flex flex-nowrap items-baseline gap-1">
+                <span className="whitespace-nowrap tabular-nums">{cell.note}</span>
+                {cell.noteTimes ? <TimesMark mark={cell.noteTimes} /> : null}
+              </span>
+              {cell.noteDetail ? (
+                <span className="mt-0.5 block tabular-nums">{cell.noteDetail}</span>
+              ) : null}
+            </p>
+          ) : null}
+          {cell.title ? (
+            <p className="mt-0.5 text-[10px] leading-snug text-[#5c6b73] sm:text-[11px]">{cell.title}</p>
+          ) : null}
+        </div>
       </div>
     );
   }
@@ -1270,12 +1273,12 @@ function ComparabilityNotice({
         className="rounded-md border border-[#e0c4b4] bg-[#fff4ec] px-3 py-2 text-xs leading-relaxed text-[#5c6b73]"
         role="note"
       >
-        <ContestedTooltip field={gdpContest}>
-          <span className="font-medium text-[#1f3d4d]">
-            {label(country.name, country.id)}
-            {t("selfReported")}
-          </span>
-        </ContestedTooltip>
+        <span className="font-medium text-[#1f3d4d]">
+          {t("contested")}
+          {": "}
+          {label(country.name, country.id)}
+          {t("selfReported")}
+        </span>
         <span className="mt-1 block">{localizeContest(gdpContest).why}</span>
       </div>
     );
