@@ -216,16 +216,6 @@ function afterInterestParts(
   };
 }
 
-function afterInterestText(
-  country: CountryGdpTree,
-  t: (key: MessageKey) => string,
-  perCapitaUsd: (usd: number) => string,
-): string | null {
-  const parts = afterInterestParts(country, t, perCapitaUsd);
-  if (!parts) return null;
-  return parts.detail ? `${parts.lead} ${parts.detail}` : parts.lead;
-}
-
 /** Drop one decimal from a formatted figure so a multiplier can sit beside it. */
 function tightenFigure(text: string): string {
   return text.replace(/(\d+)\.(\d)(\d+)/g, (_, whole: string, tenth: string, rest: string) => {
@@ -234,9 +224,46 @@ function tightenFigure(text: string): string {
   });
 }
 
+function pcapHintText(country: CountryGdpTree, t: (key: MessageKey) => string): string {
+  return country.populationYear != null
+    ? `${t("pcapPlain")} · ${country.populationYear}`
+    : t("pcapPlain");
+}
+
 function debtHintText(country: CountryGdpTree, t: (key: MessageKey) => string): string {
   if (country.publicDebtYear == null || country.publicDebtPctGdp == null) return t("empty");
   return `${t("debtHint")} · ${country.publicDebtYear} · ${country.publicDebtPctGdp.toFixed(1)}% ${t("ofGdp")}`;
+}
+
+function debtPerCapitaHintText(country: CountryGdpTree, t: (key: MessageKey) => string): string {
+  if (country.publicDebtYear == null) return t("debtPerCapitaHint");
+  return `${t("debtPerCapitaHint")} · ${country.publicDebtYear}`;
+}
+
+function adjustedHintText(
+  country: CountryGdpTree,
+  t: (key: MessageKey) => string,
+  perCapitaUsd: (usd: number) => string,
+): string {
+  const parts = afterInterestParts(country, t, perCapitaUsd);
+  if (!parts?.amount || !parts.detail) return t("adjustedMissing");
+  return `${t("adjustedHint")} ${parts.detail}`;
+}
+
+/** How many years longer the higher life expectancy is. Shown only on that side. */
+function yearsAhead(
+  a: number | null | undefined,
+  b: number | null | undefined,
+  ja: boolean,
+): { side: "a" | "b"; text: string; title: string } | null {
+  if (a == null || b == null || !Number.isFinite(a) || !Number.isFinite(b)) return null;
+  const diff = a - b;
+  const abs = Math.abs(diff);
+  if (abs < 0.05) return null;
+  const shown = abs.toFixed(1);
+  const text = ja ? `+${shown}年` : `+${shown}yrs`;
+  const title = ja ? `相手国より${shown}年長い` : `${shown} years longer than the other country`;
+  return { side: diff > 0 ? "a" : "b", text, title };
 }
 
 function largerTimes(
@@ -293,7 +320,7 @@ function DemographicsBanner({
   country: CountryGdpTree;
   dense?: boolean;
 }) {
-  const { t, label, money, people, perCapitaUsd, delta, ja, badge } = useI18n();
+  const { t, label, money, people, perCapitaUsd, delta, ja } = useI18n();
   if (country.gdpPerCapitaUsd == null || country.population == null) return null;
   const under18 = country.pctUnder18Proxy;
   const over65 = country.pct65Plus;
@@ -304,10 +331,6 @@ function DemographicsBanner({
   ) => (row ? { ...row, text: delta(row.text) } : null);
   const yieldPct = country.bondYield10y;
   const yieldPeriod = country.bondYield10yPeriod;
-  const { source, country: quality } = qualityForCountry(
-    country.code ?? "",
-    country.sourceKey,
-  );
 
   const pcapDelta = fiveYearDelta(
     country.gdpPerCapitaWbUsd,
@@ -323,7 +346,7 @@ function DemographicsBanner({
   const lifeDelta = showDelta(
     yearsFiveYearDelta(country.lifeExpectancyYears, country.lifeExpectancyPrior5yYears),
   );
-  const interestNote = afterInterestText(country, t, perCapitaUsd);
+  const adjusted = afterInterestParts(country, t, perCapitaUsd);
 
   return (
     <div className="flex flex-col gap-2">
@@ -343,6 +366,15 @@ function DemographicsBanner({
           hint={t("nominalHint")}
         />
         <MetricBlock
+          label={t("nationalDebt")}
+          value={
+            country.publicDebtUsdMillions != null
+              ? money(country.publicDebtUsdMillions)
+              : t("empty")
+          }
+          hint={debtHintText(country, t)}
+        />
+        <MetricBlock
           label={t("population")}
           contested={contestedFor(country.code ?? "", "population")}
           value={people(country.population)}
@@ -354,28 +386,21 @@ function DemographicsBanner({
           contested={contestedFor(country.code ?? "", "gdpPerCapita")}
           value={perCapitaUsd(country.gdpPerCapitaUsd)}
           delta={showDelta(pcapDelta)}
-          note={interestNote}
-          hint={
-            quality.measureWarning
-              ? `${t("derivedFrom")} ${source ? badge(source.badge) : ""} ${t("notPeer")}`
-              : pcapDelta
-                ? `${t("pcapIndustry")} (${country.populationYear}) · ${t("pcapWb")}`
-                : `${t("pcapPlain")} (${country.populationYear})`
-          }
+          hint={pcapHintText(country, t)}
         />
         <MetricBlock
-          label={t("nationalDebt")}
+          label={t("debtPerCapita")}
           value={
-            country.publicDebtUsdMillions != null
-              ? money(country.publicDebtUsdMillions)
+            country.publicDebtPerCapitaUsd != null
+              ? perCapitaUsd(country.publicDebtPerCapitaUsd)
               : t("empty")
           }
-          note={
-            country.publicDebtPerCapitaUsd != null
-              ? `${perCapitaUsd(country.publicDebtPerCapitaUsd)} ${t("debtPerPerson")}`
-              : null
-          }
-          hint={debtHintText(country, t)}
+          hint={debtPerCapitaHintText(country, t)}
+        />
+        <MetricBlock
+          label={t("adjustedGdpPerCapita")}
+          value={adjusted?.amount != null ? adjusted.amount : t("empty")}
+          hint={adjustedHintText(country, t, perCapitaUsd)}
         />
         <MetricBlock
           label={t("inflation5")}
@@ -448,16 +473,12 @@ function CompareMetrics({
   left: CountryGdpTree;
   right: CountryGdpTree;
 }) {
-  const { t, label, money, people, perCapitaUsd, delta, ja, badge } = useI18n();
+  const { t, label, money, people, perCapitaUsd, delta, ja } = useI18n();
   const showDelta = (
     row: { text: string; tone: "up" | "down" | "flat" } | null,
   ) => (row ? { ...row, text: tightenFigure(delta(row.text)) } : null);
 
   function stats(country: CountryGdpTree) {
-    const { source, country: quality } = qualityForCountry(
-      country.code ?? "",
-      country.sourceKey,
-    );
     const underLabel = label(country.under18ProxyLabel ?? "Ages 0–14");
     const pcapChange = fiveYearDelta(
       country.gdpPerCapitaWbUsd,
@@ -465,8 +486,6 @@ function CompareMetrics({
     );
     return {
       country,
-      source,
-      quality,
       name: label(country.name, country.id),
       gdp5: showDelta(gdpTotalFiveYearDelta(country)),
       inflation: showDelta(inflationFiveYearDrag(country)),
@@ -480,11 +499,9 @@ function CompareMetrics({
         yearsFiveYearDelta(country.lifeExpectancyYears, country.lifeExpectancyPrior5yYears),
       ),
       interest: afterInterestParts(country, t, perCapitaUsd),
-      debtAmount:
-        country.publicDebtPerCapitaUsd != null
-          ? perCapitaUsd(country.publicDebtPerCapitaUsd)
-          : undefined,
       debtTitle: debtHintText(country, t),
+      debtCapTitle: debtPerCapitaHintText(country, t),
+      adjustedTitle: adjustedHintText(country, t, perCapitaUsd),
       lifeTitle:
         country.lifeExpectancyYear != null
           ? `${t("lifeHint")} · ${country.lifeExpectancyYear}`
@@ -493,11 +510,7 @@ function CompareMetrics({
         country.cpiPrior5yYear != null && country.cpiYear != null
           ? `${t("cpiPrefix")}${country.cpiPrior5yYear}→${country.cpiYear}`
           : t("inflationFallback"),
-      pcapTitle: quality.measureWarning
-        ? `${t("derivedFrom")} ${source ? badge(source.badge) : ""} ${t("notPeer")}`
-        : pcapChange
-          ? `${t("pcapIndustry")} (${country.populationYear}) · ${t("pcapWb")}`
-          : `${t("pcapPlain")} (${country.populationYear})`,
+      pcapTitle: pcapHintText(country, t),
       yieldTitle: `${t("govtBond")}${country.bondYield10yPeriod ? ` · ${country.bondYield10yPeriod}` : ""}`,
       popTitle:
         country.population != null
@@ -515,38 +528,9 @@ function CompareMetrics({
   const a = stats(left);
   const b = stats(right);
   const timesOther = t("timesOther");
-  const gdp5Left = gdpTotalFiveYearDelta(left);
-  const gdp5Right = gdpTotalFiveYearDelta(right);
-  const inflationLeft = inflationFiveYearDrag(left);
-  const inflationRight = inflationFiveYearDrag(right);
-  const realLeft = realGdpFiveYearDelta(left);
-  const realRight = realGdpFiveYearDelta(right);
-  const pcap5Left = fiveYearDelta(left.gdpPerCapitaWbUsd, left.gdpPerCapitaWbPrior5yUsd);
-  const pcap5Right = fiveYearDelta(right.gdpPerCapitaWbUsd, right.gdpPerCapitaWbPrior5yUsd);
-  const yield5Left = fiveYearDelta(left.bondYield10y, left.bondYield10yPrior5y);
-  const yield5Right = fiveYearDelta(right.bondYield10y, right.bondYield10yPrior5y);
-  const pop5Left = fiveYearDelta(left.population, left.populationPrior5y);
-  const pop5Right = fiveYearDelta(right.population, right.populationPrior5y);
-  const under5Left = fiveYearDelta(left.pctUnder18Proxy, left.pctUnder15Prior5y);
-  const under5Right = fiveYearDelta(right.pctUnder18Proxy, right.pctUnder15Prior5y);
-  const over5Left = fiveYearDelta(left.pct65Plus, left.pct65PlusPrior5y);
-  const over5Right = fiveYearDelta(right.pct65Plus, right.pct65PlusPrior5y);
-  const life5Left = yearsFiveYearDelta(left.lifeExpectancyYears, left.lifeExpectancyPrior5yYears);
-  const life5Right = yearsFiveYearDelta(right.lifeExpectancyYears, right.lifeExpectancyPrior5yYears);
   const gdpTimes = largerTimes(left.amountMillions, right.amountMillions, ja, timesOther);
-  const gdp5Times = largerTimes(gdp5Left?.pct, gdp5Right?.pct, ja, timesOther);
-  const inflationTimes = largerTimes(inflationLeft?.pct, inflationRight?.pct, ja, timesOther);
-  const realTimes = largerTimes(realLeft?.pct, realRight?.pct, ja, timesOther);
   const pcapTimes = largerTimes(left.gdpPerCapitaUsd, right.gdpPerCapitaUsd, ja, timesOther);
-  const pcap5Times = largerTimes(pcap5Left?.pct, pcap5Right?.pct, ja, timesOther);
-  const yieldTimes = largerTimes(left.bondYield10y, right.bondYield10y, ja, timesOther);
-  const yield5Times = largerTimes(yield5Left?.pct, yield5Right?.pct, ja, timesOther);
   const popTimes = largerTimes(left.population, right.population, ja, timesOther);
-  const pop5Times = largerTimes(pop5Left?.pct, pop5Right?.pct, ja, timesOther);
-  const underTimes = largerTimes(left.pctUnder18Proxy, right.pctUnder18Proxy, ja, timesOther);
-  const under5Times = largerTimes(under5Left?.pct, under5Right?.pct, ja, timesOther);
-  const overTimes = largerTimes(left.pct65Plus, right.pct65Plus, ja, timesOther);
-  const over5Times = largerTimes(over5Left?.pct, over5Right?.pct, ja, timesOther);
   const debtTimes = largerTimes(left.publicDebtUsdMillions, right.publicDebtUsdMillions, ja, timesOther);
   const debtCapTimes = largerTimes(left.publicDebtPerCapitaUsd, right.publicDebtPerCapitaUsd, ja, timesOther);
   const afterTimes = largerTimes(
@@ -555,8 +539,9 @@ function CompareMetrics({
     ja,
     timesOther,
   );
-  const lifeTimes = largerTimes(left.lifeExpectancyYears, right.lifeExpectancyYears, ja, timesOther);
-  const life5Times = largerTimes(life5Left?.pct, life5Right?.pct, ja, timesOther);
+  const lifeGap = yearsAhead(left.lifeExpectancyYears, right.lifeExpectancyYears, ja);
+  const underTimes = largerTimes(left.pctUnder18Proxy, right.pctUnder18Proxy, ja, timesOther);
+  const overTimes = largerTimes(left.pct65Plus, right.pct65Plus, ja, timesOther);
 
   type Side = "a" | "b";
   type Tone = "up" | "down" | "flat";
@@ -581,13 +566,11 @@ function CompareMetrics({
   function rateCell(
     row: { text: string; tone: Tone } | null,
     title: string | undefined,
-    times: Cell["times"],
   ): Cell {
     return {
       value: row ? row.text : t("empty"),
       tone: row?.tone ?? null,
       title,
-      times,
     };
   }
 
@@ -598,16 +581,28 @@ function CompareMetrics({
       left: {
         value: money(left.amountMillions, true),
         change: a.gdp5,
-        changeTimes: timesFor(gdp5Times, "a"),
         title: t("nominalHint"),
         times: timesFor(gdpTimes, "a"),
       },
       right: {
         value: money(right.amountMillions, true),
         change: b.gdp5,
-        changeTimes: timesFor(gdp5Times, "b"),
         title: t("nominalHint"),
         times: timesFor(gdpTimes, "b"),
+      },
+    },
+    {
+      key: "debt",
+      label: t("nationalDebt"),
+      left: {
+        value: left.publicDebtUsdMillions != null ? money(left.publicDebtUsdMillions, true) : t("empty"),
+        title: a.debtTitle,
+        times: timesFor(debtTimes, "a"),
+      },
+      right: {
+        value: right.publicDebtUsdMillions != null ? money(right.publicDebtUsdMillions, true) : t("empty"),
+        title: b.debtTitle,
+        times: timesFor(debtTimes, "b"),
       },
     },
     {
@@ -616,14 +611,12 @@ function CompareMetrics({
       left: {
         value: left.population != null ? people(left.population) : t("empty"),
         change: a.popDelta,
-        changeTimes: timesFor(pop5Times, "a"),
         title: a.popTitle,
         times: timesFor(popTimes, "a"),
       },
       right: {
         value: right.population != null ? people(right.population) : t("empty"),
         change: b.popDelta,
-        changeTimes: timesFor(pop5Times, "b"),
         title: b.popTitle,
         times: timesFor(popTimes, "b"),
       },
@@ -634,59 +627,55 @@ function CompareMetrics({
       left: {
         value: left.gdpPerCapitaUsd != null ? perCapitaUsd(left.gdpPerCapitaUsd) : t("empty"),
         change: a.pcapDelta,
-        changeTimes: timesFor(pcap5Times, "a"),
         title: a.pcapTitle,
         times: timesFor(pcapTimes, "a"),
-        note: a.interest?.amount ?? a.interest?.lead,
-        noteDetail: a.interest?.amount
-          ? `${t("afterInterest")} ${a.interest.detail ?? ""}`.trim()
-          : a.interest?.detail,
-        noteTimes: a.interest?.amount ? timesFor(afterTimes, "a") : null,
       },
       right: {
         value: right.gdpPerCapitaUsd != null ? perCapitaUsd(right.gdpPerCapitaUsd) : t("empty"),
         change: b.pcapDelta,
-        changeTimes: timesFor(pcap5Times, "b"),
         title: b.pcapTitle,
         times: timesFor(pcapTimes, "b"),
-        note: b.interest?.amount ?? b.interest?.lead,
-        noteDetail: b.interest?.amount
-          ? `${t("afterInterest")} ${b.interest.detail ?? ""}`.trim()
-          : b.interest?.detail,
-        noteTimes: b.interest?.amount ? timesFor(afterTimes, "b") : null,
       },
     },
     {
-      key: "debt",
-      label: t("nationalDebt"),
+      key: "debtcap",
+      label: t("debtPerCapita"),
       left: {
-        value: left.publicDebtUsdMillions != null ? money(left.publicDebtUsdMillions, true) : t("empty"),
-        title: a.debtTitle,
-        times: timesFor(debtTimes, "a"),
-        note: a.debtAmount,
-        noteDetail: a.debtAmount ? t("debtPerPerson") : undefined,
-        noteTimes: timesFor(debtCapTimes, "a"),
+        value: left.publicDebtPerCapitaUsd != null ? perCapitaUsd(left.publicDebtPerCapitaUsd) : t("empty"),
+        title: a.debtCapTitle,
+        times: timesFor(debtCapTimes, "a"),
       },
       right: {
-        value: right.publicDebtUsdMillions != null ? money(right.publicDebtUsdMillions, true) : t("empty"),
-        title: b.debtTitle,
-        times: timesFor(debtTimes, "b"),
-        note: b.debtAmount,
-        noteDetail: b.debtAmount ? t("debtPerPerson") : undefined,
-        noteTimes: timesFor(debtCapTimes, "b"),
+        value: right.publicDebtPerCapitaUsd != null ? perCapitaUsd(right.publicDebtPerCapitaUsd) : t("empty"),
+        title: b.debtCapTitle,
+        times: timesFor(debtCapTimes, "b"),
+      },
+    },
+    {
+      key: "adjusted",
+      label: t("adjustedGdpPerCapita"),
+      left: {
+        value: a.interest?.amount ?? t("empty"),
+        title: a.adjustedTitle,
+        times: a.interest?.amount ? timesFor(afterTimes, "a") : null,
+      },
+      right: {
+        value: b.interest?.amount ?? t("empty"),
+        title: b.adjustedTitle,
+        times: b.interest?.amount ? timesFor(afterTimes, "b") : null,
       },
     },
     {
       key: "inflation",
       label: t("inflation5"),
-      left: rateCell(a.inflation, a.inflationTitle, timesFor(inflationTimes, "a")),
-      right: rateCell(b.inflation, b.inflationTitle, timesFor(inflationTimes, "b")),
+      left: rateCell(a.inflation, a.inflationTitle),
+      right: rateCell(b.inflation, b.inflationTitle),
     },
     {
       key: "real",
       label: t("real5"),
-      left: rateCell(a.real, t("realHint"), timesFor(realTimes, "a")),
-      right: rateCell(b.real, t("realHint"), timesFor(realTimes, "b")),
+      left: rateCell(a.real, t("realHint")),
+      right: rateCell(b.real, t("realHint")),
     },
     {
       key: "yield",
@@ -694,16 +683,12 @@ function CompareMetrics({
       left: {
         value: left.bondYield10y != null ? `${left.bondYield10y.toFixed(2)}%` : t("empty"),
         change: a.yieldDelta,
-        changeTimes: timesFor(yield5Times, "a"),
         title: a.yieldTitle,
-        times: timesFor(yieldTimes, "a"),
       },
       right: {
         value: right.bondYield10y != null ? `${right.bondYield10y.toFixed(2)}%` : t("empty"),
         change: b.yieldDelta,
-        changeTimes: timesFor(yield5Times, "b"),
         title: b.yieldTitle,
-        times: timesFor(yieldTimes, "b"),
       },
     },
     {
@@ -712,14 +697,12 @@ function CompareMetrics({
       left: {
         value: left.pctUnder18Proxy != null ? `${left.pctUnder18Proxy}%` : t("empty"),
         change: a.underDelta,
-        changeTimes: timesFor(under5Times, "a"),
         title: a.underTitle,
         times: timesFor(underTimes, "a"),
       },
       right: {
         value: right.pctUnder18Proxy != null ? `${right.pctUnder18Proxy}%` : t("empty"),
         change: b.underDelta,
-        changeTimes: timesFor(under5Times, "b"),
         title: b.underTitle,
         times: timesFor(underTimes, "b"),
       },
@@ -730,14 +713,12 @@ function CompareMetrics({
       left: {
         value: left.pct65Plus != null ? `${left.pct65Plus}%` : t("empty"),
         change: a.overDelta,
-        changeTimes: timesFor(over5Times, "a"),
         title: a.overTitle,
         times: timesFor(overTimes, "a"),
       },
       right: {
         value: right.pct65Plus != null ? `${right.pct65Plus}%` : t("empty"),
         change: b.overDelta,
-        changeTimes: timesFor(over5Times, "b"),
         title: b.overTitle,
         times: timesFor(overTimes, "b"),
       },
@@ -751,9 +732,8 @@ function CompareMetrics({
             ? `${left.lifeExpectancyYears.toFixed(1)}${t("yearsSuffix")}`
             : t("empty"),
         change: a.lifeDelta,
-        changeTimes: timesFor(life5Times, "a"),
         title: a.lifeTitle,
-        times: timesFor(lifeTimes, "a"),
+        times: timesFor(lifeGap, "a"),
       },
       right: {
         value:
@@ -761,9 +741,8 @@ function CompareMetrics({
             ? `${right.lifeExpectancyYears.toFixed(1)}${t("yearsSuffix")}`
             : t("empty"),
         change: b.lifeDelta,
-        changeTimes: timesFor(life5Times, "b"),
         title: b.lifeTitle,
-        times: timesFor(lifeTimes, "b"),
+        times: timesFor(lifeGap, "b"),
       },
     },
   ];
@@ -936,10 +915,17 @@ function SliceRow({
       ? COUNTRY_GDP[countryCode as keyof typeof COUNTRY_GDP]
       : null;
   const countrySlice = countryRow != null && slice.id === countryRow.id ? countryRow : null;
-  const interestLine = countrySlice ? afterInterestText(countrySlice, t, perCapitaUsd) : null;
+  const adjustedLine =
+    countrySlice?.gdpPerCapitaAfterInterestUsd != null
+      ? `${t("adjustedGdpPerCapita")}: ${perCapitaUsd(countrySlice.gdpPerCapitaAfterInterestUsd)}`
+      : null;
+  const debtCapLine =
+    countrySlice?.publicDebtPerCapitaUsd != null
+      ? `${t("debtPerCapita")}: ${perCapitaUsd(countrySlice.publicDebtPerCapitaUsd)}`
+      : null;
   const debtLine =
-    countrySlice?.publicDebtUsdMillions != null && countrySlice.publicDebtPerCapitaUsd != null
-      ? `${t("nationalDebt")}: ${money(countrySlice.publicDebtUsdMillions)} · ${perCapitaUsd(countrySlice.publicDebtPerCapitaUsd)} ${t("debtPerPerson")}`
+    countrySlice?.publicDebtUsdMillions != null
+      ? `${t("nationalDebt")}: ${money(countrySlice.publicDebtUsdMillions)}`
       : null;
   const lifeChange = countrySlice
     ? yearsFiveYearDelta(countrySlice.lifeExpectancyYears, countrySlice.lifeExpectancyPrior5yYears)
@@ -957,7 +943,8 @@ function SliceRow({
     inflationDrag ? `${t("inflation5")}: ${delta(inflationDrag.text)}` : null,
     realGdp ? `${t("real5")}: ${delta(realGdp.text)}` : null,
     perCapita ? `${t("gdpPerCapita")}: ${perCapita}` : null,
-    interestLine,
+    debtCapLine,
+    adjustedLine,
     debtLine,
     lifeLine,
     bondYield ? `${t("yield")}: ${bondYield}` : null,
@@ -1355,6 +1342,18 @@ function StaleDataNotice() {
   );
 }
 
+function MetricSourceNote() {
+  const { t } = useI18n();
+  return (
+    <p
+      className="rounded-md border border-[#e0d6c6] bg-[#fbf8f2] px-3 py-2 text-xs leading-relaxed text-[#5c6b73]"
+      role="note"
+    >
+      {t("metricSources")}
+    </p>
+  );
+}
+
 function YearLagNotice({
   node,
   visibleCodes,
@@ -1420,7 +1419,6 @@ function LevelSummary({ node }: { node: ChartNode }) {
     node.periodLabel ?? (node.year != null ? String(node.year) : null);
   const isWorld = node.id === "world";
   const country = countryForNode(node);
-  const interestLine = country ? afterInterestText(country, t, perCapitaUsd) : null;
 
   const measureLabel = isWorld
     ? t("combined")
@@ -1489,9 +1487,6 @@ function LevelSummary({ node }: { node: ChartNode }) {
           <span className="font-semibold tabular-nums text-[#1f3d4d]">
             {perCapitaUsd(country.gdpPerCapitaUsd)}
           </span>
-          {interestLine ? (
-            <span className="ml-1.5 text-[11px] tabular-nums text-[#5c6b73]">{interestLine}</span>
-          ) : null}
         </span>
       ) : null}
       {country?.bondYield10y != null ? (
@@ -1720,7 +1715,6 @@ function CompareColumn({
         </button>
       </div>
       <PathCrumb root={root} path={path} onWorld={onWorld} onNavigate={onOpenPath} />
-      <LevelSummary node={node} />
       <IndustryChart
         root={root}
         node={node}
@@ -1969,18 +1963,16 @@ export default function GdpExplorer() {
     <div className={`mx-auto flex w-full min-w-0 max-w-full flex-col gap-6 ${splitView ? "max-w-[96rem]" : "max-w-5xl"}`}>
       <header className="flex flex-col gap-3">
         <div className="flex items-start justify-between gap-4">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-3xl font-semibold tracking-tight text-[#1f3d4d] sm:text-4xl">
-              {t("title")}
-            </h1>
-            <p className="max-w-2xl text-sm leading-relaxed text-[#5c6b73]">
-              {t("introLead")}
-              <span className="font-medium text-[#1f3d4d]">{t("introEdit")}</span>
-              {t("introTail")}
-            </p>
-          </div>
+          <h1 className="text-3xl font-semibold tracking-tight text-[#1f3d4d] sm:text-4xl">
+            {t("title")}
+          </h1>
           <YoshinobuButton />
         </div>
+        <p className="w-full text-sm leading-relaxed text-[#5c6b73]">
+          {t("introLead")}
+          <span className="font-medium text-[#1f3d4d]">{t("introEdit")}</span>
+          {t("introTail")}
+        </p>
         <ScopeTabs
           path={path}
           compareCode={compareCode}
@@ -2018,7 +2010,7 @@ export default function GdpExplorer() {
         <StaleDataNotice />
         {splitView ? null : (
           <>
-            <LevelSummary node={current} />
+            {activeCountry ? null : <LevelSummary node={current} />}
             {activeCountry ? <DemographicsBanner country={activeCountry} /> : null}
             <PathCrumb
               root={root}
@@ -2115,6 +2107,7 @@ export default function GdpExplorer() {
         )}
 
         <div className="flex w-full flex-col gap-3">
+          {path.length > 0 ? <MetricSourceNote /> : null}
           {comparing && compareCurrent ? (
             <>
               <YearLagNotice node={current} visibleCodes={visibleCodes} />
