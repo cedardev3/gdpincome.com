@@ -30,7 +30,6 @@ import {
   nodeAtPath,
   type ChartNode,
   type PieSlice,
-  type SourceLink,
 } from "@/lib/pie";
 
 const VISIBLE_STORAGE_KEY = "gdpincome.visibleCountries.v3";
@@ -118,14 +117,6 @@ function buildFilteredWorld(visibleCodes: readonly string[]): ChartNode {
     children,
   };
 }
-function sourceSummary(
-  sources: SourceLink[] | undefined,
-  nameOf: (name: string) => string,
-): string {
-  if (!sources?.length) return "";
-  return sources.map((s) => nameOf(s.label)).join(" · ");
-}
-
 function countryForNode(node: ChartNode): CountryGdpTree | null {
   if (node.id === "world") return null;
   return (
@@ -859,7 +850,7 @@ function SliceRow({
   onOpen: () => void;
   onRemove?: () => void;
 }) {
-  const { t, label: nameOf, money, perCapitaUsd, delta, badge, sourceSummary: summarize } = useI18n();
+  const { t, label: nameOf, money, perCapitaUsd, delta, badge } = useI18n();
   const amountClass = slice.isOffset ? "text-[#8a7358]" : "text-[#5c6b73]";
   const nameClass = slice.isOffset
     ? "text-[#5c6b73]"
@@ -910,53 +901,6 @@ function SliceRow({
           : undefined,
       )
     : null;
-  const countryRow =
-    countryCode && countryCode in COUNTRY_GDP
-      ? COUNTRY_GDP[countryCode as keyof typeof COUNTRY_GDP]
-      : null;
-  const countrySlice = countryRow != null && slice.id === countryRow.id ? countryRow : null;
-  const adjustedLine =
-    countrySlice?.gdpPerCapitaAfterInterestUsd != null
-      ? `${t("adjustedGdpPerCapita")}: ${perCapitaUsd(countrySlice.gdpPerCapitaAfterInterestUsd)}`
-      : null;
-  const debtCapLine =
-    countrySlice?.publicDebtPerCapitaUsd != null
-      ? `${t("debtPerCapita")}: ${perCapitaUsd(countrySlice.publicDebtPerCapitaUsd)}`
-      : null;
-  const debtLine =
-    countrySlice?.publicDebtUsdMillions != null
-      ? `${t("nationalDebt")}: ${money(countrySlice.publicDebtUsdMillions)}`
-      : null;
-  const lifeChange = countrySlice
-    ? yearsFiveYearDelta(countrySlice.lifeExpectancyYears, countrySlice.lifeExpectancyPrior5yYears)
-    : null;
-  const lifeLine =
-    countrySlice?.lifeExpectancyYears != null
-      ? `${t("lifeExpectancy")}: ${countrySlice.lifeExpectancyYears.toFixed(1)}${t("yearsSuffix")}${
-          lifeChange ? ` ${delta(lifeChange.text)}` : ""
-        }`
-      : null;
-  const tip = [
-    sliceName,
-    metrics,
-    gdp5yr ? `${t("gdp5")}: ${delta(gdp5yr.text)}` : null,
-    inflationDrag ? `${t("inflation5")}: ${delta(inflationDrag.text)}` : null,
-    realGdp ? `${t("real5")}: ${delta(realGdp.text)}` : null,
-    perCapita ? `${t("gdpPerCapita")}: ${perCapita}` : null,
-    debtCapLine,
-    adjustedLine,
-    debtLine,
-    lifeLine,
-    bondYield ? `${t("yield")}: ${bondYield}` : null,
-    contestedPop ? t("contestedSeries") : null,
-    measureQ?.source && !measureQ.source.levelComparableToNominalUsd
-      ? summarize(measureQ.source.sourceKey, measureQ.source.summary)
-      : null,
-    period ? `${t("asOf")} ${period}` : null,
-    sourceSummary(slice.sources, nameOf),
-  ]
-    .filter(Boolean)
-    .join("\n");
 
   const label = (
     <>
@@ -1031,7 +975,6 @@ function SliceRow({
   return (
     <li
       className={`flex items-center gap-2 rounded-lg px-1.5 py-1 ${active ? "bg-[#f4efe6]" : ""}`}
-      title={tip}
       onMouseEnter={() => onHover(slice.id)}
       onMouseLeave={() => onHover(null)}
     >
@@ -1041,7 +984,6 @@ function SliceRow({
           className="flex min-w-0 flex-1 items-center gap-2 text-left"
           onClick={onOpen}
           aria-label={`${sliceName}, ${t("openDetails")}`}
-          title={tip}
         >
           {label}
         </button>

@@ -1,8 +1,10 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import type { ContestedField, SourceQuality } from "@/data/data-quality";
 import { useI18n } from "@/i18n/locale";
+import { placeInView } from "@/components/placeInView";
 
 /** Accessible contested-data callout with alternate estimates. */
 export function ContestedTooltip({
@@ -14,18 +16,54 @@ export function ContestedTooltip({
 }) {
   const { t, contested } = useI18n();
   const copy = contested(field);
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false);
+  const [root, setRoot] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setRoot(document.body);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open) return;
+    const panel = panelRef.current;
+    const anchor = detailsRef.current;
+    if (!panel || !anchor) return;
+    const place = () =>
+      placeInView(panel, anchor, { placement: "below", maxWidth: 352 });
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    const viewport = window.visualViewport;
+    viewport?.addEventListener("resize", place);
+    viewport?.addEventListener("scroll", place);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+      viewport?.removeEventListener("resize", place);
+      viewport?.removeEventListener("scroll", place);
+    };
+  }, [open, copy, root]);
+
   return (
-    <details className="group relative inline-block max-w-full">
+    <details
+      ref={detailsRef}
+      className="group relative inline-block max-w-full"
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
       <summary className="flex cursor-pointer list-none items-center gap-1.5 marker:content-none [&::-webkit-details-marker]:hidden">
         {children}
-        <span
-          className="inline-flex h-4 items-center rounded border border-[#c45c26]/40 bg-[#fff4ec] px-1 text-[10px] font-medium uppercase tracking-wide text-[#8a3c18]"
-          title={copy.title}
-        >
+        <span className="inline-flex h-4 items-center rounded border border-[#c45c26]/40 bg-[#fff4ec] px-1 text-[10px] font-medium uppercase tracking-wide text-[#8a3c18]">
           {t("contested")}
         </span>
       </summary>
-      <div className="absolute left-0 z-30 mt-2 w-[min(22rem,calc(100vw-2rem))] rounded-md border border-[#e0d6c6] bg-[#fbf8f2] p-3 text-left shadow-md">
+      {open && root
+        ? createPortal(
+            <div
+              ref={panelRef}
+              className="overflow-y-auto break-words rounded-md border border-[#e0d6c6] bg-[#fbf8f2] p-3 text-left shadow-md"
+            >
         <p className="text-xs font-medium text-[#1f3d4d]">{copy.title}</p>
         <p className="mt-1 text-[11px] leading-relaxed text-[#5c6b73]">
           {copy.why}
@@ -72,7 +110,10 @@ export function ContestedTooltip({
             ))}
           </div>
         ) : null}
-      </div>
+            </div>,
+            root,
+          )
+        : null}
     </details>
   );
 }

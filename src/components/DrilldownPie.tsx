@@ -1,6 +1,8 @@
 "use client";
 
-import { useId } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import { createPortal } from "react-dom";
+import { placeInView } from "@/components/placeInView";
 import { FlagIcon } from "@/lib/flags";
 import { useI18n } from "@/i18n/locale";
 import {
@@ -43,6 +45,53 @@ const MIN_SWEEP_LABEL = 0.2;
 const MIN_SWEEP_FLAG = 0.32;
 const MIN_CHARS_SECTOR = 4;
 
+function PlacedTip({
+  anchorRef,
+  children,
+}: {
+  anchorRef: RefObject<HTMLElement | null>;
+  children: ReactNode;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [root, setRoot] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setRoot(document.body);
+  }, []);
+
+  useLayoutEffect(() => {
+    const panel = panelRef.current;
+    const anchor = anchorRef.current;
+    if (!panel || !anchor) return;
+    const place = () =>
+      placeInView(panel, anchor, { placement: "inside-top", maxWidth: 288 });
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, true);
+    const viewport = window.visualViewport;
+    viewport?.addEventListener("resize", place);
+    viewport?.addEventListener("scroll", place);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place, true);
+      viewport?.removeEventListener("resize", place);
+      viewport?.removeEventListener("scroll", place);
+    };
+  }, [anchorRef, children, root]);
+
+  if (!root) return null;
+
+  return createPortal(
+    <div
+      ref={panelRef}
+      className="pointer-events-none overflow-y-auto rounded-lg bg-[#1f3d4d] px-3 py-2 text-left text-white shadow-lg"
+    >
+      {children}
+    </div>,
+    root,
+  );
+}
+
 export default function DrilldownPie({
   node,
   labelMode,
@@ -54,6 +103,7 @@ export default function DrilldownPie({
 }: DrilldownPieProps) {
   const glowId = useId();
   const hatchId = useId();
+  const pieRef = useRef<HTMLDivElement>(null);
   const { t, label, money, delta } = useI18n();
   const chart = buildPieChart(node);
   const hovered =
@@ -70,7 +120,7 @@ export default function DrilldownPie({
   }
 
   return (
-    <div className="relative mx-auto w-full min-w-0 max-w-[520px]">
+    <div ref={pieRef} className="relative mx-auto w-full min-w-0 max-w-[520px]">
       {canGoBack && onBack ? (
         <button
           type="button"
@@ -178,22 +228,26 @@ export default function DrilldownPie({
         </text>
       </svg>
       {hovered ? (
-        <div className="pointer-events-none absolute left-1/2 top-2 z-10 max-w-[min(100%,20rem)] -translate-x-1/2 rounded-lg bg-[#1f3d4d] px-3 py-1.5 text-center text-white shadow-lg">
-          <p className="text-sm font-semibold">{label(hovered.name, hovered.id)}</p>
-          <p className="text-xs text-[#e8dcc8]">
+        <PlacedTip anchorRef={pieRef}>
+          <p className="break-words text-sm font-semibold leading-snug">
+            {label(hovered.name, hovered.id)}
+          </p>
+          <p className="mt-0.5 text-xs tabular-nums text-[#e8dcc8]">
             {money(hovered.amountMillions)} · {formatPercent(hovered.percent)}
             {hovered.isOffset ? ` · ${t("offset")}` : ""}
-            {hovered.periodLabel || hovered.year
-              ? ` · ${hovered.periodLabel ?? hovered.year}`
-              : ""}
           </p>
+          {hovered.periodLabel || hovered.year ? (
+            <p className="text-[11px] text-[#c4b59a]">
+              {t("asOf")} {hovered.periodLabel ?? hovered.year}
+            </p>
+          ) : null}
           {(() => {
             const gdp5yr = gdpTotalFiveYearDelta(hovered);
             const inflation = inflationFiveYearDrag(hovered);
             const real = realGdpFiveYearDelta(hovered);
             if (!gdp5yr && !inflation && !real) return null;
             return (
-              <div className="mt-0.5 space-y-0.5 text-xs font-medium tabular-nums">
+              <div className="mt-1 space-y-0.5 text-xs font-medium tabular-nums">
                 {gdp5yr ? (
                   <p className={fiveYearDeltaClassOnDark(gdp5yr.tone)}>
                     {delta(gdp5yr.text)}
@@ -212,15 +266,15 @@ export default function DrilldownPie({
               </div>
             );
           })()}
-          {hovered.sources?.length ? (
-            <p className="mt-0.5 text-[10px] leading-snug text-[#c4b59a]">
-              {t("source")}: {hovered.sources.map((s) => label(s.label)).join(" · ")}
+          {hovered.sources?.[0] ? (
+            <p className="mt-1 break-words border-t border-white/15 pt-1 text-[11px] leading-snug text-[#c4b59a]">
+              {t("source")}: {label(hovered.sources[0].label)}
             </p>
           ) : null}
-          <p className="mt-0.5 text-[10px] text-[#a89880]">
+          <p className="mt-1 text-[10px] text-[#a89880]">
             {hasChildren(hovered) ? t("tapOpen") : t("noDetail")}
           </p>
-        </div>
+        </PlacedTip>
       ) : null}
       {hasOverlays && !hatchOnly ? (
         <p className="mt-2 text-center text-[11px] text-[#8a7358]">
