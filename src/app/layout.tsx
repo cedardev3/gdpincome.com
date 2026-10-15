@@ -10,7 +10,7 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   title: "GDP Income",
   description:
-    "Explore GDP across selected economies in USD, then drill into industry composition for the United States, Canada, and Australia.",
+    "Explore GDP across selected economies in USD, then drill into industry composition for the United States, China, Germany, Japan, India, etc.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

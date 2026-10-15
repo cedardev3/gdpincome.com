@@ -1960,7 +1960,7 @@ export default function GdpExplorer() {
   }
 
   return (
-    <div className={`mx-auto flex w-full min-w-0 max-w-full flex-col gap-6 ${splitView ? "max-w-[96rem]" : "max-w-5xl"}`}>
+    <div className={`mx-auto flex w-full min-w-0 flex-col gap-6 ${splitView ? "max-w-[96rem]" : "max-w-5xl"}`}>
       <header className="flex flex-col gap-3">
         <div className="flex items-start justify-between gap-4">
           <h1 className="text-3xl font-semibold tracking-tight text-[#1f3d4d] sm:text-4xl">
